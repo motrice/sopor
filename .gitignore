@@ -1,0 +1,34 @@
+# Rust build artifacts
+/target/
+
+# Cargo-generated files we don't want tracked
+**/*.rs.bk
+*.pdb
+
+# IDE / editor
+.idea/
+.vscode/
+*.iml
+*.swp
+*.swo
+*~
+.helix/
+.zed/
+
+# rust-analyzer / OS junk
+.rustc_info.json
+.DS_Store
+Thumbs.db
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Coverage / profiling
+*.profraw
+tarpaulin-report.*
+/coverage/
+
+# Docker
+.docker/

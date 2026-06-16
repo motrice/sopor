@@ -1,0 +1,38 @@
+# Build artifacts (rebuilt inside the container)
+target/
+**/*.rs.bk
+
+# VCS
+.git/
+.gitignore
+.gitattributes
+
+# Editor / OS
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Docs not needed at build time (README kept for license/context)
+*.md
+!README.md
+
+# Compose / local infra
+compose.yml
+docker-compose*.yml
+Dockerfile.*
+!Dockerfile
+
+# Local env / secrets
+.env
+.env.*
+
+# Coverage / profiling
+*.profraw
+/coverage/
+
+# CI configs
+.github/
+.gitlab-ci.yml
