@@ -1,4 +1,4 @@
-pub const INDEX_HTML: &str = r#"<!doctype html>
+const HEAD: &str = r#"<!doctype html>
 <html lang="sv">
 <head>
 <meta charset="utf-8">
@@ -42,30 +42,83 @@ pub const INDEX_HTML: &str = r#"<!doctype html>
   footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; text-align:center; }
   footer a { color: inherit; }
   .note { font-size:.8rem; color: var(--muted); margin-top: .5rem; }
+  .kommun-list { list-style: none; padding: 0; margin: 0; display: grid; gap: .5rem; }
+  .kommun-list a { display: block; padding: .8rem 1rem; background: #f6f7f3;
+                   border-radius: 8px; text-decoration: none; color: var(--fg);
+                   font-weight: 600; border: 1px solid var(--border); }
+  .kommun-list a:hover { background: #f0f4ee; border-color: var(--acc); }
+  .back { color: var(--muted); text-decoration: none; font-size: .85rem; }
+  .back:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
-<main>
+"#;
+
+const TAIL: &str = r#"
+</body>
+</html>
+"#;
+
+pub fn render_index(kommuner: &[(&str, &str)]) -> String {
+    let mut out = String::new();
+    out.push_str(HEAD);
+    out.push_str(
+        r#"<main>
   <h1>Sophämtningskalender</h1>
-  <p class="lede">Sök upp en adress och prenumerera på sophämtningsdatum
-    i Google Calendar, Apple Calendar eller Outlook. Data från Stockholm Vatten och Avfall.</p>
+  <p class="lede">Välj din kommun för att skapa en kalenderprenumeration
+    med dina sophämtningsdatum.</p>
+
+  <div class="card">
+    <label>Kommuner</label>
+    <ul class="kommun-list">
+"#,
+    );
+    for (id, name) in kommuner {
+        out.push_str(&format!(
+            r#"      <li><a href="/{id}">{name}</a></li>
+"#,
+            id = escape(id),
+            name = escape(name)
+        ));
+    }
+    out.push_str(
+        r#"    </ul>
+  </div>
+
+  <footer>
+    Inofficiell tjänst — kontakta din kommun för officiella uppgifter.
+  </footer>
+</main>"#,
+    );
+    out.push_str(TAIL);
+    out
+}
+
+pub fn render_kommun(slug: &str, name: &str, placeholder: &str, note: &str) -> String {
+    let mut out = String::new();
+    out.push_str(HEAD);
+    out.push_str(&format!(
+        r#"<main>
+  <a href="/" class="back">← Alla kommuner</a>
+  <h1>Sophämtningskalender — {name}</h1>
+  <p class="lede">{note}</p>
 
   <div class="card">
     <label for="q">Adress</label>
     <div class="search">
-      <input id="q" type="text" autocomplete="off" placeholder="t.ex. Olovslundsvägen 9">
+      <input id="q" type="text" autocomplete="off" placeholder="{placeholder}">
       <div id="suggestions" class="suggestions hidden"></div>
     </div>
-
     <div id="result" class="result"></div>
   </div>
 
   <footer>
-    Endast Stockholms stad (villor och radhus). Inofficiell tjänst.
+    Inofficiell tjänst — kontakta {name}s renhållning för officiella uppgifter.
   </footer>
 </main>
 
 <script>
+const SLUG = {slug_json};
 const q = document.getElementById('q');
 const sugg = document.getElementById('suggestions');
 const result = document.getElementById('result');
@@ -73,87 +126,86 @@ let timer = null;
 let active = -1;
 let suggestions = [];
 
-q.addEventListener('input', () => {
+q.addEventListener('input', () => {{
   clearTimeout(timer);
   const v = q.value.trim();
-  if (v.length < 2) { hideSuggestions(); return; }
+  if (v.length < 2) {{ hideSuggestions(); return; }}
   timer = setTimeout(() => fetchSuggestions(v), 250);
-});
+}});
 
-q.addEventListener('keydown', (e) => {
+q.addEventListener('keydown', (e) => {{
   if (sugg.classList.contains('hidden')) return;
-  if (e.key === 'ArrowDown') { e.preventDefault(); active = Math.min(active + 1, suggestions.length - 1); renderActive(); }
-  else if (e.key === 'ArrowUp') { e.preventDefault(); active = Math.max(active - 1, 0); renderActive(); }
-  else if (e.key === 'Enter') {
+  if (e.key === 'ArrowDown') {{ e.preventDefault(); active = Math.min(active + 1, suggestions.length - 1); renderActive(); }}
+  else if (e.key === 'ArrowUp') {{ e.preventDefault(); active = Math.max(active - 1, 0); renderActive(); }}
+  else if (e.key === 'Enter') {{
     e.preventDefault();
     if (active >= 0 && suggestions[active]) selectAddress(suggestions[active].value);
     else if (suggestions[0]) selectAddress(suggestions[0].value);
-  } else if (e.key === 'Escape') hideSuggestions();
-});
+  }} else if (e.key === 'Escape') hideSuggestions();
+}});
 
-document.addEventListener('click', (e) => {
+document.addEventListener('click', (e) => {{
   if (!sugg.contains(e.target) && e.target !== q) hideSuggestions();
-});
+}});
 
-async function fetchSuggestions(v) {
-  try {
-    const res = await fetch('/autocomplete?query=' + encodeURIComponent(v));
+async function fetchSuggestions(v) {{
+  try {{
+    const res = await fetch('/' + SLUG + '/autocomplete?query=' + encodeURIComponent(v));
     if (!res.ok) return;
     suggestions = await res.json();
-    if (!suggestions.length) { hideSuggestions(); return; }
+    if (!suggestions.length) {{ hideSuggestions(); return; }}
     sugg.innerHTML = '';
-    suggestions.forEach((s, i) => {
+    suggestions.forEach((s) => {{
       const div = document.createElement('div');
       div.textContent = s.value;
-      div.addEventListener('mousedown', (ev) => { ev.preventDefault(); selectAddress(s.value); });
+      div.addEventListener('mousedown', (ev) => {{ ev.preventDefault(); selectAddress(s.value); }});
       sugg.appendChild(div);
-    });
+    }});
     active = -1;
     sugg.classList.remove('hidden');
-  } catch (e) { console.error(e); }
-}
+  }} catch (e) {{ console.error(e); }}
+}}
 
-function renderActive() {
+function renderActive() {{
   [...sugg.children].forEach((el, i) => el.classList.toggle('active', i === active));
-}
+}}
 
-function hideSuggestions() { sugg.classList.add('hidden'); active = -1; }
+function hideSuggestions() {{ sugg.classList.add('hidden'); active = -1; }}
 
-async function selectAddress(address) {
+async function selectAddress(address) {{
   q.value = address;
   hideSuggestions();
   result.innerHTML = '<p class="empty">Söker hämtningsinformation…</p>';
-  try {
-    const res = await fetch('/preview?address=' + encodeURIComponent(address));
-    if (!res.ok) { result.innerHTML = '<p class="empty">Något gick fel.</p>'; return; }
+  try {{
+    const res = await fetch('/' + SLUG + '/preview?address=' + encodeURIComponent(address));
+    if (!res.ok) {{ result.innerHTML = '<p class="empty">Något gick fel.</p>'; return; }}
     const data = await res.json();
     renderResult(address, data);
-  } catch (e) {
+  }} catch (e) {{
     result.innerHTML = '<p class="empty">Något gick fel.</p>';
-  }
-}
+  }}
+}}
 
-function renderResult(address, data) {
-  const keys = Object.keys(data);
-  if (!keys.length) {
-    result.innerHTML = '<p class="empty">Adressen hittades inte i hushållsregistret. ' +
-      'Detta är vanligt för flerfamiljshus och samfälligheter.</p>';
+function renderResult(address, data) {{
+  if (!data.length) {{
+    result.innerHTML = '<p class="empty">Inga hämtningar hittades för adressen.</p>';
     return;
-  }
-  const url = location.origin + '/ics?address=' + encodeURIComponent(address);
-  const webcal = 'webcal://' + location.host + '/ics?address=' + encodeURIComponent(address);
+  }}
+  const url = location.origin + '/' + SLUG + '/ics?address=' + encodeURIComponent(address);
+  const webcal = 'webcal://' + location.host + '/' + SLUG + '/ics?address=' + encodeURIComponent(address);
   const gcalUrl = 'https://calendar.google.com/calendar/u/0/r?cid=' + encodeURIComponent(webcal);
   const outlookUrl = 'https://outlook.live.com/calendar/0/addfromweb?url=' +
                      encodeURIComponent(url) + '&name=' + encodeURIComponent('Sophämtning ' + address);
 
   let html = '<h2 style="font-size:1.1rem;margin:0 0 .5rem 0">' + escapeHtml(address) + '</h2>';
   html += '<div class="pickups">';
-  for (const type of keys) {
-    for (const e of data[type]) {
-      html += '<div class="pickup"><span>' + escapeHtml(type) + ' — ' + escapeHtml(e.FetchFrequency) +
-              '</span><b>' + escapeHtml(e.ExecutionDate) + ' (' + escapeHtml(e.Weekday) + ')</b></div>';
-    }
-  }
+  for (const series of data) {{
+    if (!series.entries.length) continue;
+    const next = series.entries[0];
+    const freq = series.frequency ? ' — ' + escapeHtml(series.frequency) : '';
+    html += '<div class="pickup"><span>' + escapeHtml(series.waste_type) + freq +
+            '</span><b>' + escapeHtml(next.date) + ' (' + escapeHtml(next.weekday) + ')</b></div>';
+  }}
   html += '</div>';
   html += '<label>Prenumerationslänk</label>';
   html += '<div class="url-box"><input type="text" id="ics-url" readonly value="' + escapeAttr(url) + '">';
@@ -166,18 +218,31 @@ function renderResult(address, data) {
   html += '<a href="' + escapeAttr(url) + '" download="sophamtning.ics"><button class="ghost">Ladda ner .ics</button></a>';
   html += '</div>';
   result.innerHTML = html;
-}
+}}
 
-function copyUrl() {
+function copyUrl() {{
   const el = document.getElementById('ics-url');
   el.select(); document.execCommand('copy');
+}}
+
+function escapeHtml(s) {{
+  return String(s).replace(/[&<>"']/g, c => ({{ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }}[c]));
+}}
+function escapeAttr(s) {{ return escapeHtml(s); }}
+</script>"#,
+        name = escape(name),
+        note = escape(note),
+        placeholder = escape(placeholder),
+        slug_json = serde_json::to_string(slug).unwrap_or_else(|_| "\"\"".into()),
+    ));
+    out.push_str(TAIL);
+    out
 }
 
-function escapeHtml(s) {
-  return String(s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+fn escape(s: &str) -> String {
+    s.replace('&', "&amp;")
+        .replace('<', "&lt;")
+        .replace('>', "&gt;")
+        .replace('"', "&quot;")
+        .replace('\'', "&#39;")
 }
-function escapeAttr(s) { return escapeHtml(s); }
-</script>
-</body>
-</html>
-"#;

@@ -1,22 +1,23 @@
 mod ical;
-mod svoa;
+mod providers;
 mod templates;
 
 use std::net::SocketAddr;
+use std::sync::Arc;
 
 use axum::{
-    extract::{Query, State},
+    extract::{Path, Query, State},
     http::{header, StatusCode},
     response::{Html, IntoResponse, Response},
     routing::get,
     Json, Router,
 };
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use tower_http::{compression::CompressionLayer, trace::TraceLayer};
 
 #[derive(Clone)]
 struct AppState {
-    svoa: svoa::Client,
+    registry: Arc<providers::Registry>,
 }
 
 #[tokio::main]
@@ -29,15 +30,16 @@ async fn main() {
         .init();
 
     let state = AppState {
-        svoa: svoa::Client::new(),
+        registry: Arc::new(providers::Registry::build()),
     };
 
     let app = Router::new()
         .route("/", get(index))
-        .route("/autocomplete", get(autocomplete))
-        .route("/preview", get(preview))
-        .route("/ics", get(ics))
         .route("/healthz", get(|| async { "ok" }))
+        .route("/:kommun", get(kommun_page))
+        .route("/:kommun/autocomplete", get(autocomplete))
+        .route("/:kommun/preview", get(preview))
+        .route("/:kommun/ics", get(ics))
         .with_state(state)
         .layer(CompressionLayer::new())
         .layer(TraceLayer::new_for_http());
@@ -60,8 +62,29 @@ async fn shutdown_signal() {
     let _ = tokio::signal::ctrl_c().await;
 }
 
-async fn index() -> Html<&'static str> {
-    Html(templates::INDEX_HTML)
+async fn index(State(state): State<AppState>) -> Html<String> {
+    let kommuner: Vec<(&str, &str)> = state
+        .registry
+        .iter()
+        .map(|p| (p.id(), p.name()))
+        .collect();
+    Html(templates::render_index(&kommuner))
+}
+
+async fn kommun_page(
+    State(state): State<AppState>,
+    Path(kommun): Path<String>,
+) -> Response {
+    let Some(provider) = state.registry.get(&kommun) else {
+        return (StatusCode::NOT_FOUND, "okänd kommun").into_response();
+    };
+    Html(templates::render_kommun(
+        provider.id(),
+        provider.name(),
+        provider.placeholder(),
+        provider.note(),
+    ))
+    .into_response()
 }
 
 #[derive(Deserialize)]
@@ -71,15 +94,16 @@ struct QueryParam {
 
 async fn autocomplete(
     State(state): State<AppState>,
+    Path(kommun): Path<String>,
     Query(q): Query<QueryParam>,
 ) -> Response {
-    if q.query.trim().len() < 2 {
-        return Json(Vec::<svoa::Suggestion>::new()).into_response();
-    }
-    match state.svoa.autocomplete(&q.query).await {
+    let Some(provider) = state.registry.get(&kommun) else {
+        return (StatusCode::NOT_FOUND, "okänd kommun").into_response();
+    };
+    match provider.autocomplete(&q.query).await {
         Ok(s) => Json(s).into_response(),
         Err(e) => {
-            tracing::warn!("autocomplete failed: {e}");
+            tracing::warn!("autocomplete failed for {kommun}: {e}");
             (StatusCode::BAD_GATEWAY, "upstream error").into_response()
         }
     }
@@ -90,29 +114,71 @@ struct AddressParam {
     address: String,
 }
 
+#[derive(Serialize)]
+struct PreviewEntry {
+    date: String,
+    weekday: String,
+}
+
+#[derive(Serialize)]
+struct PreviewSeries {
+    waste_type: String,
+    frequency: String,
+    entries: Vec<PreviewEntry>,
+}
+
 async fn preview(
     State(state): State<AppState>,
+    Path(kommun): Path<String>,
     Query(p): Query<AddressParam>,
 ) -> Response {
-    match state.svoa.search(&p.address).await {
-        Ok(s) => Json(s).into_response(),
+    let Some(provider) = state.registry.get(&kommun) else {
+        return (StatusCode::NOT_FOUND, "okänd kommun").into_response();
+    };
+    match provider.schedule(&p.address).await {
+        Ok(s) => {
+            let series: Vec<PreviewSeries> = s
+                .series
+                .into_iter()
+                .map(|series| PreviewSeries {
+                    waste_type: series.waste_type,
+                    frequency: series.frequency_text,
+                    entries: series
+                        .anchor
+                        .into_iter()
+                        .map(|d| PreviewEntry {
+                            date: d.format("%Y-%m-%d").to_string(),
+                            weekday: swedish_weekday(d),
+                        })
+                        .collect(),
+                })
+                .collect();
+            Json(series).into_response()
+        }
         Err(e) => {
-            tracing::warn!("preview failed: {e}");
+            tracing::warn!("preview failed for {kommun}: {e}");
             (StatusCode::BAD_GATEWAY, "upstream error").into_response()
         }
     }
 }
 
-async fn ics(State(state): State<AppState>, Query(p): Query<AddressParam>) -> Response {
-    let schedule = match state.svoa.search(&p.address).await {
+async fn ics(
+    State(state): State<AppState>,
+    Path(kommun): Path<String>,
+    Query(p): Query<AddressParam>,
+) -> Response {
+    let Some(provider) = state.registry.get(&kommun) else {
+        return (StatusCode::NOT_FOUND, "okänd kommun").into_response();
+    };
+    let schedule = match provider.schedule(&p.address).await {
         Ok(s) => s,
         Err(e) => {
-            tracing::warn!("ics fetch failed: {e}");
+            tracing::warn!("ics fetch failed for {kommun}: {e}");
             return (StatusCode::BAD_GATEWAY, "upstream error").into_response();
         }
     };
 
-    let body = ical::build_calendar(&p.address, &schedule);
+    let body = ical::build_calendar(provider.id(), &schedule);
     (
         [
             (header::CONTENT_TYPE, "text/calendar; charset=utf-8"),
@@ -128,4 +194,18 @@ async fn ics(State(state): State<AppState>, Query(p): Query<AddressParam>) -> Re
         body,
     )
         .into_response()
+}
+
+fn swedish_weekday(date: chrono::NaiveDate) -> String {
+    use chrono::Datelike;
+    match date.weekday() {
+        chrono::Weekday::Mon => "Måndag",
+        chrono::Weekday::Tue => "Tisdag",
+        chrono::Weekday::Wed => "Onsdag",
+        chrono::Weekday::Thu => "Torsdag",
+        chrono::Weekday::Fri => "Fredag",
+        chrono::Weekday::Sat => "Lördag",
+        chrono::Weekday::Sun => "Söndag",
+    }
+    .to_string()
 }
