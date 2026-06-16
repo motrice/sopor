@@ -4,7 +4,7 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Serialize;
 
-pub mod falun;
+pub mod sitevision_fetchplanner;
 pub mod stockholm;
 
 #[derive(Debug, Clone, Serialize)]
@@ -71,9 +71,36 @@ impl Registry {
             .build()
             .expect("reqwest client");
 
+        use sitevision_fetchplanner::{Config, SitevisionFetchplanner};
+
         let providers: Vec<Arc<dyn Provider>> = vec![
             Arc::new(stockholm::Stockholm::new(http.clone())),
-            Arc::new(falun::Falun::new(http)),
+            Arc::new(SitevisionFetchplanner::new(
+                http.clone(),
+                Config {
+                    id: "falun",
+                    name: "Falun",
+                    url: "https://fev.se/atervinning/sophamtning.html",
+                    portlet_id: "12.1daee82819540d202c7322ce",
+                    placeholder: "t.ex. Trotzgatan 13",
+                    note: "Sophämtningsdata från Falu Energi & Vatten. \
+                           Skriv enbart gatuadress (ingen kommun eller postnummer).",
+                    default_city: "Falun",
+                },
+            )),
+            Arc::new(SitevisionFetchplanner::new(
+                http,
+                Config {
+                    id: "ornskoldsvik",
+                    name: "Örnsköldsvik",
+                    url: "https://miva.se/kundservice/sjalvservice/sophamtning/nar-kommer-sopbilen",
+                    portlet_id: "12.5e486747177feaef88f29850",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från Miva (Örnsköldsviks kommun). \
+                           Skriv enbart gatuadress (ingen kommun eller postnummer).",
+                    default_city: "Örnsköldsvik",
+                },
+            )),
         ];
         Self { providers }
     }

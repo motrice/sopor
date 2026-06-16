@@ -1,3 +1,10 @@
+//! Generic provider for kommuner using Limepark's SiteVision FetchPlanner
+//! widget. Same data shape across deployments (`limepark.app-fetchplanner` and
+//! the older `limepark.webapp-fetchplanner`), only the URL, portlet id and
+//! kommun label differ.
+//!
+//! Confirmed deployments: Falu Energi & Vatten (Falun), Miva (Örnsköldsvik).
+
 use std::collections::{BTreeMap, HashSet};
 
 use async_trait::async_trait;
@@ -7,29 +14,37 @@ use serde::Deserialize;
 
 use super::{PickupSchedule, PickupSeries, Provider, ProviderError, Suggestion};
 
-const URL: &str = "https://fev.se/atervinning/sophamtning.html";
-const PORTLET_ID: &str = "12.1daee82819540d202c7322ce";
-
-pub struct Falun {
-    http: reqwest::Client,
+pub struct Config {
+    pub id: &'static str,
+    pub name: &'static str,
+    pub url: &'static str,
+    pub portlet_id: &'static str,
+    pub placeholder: &'static str,
+    pub note: &'static str,
+    pub default_city: &'static str,
 }
 
-impl Falun {
-    pub fn new(http: reqwest::Client) -> Self {
-        Self { http }
+pub struct SitevisionFetchplanner {
+    http: reqwest::Client,
+    cfg: Config,
+}
+
+impl SitevisionFetchplanner {
+    pub fn new(http: reqwest::Client, cfg: Config) -> Self {
+        Self { http, cfg }
     }
 
     async fn fetch_state(&self, query: &str) -> Result<InitialState, ProviderError> {
         let body = self
             .http
-            .get(URL)
+            .get(self.cfg.url)
             .query(&[("q", query)])
             .send()
             .await?
             .error_for_status()?
             .text()
             .await?;
-        extract_state(&body)
+        extract_state(&body, self.cfg.portlet_id)
     }
 }
 
@@ -47,7 +62,9 @@ struct InitialState {
 #[serde(rename_all = "PascalCase")]
 struct Hit {
     pickup_address: String,
+    #[serde(default)]
     pickup_city: String,
+    #[serde(default)]
     pickup_zip_code: String,
     content_type_name: String,
     calendars: Vec<HitCalendar>,
@@ -70,8 +87,8 @@ struct Container {
     next_pickup_date_iso: String,
 }
 
-fn extract_state(html: &str) -> Result<InitialState, ProviderError> {
-    let needle = format!("registerInitialState('{PORTLET_ID}',");
+fn extract_state(html: &str, portlet_id: &str) -> Result<InitialState, ProviderError> {
+    let needle = format!("registerInitialState('{portlet_id}',");
     let start = html
         .find(&needle)
         .ok_or_else(|| ProviderError("missing fetchplanner state".into()))?
@@ -103,24 +120,32 @@ fn titlecase_city(city: &str) -> String {
     out
 }
 
-fn format_label(addr: &str, city: &str, zip: &str) -> String {
-    format!("{addr}, {} {zip}", titlecase_city(city))
+fn format_label(addr: &str, city: &str, zip: &str, default_city: &str) -> String {
+    let city = if city.is_empty() {
+        default_city.to_string()
+    } else {
+        titlecase_city(city)
+    };
+    if zip.is_empty() {
+        format!("{addr}, {city}")
+    } else {
+        format!("{addr}, {city} {zip}")
+    }
 }
 
 #[async_trait]
-impl Provider for Falun {
+impl Provider for SitevisionFetchplanner {
     fn id(&self) -> &'static str {
-        "falun"
+        self.cfg.id
     }
     fn name(&self) -> &'static str {
-        "Falun"
+        self.cfg.name
     }
     fn placeholder(&self) -> &'static str {
-        "t.ex. Trotzgatan 13"
+        self.cfg.placeholder
     }
     fn note(&self) -> &'static str {
-        "Sophämtningsdata från Falu Energi & Vatten. Skriv enbart gatuadress (ingen \
-         kommun eller postnummer)."
+        self.cfg.note
     }
 
     async fn autocomplete(&self, query: &str) -> Result<Vec<Suggestion>, ProviderError> {
@@ -134,7 +159,12 @@ impl Provider for Falun {
         let mut seen = HashSet::new();
 
         for h in &state.hits {
-            let value = format_label(&h.pickup_address, &h.pickup_city, &h.pickup_zip_code);
+            let value = format_label(
+                &h.pickup_address,
+                &h.pickup_city,
+                &h.pickup_zip_code,
+                self.cfg.default_city,
+            );
             if seen.insert(value.clone()) {
                 suggestions.push(Suggestion { value });
             }
@@ -143,7 +173,7 @@ impl Provider for Falun {
         if suggestions.is_empty() {
             if let Some(addr) = state.address {
                 if !state.containers.is_empty() {
-                    let value = format!("{addr}, Falun");
+                    let value = format!("{addr}, {}", self.cfg.default_city);
                     suggestions.push(Suggestion { value });
                 }
             }
@@ -165,8 +195,13 @@ impl Provider for Falun {
 
         if !state.hits.is_empty() {
             for h in state.hits {
-                if !addresses_match(address, &h.pickup_address, &h.pickup_city, &h.pickup_zip_code)
-                {
+                if !addresses_match(
+                    address,
+                    &h.pickup_address,
+                    &h.pickup_city,
+                    &h.pickup_zip_code,
+                    self.cfg.default_city,
+                ) {
                     continue;
                 }
                 let entry = series_map.entry(h.content_type_name.clone()).or_default();
@@ -226,8 +261,14 @@ impl Provider for Falun {
     }
 }
 
-fn addresses_match(requested: &str, hit_addr: &str, hit_city: &str, hit_zip: &str) -> bool {
-    let normalized_hit = format_label(hit_addr, hit_city, hit_zip);
+fn addresses_match(
+    requested: &str,
+    hit_addr: &str,
+    hit_city: &str,
+    hit_zip: &str,
+    default_city: &str,
+) -> bool {
+    let normalized_hit = format_label(hit_addr, hit_city, hit_zip, default_city);
     if normalized_hit.eq_ignore_ascii_case(requested) {
         return true;
     }
