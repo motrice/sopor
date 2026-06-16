@@ -55,6 +55,8 @@ struct InitialState {
     #[serde(default)]
     containers: Vec<Container>,
     #[serde(default)]
+    trips: Vec<Trip>,
+    #[serde(default)]
     address: Option<String>,
 }
 
@@ -80,11 +82,27 @@ struct HitCalendar {
 #[serde(rename_all = "camelCase")]
 struct Container {
     type_text: String,
-    has_calendars: bool,
     #[serde(default)]
     pickup_date_iso: String,
     #[serde(default)]
     next_pickup_date_iso: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+struct Trip {
+    #[serde(default)]
+    containers: Vec<TripContainer>,
+    #[serde(default)]
+    pickup_date_iso: String,
+    #[serde(default)]
+    next_pickup_date_iso: String,
+}
+
+#[derive(Deserialize, Debug)]
+#[serde(rename_all = "camelCase")]
+struct TripContainer {
+    type_text: String,
 }
 
 fn extract_state(html: &str, portlet_id: &str) -> Result<InitialState, ProviderError> {
@@ -212,8 +230,11 @@ impl Provider for SitevisionFetchplanner {
                 }
             }
         } else {
+            // Resolved-view path: some deployments put ISO dates on the
+            // container itself (Falun), others put them on trips[] keyed by
+            // container typeText (Miva). Walk both and dedup later.
             for c in state.containers {
-                if !c.has_calendars {
+                if c.pickup_date_iso.is_empty() && c.next_pickup_date_iso.is_empty() {
                     continue;
                 }
                 let entry = series_map.entry(c.type_text.clone()).or_default();
@@ -222,6 +243,26 @@ impl Provider for SitevisionFetchplanner {
                 }
                 if let Some(d) = iso_to_local_date(&c.next_pickup_date_iso) {
                     entry.push(d);
+                }
+            }
+            for trip in state.trips {
+                let pickup = iso_to_local_date(&trip.pickup_date_iso);
+                let next = iso_to_local_date(&trip.next_pickup_date_iso);
+                if pickup.is_none() && next.is_none() {
+                    continue;
+                }
+                let mut seen_types = HashSet::new();
+                for tc in trip.containers {
+                    if !seen_types.insert(tc.type_text.clone()) {
+                        continue;
+                    }
+                    let entry = series_map.entry(tc.type_text).or_default();
+                    if let Some(d) = pickup {
+                        entry.push(d);
+                    }
+                    if let Some(d) = next {
+                        entry.push(d);
+                    }
                 }
             }
         }
