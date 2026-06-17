@@ -16,6 +16,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Örnsköldsvik | `/ornskoldsvik` | SiteVision FetchPlanner (Limepark) via Miva |
 | Malmö | `/malmo` | VA SYD (öppet POST JSON API) |
 | Burlöv | `/burlov` | VA SYD (öppet POST JSON API) |
+| Östra Göinge | `/ostra-goinge` | Indecta OnlineKalender via OGRAB |
+| Osby | `/osby` | Indecta OnlineKalender via OGRAB (samdrift) |
+| Sjöbo | `/sjobo` | Indecta OnlineKalender |
 
 ## Endpoints
 
@@ -102,10 +105,10 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Nacka | ⬜ Nora | ⬜ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
 | ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ⬜ Nybro | ⬜ Nykvarn |
 | ⬜ Nyköping | ⬜ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
-| ⬜ Orsa | ⬜ Orust | ⬜ Osby | ⬜ Oskarshamn | ⬜ Ovanåker |
+| ⬜ Orsa | ⬜ Orust | ✅ Osby | ⬜ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
 | ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ⬜ Sala |
-| ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ⬜ Simrishamn | ⬜ Sjöbo |
+| ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ⬜ Simrishamn | ✅ Sjöbo |
 | ⬜ Skara | 🔬 Skellefteå | ⬜ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ⬜ Sotenäs | ⬜ Staffanstorp | ⬜ Stenungsund | ✅ Stockholm | ⬜ Storfors |
@@ -126,7 +129,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ⬜ Älmhult |
 | ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
 | ⬜ Ödeshög | ⬜ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
-| 🔬 Österåker | ⬜ Östhammar | ⬜ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
+| 🔬 Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
 
 Status motsvarar status i kodbasen idag. 🔬 betyder att jag identifierat
 sannolik plattform via offentlig källa men inte verifierat eller byggt

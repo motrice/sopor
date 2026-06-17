@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Serialize;
 
+pub mod indecta;
 pub mod sitevision_fetchplanner;
 pub mod stockholm;
 pub mod vasyd;
@@ -121,13 +122,55 @@ impl Registry {
                 },
             )),
             Arc::new(vasyd::VaSyd::new(
-                http,
+                http.clone(),
                 vasyd::Config {
                     id: "burlov",
                     name: "Burlöv",
                     placeholder: "t.ex. Storgatan 2",
                     note: "Sophämtningsdata från VA SYD.",
                     cities: &["Arlöv", "Åkarp", "Burlöv"],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "ostra-goinge",
+                    name: "Östra Göinge",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från Östra Göinge Renhållnings AB (OGRAB).",
+                    client: "ograb",
+                    cities: &[
+                        "Broby",
+                        "Glimåkra",
+                        "Hanaskog",
+                        "Hjärsås",
+                        "Immeln",
+                        "Knislinge",
+                        "Kviinge",
+                        "Sibbhult",
+                    ],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "osby",
+                    name: "Osby",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från OGRAB (samdrift med Östra Göinge).",
+                    client: "ograb",
+                    cities: &["Osby", "Killeberg", "Lönsboda", "Visseltofta", "Hökön"],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http,
+                indecta::Config {
+                    id: "sjobo",
+                    name: "Sjöbo",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från Sjöbo kommun (Indecta-portal).",
+                    client: "sjobo",
+                    cities: &["Sjöbo", "Lövestad", "Vollsjö", "Blentarp"],
                 },
             )),
         ];
