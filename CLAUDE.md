@@ -186,10 +186,15 @@ provider rather than scaling test count for its own sake.
   exhaustively. Zero of 290 kommuner publish address-based pickup
   schedules as authorized open data. All current adapters are
   scrape-based by necessity.
-- **CGI PFU / Flex (Mina sidor-plattform)** — used by at least Vakin
-  (Umeå, Vindeln, Nordmaling — `minasidor.vakin.se`) and Stockholm
-  Vatten och Avfall (the "Mina sidor"-link on the SVOA frontend points
-  to `https://pfu.stockholmvattenochavfall.se/flex/flexservices.aspx`).
+- **CGI PFU / Flex (Mina sidor-plattform)** — confirmed customers:
+  - Vakin / UMEVA (Umeå, Vindeln, Nordmaling) at `minasidor.vakin.se`
+    — `/Environments/UMEVA/`
+  - Stockholm Vatten och Avfall — `pfu.stockholmvattenochavfall.se/
+    flex/flexservices.aspx` (visible as the "Mina sidor"-link in SVOA's
+    frontend, see session 1)
+  - Karlstads Energi — `minasidor.karlstadsenergi.se` —
+    `/Environments/KARLS/`
+
   Identifiable by the `Portal-Version` meta tag containing
   `CGI.Utility.Application.CPU.Client.Web.dll`, the `pfu_lang` cookie,
   and `/Environments/<CLIENT>/` paths in stylesheets. The portal is

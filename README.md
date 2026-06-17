@@ -115,7 +115,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | **Avfallsappen** (Bozzanova) | Kommunens sida länkar till app, mobil-API | ~50 kommuner. Lista på `avfallsappen.se`. |
 | **Renova / Göteborg Stad Kretslopp och vatten** | Mina sidor med BankID | Göteborg (publika widget saknas — bara inloggad vy). |
 | **Sysav-relaterade** | Per-kommun "Min sophämtning"-sidor | Lomma, Kävlinge, Svedala — sannolikt EDP-bakgrund. |
-| **CGI PFU / Flex** | `Portal-Version: CGI.Utility.Application.CPU.Client.Web.dll`, `pfu_lang`-cookie, `/Environments/<KLIENT>/`-paths | BankID/inloggning krävs — inga publika endpoints. Vakin (Umeå/Vindeln/Nordmaling), Stockholm Vatten och Avfall, m.fl. |
+| **CGI PFU / Flex** | `Portal-Version: CGI.Utility.Application.CPU.Client.Web.dll`, `pfu_lang`-cookie, `/Environments/<KLIENT>/`-paths | BankID/inloggning krävs — inga publika endpoints. Bekräftade kunder: Vakin (Umeå/Vindeln/Nordmaling), Stockholm Vatten och Avfall, Karlstads Energi. |
 
 ## Alla Sveriges 290 kommuner
 
