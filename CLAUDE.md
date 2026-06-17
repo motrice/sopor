@@ -186,6 +186,17 @@ provider rather than scaling test count for its own sake.
   exhaustively. Zero of 290 kommuner publish address-based pickup
   schedules as authorized open data. All current adapters are
   scrape-based by necessity.
+- **CGI PFU / Flex (Mina sidor-plattform)** — used by at least Vakin
+  (Umeå, Vindeln, Nordmaling — `minasidor.vakin.se`) and Stockholm
+  Vatten och Avfall (the "Mina sidor"-link on the SVOA frontend points
+  to `https://pfu.stockholmvattenochavfall.se/flex/flexservices.aspx`).
+  Identifiable by the `Portal-Version` meta tag containing
+  `CGI.Utility.Application.CPU.Client.Web.dll`, the `pfu_lang` cookie,
+  and `/Environments/<CLIENT>/` paths in stylesheets. The portal is
+  **BankID/login-gated** — no public autocomplete or schedule endpoint
+  found. Re-attempt only if (a) a kommun publishes a separate non-PFU
+  widget, (b) we build BankID auth support (out of scope), or
+  (c) a HACS source reverses the post-login endpoints.
 - **MSVA — Mittsverige Vatten & Avfall (Sundsvall, Timrå, Nordanstig)** —
   investigated, *not implemented*. The widget on `msva.se` is a custom
   SiteVision React app (`sv-garbageScheduleExtended`) that fetches via
