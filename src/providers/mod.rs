@@ -6,6 +6,7 @@ use serde::Serialize;
 
 pub mod sitevision_fetchplanner;
 pub mod stockholm;
+pub mod vasyd;
 
 #[derive(Debug, Clone, Serialize)]
 pub struct Suggestion {
@@ -89,7 +90,7 @@ impl Registry {
                 },
             )),
             Arc::new(SitevisionFetchplanner::new(
-                http,
+                http.clone(),
                 Config {
                     id: "ornskoldsvik",
                     name: "Örnsköldsvik",
@@ -99,6 +100,34 @@ impl Registry {
                     note: "Sophämtningsdata från Miva (Örnsköldsviks kommun). \
                            Skriv enbart gatuadress (ingen kommun eller postnummer).",
                     default_city: "Örnsköldsvik",
+                },
+            )),
+            Arc::new(vasyd::VaSyd::new(
+                http.clone(),
+                vasyd::Config {
+                    id: "malmo",
+                    name: "Malmö",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från VA SYD.",
+                    cities: &[
+                        "Malmö",
+                        "Limhamn",
+                        "Bunkeflostrand",
+                        "Vintrie",
+                        "Oxie",
+                        "Tygelsjö",
+                        "Klagshamn",
+                    ],
+                },
+            )),
+            Arc::new(vasyd::VaSyd::new(
+                http,
+                vasyd::Config {
+                    id: "burlov",
+                    name: "Burlöv",
+                    placeholder: "t.ex. Storgatan 2",
+                    note: "Sophämtningsdata från VA SYD.",
+                    cities: &["Arlöv", "Åkarp", "Burlöv"],
                 },
             )),
         ];

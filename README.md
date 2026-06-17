@@ -14,6 +14,8 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Stockholm | `/stockholm` | Stockholm Vatten och Avfall (custom) |
 | Falun | `/falun` | SiteVision FetchPlanner (Limepark) via Falu Energi & Vatten |
 | Örnsköldsvik | `/ornskoldsvik` | SiteVision FetchPlanner (Limepark) via Miva |
+| Malmö | `/malmo` | VA SYD (öppet POST JSON API) |
+| Burlöv | `/burlov` | VA SYD (öppet POST JSON API) |
 
 ## Endpoints
 
@@ -71,7 +73,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ⬜ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ⬜ Borgholm | ⬜ Borlänge | ⬜ Borås |
-| ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ⬜ Burlöv |
+| ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | 🔬 Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | 🔬 Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ⬜ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ⬜ Fagersta | ⬜ Falkenberg |
@@ -93,7 +95,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ⬜ Lessebo |
 | ⬜ Lidingö | ⬜ Lidköping | ⬜ Lilla Edet | ⬜ Lindesberg | ⬜ Linköping |
 | ⬜ Ljungby | ⬜ Ljusdal | ⬜ Ljusnarsberg | ⬜ Lomma | ⬜ Ludvika |
-| 🔬 Luleå | ⬜ Lund | ⬜ Lycksele | ⬜ Lysekil | ⬜ Malmö |
+| 🔬 Luleå | ⬜ Lund | ⬜ Lycksele | ⬜ Lysekil | ✅ Malmö |
 | ⬜ Malung-Sälen | ⬜ Malå | ⬜ Mariestad | ⬜ Mark | ⬜ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ⬜ Mullsjö |
 | ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ⬜ Mönsterås | ⬜ Mörbylånga |
