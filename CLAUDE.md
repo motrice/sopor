@@ -186,22 +186,45 @@ provider rather than scaling test count for its own sake.
   exhaustively. Zero of 290 kommuner publish address-based pickup
   schedules as authorized open data. All current adapters are
   scrape-based by necessity.
-- **CGI PFU / Flex (Mina sidor-plattform)** — confirmed customers:
-  - Vakin / UMEVA (Umeå, Vindeln, Nordmaling) at `minasidor.vakin.se`
-    — `/Environments/UMEVA/`
+- **CGI BFUS (Business For Utilities Suite)** — the Mina sidor /
+  customer portal layer of CGI's BFUS product. Product page:
+  `https://www.cgi.com/se/sv/business-for-utilities-suite` (says 70+
+  customer companies, none listed publicly). The portal is
+  ASP.NET WebForms + Knockout.js + jQuery, with WSDL/Swagger/OpenAPI
+  intentionally not exposed.
+
+  Confirmed customers:
+  - Vakin / UMEVA (Umeå, Vindeln, Nordmaling) — `minasidor.vakin.se`,
+    `/Environments/UMEVA/`
   - Stockholm Vatten och Avfall — `pfu.stockholmvattenochavfall.se/
     flex/flexservices.aspx` (visible as the "Mina sidor"-link in SVOA's
-    frontend, see session 1)
-  - Karlstads Energi — `minasidor.karlstadsenergi.se` —
+    frontend, see session 1), `/Environments/STOVA/`
+  - Karlstads Energi — `minasidor.karlstadsenergi.se`,
     `/Environments/KARLS/`
 
-  Identifiable by the `Portal-Version` meta tag containing
-  `CGI.Utility.Application.CPU.Client.Web.dll`, the `pfu_lang` cookie,
-  and `/Environments/<CLIENT>/` paths in stylesheets. The portal is
-  **BankID/login-gated** — no public autocomplete or schedule endpoint
-  found. Re-attempt only if (a) a kommun publishes a separate non-PFU
-  widget, (b) we build BankID auth support (out of scope), or
-  (c) a HACS source reverses the post-login endpoints.
+  Identification fingerprints (any one is sufficient):
+  - `Portal-Version` meta with `CGI.Utility.Application.CPU.Client.Web.dll`
+  - `pfu_lang` cookie set on first response
+  - `/Environments/<CLIENT_SLUG>/` paths in stylesheets
+
+  Verified BankID/login-gated end-to-end (session 2):
+  - Probed standard public paths (`/api/StartUp`, `/api/Tomning`,
+    `/api/Schedule`, `/swagger`, `/openapi`, `/Services/PFU.asmx?WSDL`,
+    `/Customer/*`, `/api/Public/*`, `/api/Anonym/*`) — all 404 or empty
+    catch-all 200.
+  - The only app-specific paths leaking from `site.min.js`
+    (`/api/grp2/`, `/api/subuser/`, `/api/swish/`, `/api/grp2/GenerateQr/`)
+    all return 404 without auth.
+  - CGI's product page mentions "standardiserade integrationer via
+    API:er" but only for internal case-creation — no public developer
+    docs, no third-party widgets.
+
+  **Don't re-probe.** Skip CGI BFUS entirely. Re-attempt only if
+  (a) a kommun publishes a separate non-BFUS widget, (b) we build
+  BankID/Freja auth support (separate project, brushes against
+  personuppgifter), or (c) a HACS source reverses the post-login
+  endpoints. Direct contact: Lasse Andersson, lar.andersson@cgi.com
+  (BFUS product manager).
 - **MSVA — Mittsverige Vatten & Avfall (Sundsvall, Timrå, Nordanstig)** —
   investigated, *not implemented*. The widget on `msva.se` is a custom
   SiteVision React app (`sv-garbageScheduleExtended`) that fetches via
