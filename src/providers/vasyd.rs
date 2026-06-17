@@ -205,3 +205,70 @@ fn parse_va_syd_interval(freq: &str) -> Option<u32> {
     }
     None
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    fn cfg() -> Config {
+        Config {
+            id: "test",
+            name: "Test",
+            placeholder: "",
+            note: "",
+            cities: &["Malmö", "Limhamn"],
+        }
+    }
+
+    fn provider() -> VaSyd {
+        VaSyd::new(reqwest::Client::new(), cfg())
+    }
+
+    #[test]
+    fn interval_parsing() {
+        assert_eq!(parse_va_syd_interval("Onsdag varje vecka"), Some(1));
+        assert_eq!(parse_va_syd_interval("Måndag varje vecka"), Some(1));
+        // Two weekdays per week — single weekly anchor would miss the other day.
+        assert_eq!(parse_va_syd_interval("Måndag, torsdag varje vecka"), None);
+        // Absolute week — unclear cadence.
+        assert_eq!(parse_va_syd_interval("Måndag Vecka 30"), None);
+        assert_eq!(parse_va_syd_interval(""), None);
+    }
+
+    #[test]
+    fn city_filter_includes_known_localities() {
+        let p = provider();
+        assert!(p.matches_city("Storgatan 1, Malmö"));
+        assert!(p.matches_city("Limhamnsvägen 5, Limhamn"));
+        assert!(!p.matches_city("Storgatan 2, Arlöv"));
+        assert!(!p.matches_city("Hornsgatan 1, Stockholm"));
+    }
+
+    #[test]
+    fn typeahead_response_deserializes() {
+        let json = r#"{"query":"Storgatan","items":[
+            {"street":"Storgatan 1, Malmö","id":"185904"},
+            {"street":"Storgatan 2, Arlöv","id":"131172"}
+        ],"meta":{"success":true,"message":null}}"#;
+        let resp: TypeaheadResp = serde_json::from_str(json).unwrap();
+        assert_eq!(resp.items.len(), 2);
+        assert_eq!(resp.items[0].id, "185904");
+        assert_eq!(resp.items[1].street, "Storgatan 2, Arlöv");
+    }
+
+    #[test]
+    fn search_response_deserializes() {
+        let json = r#"{"items":[
+            {"address":"Storgatan 1, Malmö","wasteType":"Restavfall",
+             "wastePickupFrequency":"Måndag, torsdag varje vecka",
+             "nextWastePickup":"2026-06-18"},
+            {"address":"Storgatan 1, Malmö","wasteType":"Glasförp.färg",
+             "wastePickupFrequency":"Måndag Vecka 30",
+             "nextWastePickup":"2026-07-20"}
+        ],"meta":{"success":true,"message":null}}"#;
+        let resp: SearchResp = serde_json::from_str(json).unwrap();
+        assert_eq!(resp.items.len(), 2);
+        assert_eq!(resp.items[0].waste_type, "Restavfall");
+        assert_eq!(resp.items[1].next_waste_pickup, "2026-07-20");
+    }
+}

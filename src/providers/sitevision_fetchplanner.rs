@@ -208,97 +208,100 @@ impl Provider for SitevisionFetchplanner {
             .trim()
             .to_string();
         let state = self.fetch_state(&street_part).await?;
+        Ok(build_schedule(state, address, self.cfg.default_city))
+    }
+}
 
-        let mut series_map: BTreeMap<String, Vec<NaiveDate>> = BTreeMap::new();
+fn build_schedule(state: InitialState, address: &str, default_city: &str) -> PickupSchedule {
+    let mut series_map: BTreeMap<String, Vec<NaiveDate>> = BTreeMap::new();
 
-        if !state.hits.is_empty() {
-            for h in state.hits {
-                if !addresses_match(
-                    address,
-                    &h.pickup_address,
-                    &h.pickup_city,
-                    &h.pickup_zip_code,
-                    self.cfg.default_city,
-                ) {
-                    continue;
-                }
-                let entry = series_map.entry(h.content_type_name.clone()).or_default();
-                for cal in h.calendars {
-                    if let Some(d) = iso_to_local_date(&cal.execution_date) {
-                        entry.push(d);
-                    }
-                }
+    if !state.hits.is_empty() {
+        for h in state.hits {
+            if !addresses_match(
+                address,
+                &h.pickup_address,
+                &h.pickup_city,
+                &h.pickup_zip_code,
+                default_city,
+            ) {
+                continue;
             }
-        } else {
-            // Resolved-view path: some deployments put ISO dates on the
-            // container itself (Falun), others put them on trips[] keyed by
-            // container typeText (Miva). Walk both and dedup later.
-            for c in state.containers {
-                if c.pickup_date_iso.is_empty() && c.next_pickup_date_iso.is_empty() {
-                    continue;
-                }
-                let entry = series_map.entry(c.type_text.clone()).or_default();
-                if let Some(d) = iso_to_local_date(&c.pickup_date_iso) {
+            let entry = series_map.entry(h.content_type_name.clone()).or_default();
+            for cal in h.calendars {
+                if let Some(d) = iso_to_local_date(&cal.execution_date) {
                     entry.push(d);
-                }
-                if let Some(d) = iso_to_local_date(&c.next_pickup_date_iso) {
-                    entry.push(d);
-                }
-            }
-            for trip in state.trips {
-                let pickup = iso_to_local_date(&trip.pickup_date_iso);
-                let next = iso_to_local_date(&trip.next_pickup_date_iso);
-                if pickup.is_none() && next.is_none() {
-                    continue;
-                }
-                let mut seen_types = HashSet::new();
-                for tc in trip.containers {
-                    if !seen_types.insert(tc.type_text.clone()) {
-                        continue;
-                    }
-                    let entry = series_map.entry(tc.type_text).or_default();
-                    if let Some(d) = pickup {
-                        entry.push(d);
-                    }
-                    if let Some(d) = next {
-                        entry.push(d);
-                    }
                 }
             }
         }
-
-        let mut series = Vec::new();
-        for (waste_type, mut dates) in series_map {
-            dates.sort();
-            dates.dedup();
-            let interval = if dates.len() >= 2 {
-                let gap = (dates[1] - dates[0]).num_days();
-                if gap > 0 && gap % 7 == 0 {
-                    Some((gap / 7) as u32)
-                } else {
-                    None
+    } else {
+        // Resolved-view path: some deployments put ISO dates on the
+        // container itself (Falun), others put them on trips[] keyed by
+        // container typeText (Miva). Walk both and dedup later.
+        for c in state.containers {
+            if c.pickup_date_iso.is_empty() && c.next_pickup_date_iso.is_empty() {
+                continue;
+            }
+            let entry = series_map.entry(c.type_text.clone()).or_default();
+            if let Some(d) = iso_to_local_date(&c.pickup_date_iso) {
+                entry.push(d);
+            }
+            if let Some(d) = iso_to_local_date(&c.next_pickup_date_iso) {
+                entry.push(d);
+            }
+        }
+        for trip in state.trips {
+            let pickup = iso_to_local_date(&trip.pickup_date_iso);
+            let next = iso_to_local_date(&trip.next_pickup_date_iso);
+            if pickup.is_none() && next.is_none() {
+                continue;
+            }
+            let mut seen_types = HashSet::new();
+            for tc in trip.containers {
+                if !seen_types.insert(tc.type_text.clone()) {
+                    continue;
                 }
+                let entry = series_map.entry(tc.type_text).or_default();
+                if let Some(d) = pickup {
+                    entry.push(d);
+                }
+                if let Some(d) = next {
+                    entry.push(d);
+                }
+            }
+        }
+    }
+
+    let mut series = Vec::new();
+    for (waste_type, mut dates) in series_map {
+        dates.sort();
+        dates.dedup();
+        let interval = if dates.len() >= 2 {
+            let gap = (dates[1] - dates[0]).num_days();
+            if gap > 0 && gap % 7 == 0 {
+                Some((gap / 7) as u32)
             } else {
                 None
-            };
-            let frequency_text = match interval {
-                Some(1) => "Varje vecka".to_string(),
-                Some(2) => "Varannan vecka".to_string(),
-                Some(n) => format!("Var {n}:e vecka"),
-                None => String::new(),
-            };
-            series.push(PickupSeries {
-                waste_type,
-                frequency_text,
-                interval_weeks: None,
-                anchor: dates,
-            });
-        }
+            }
+        } else {
+            None
+        };
+        let frequency_text = match interval {
+            Some(1) => "Varje vecka".to_string(),
+            Some(2) => "Varannan vecka".to_string(),
+            Some(n) => format!("Var {n}:e vecka"),
+            None => String::new(),
+        };
+        series.push(PickupSeries {
+            waste_type,
+            frequency_text,
+            interval_weeks: None,
+            anchor: dates,
+        });
+    }
 
-        Ok(PickupSchedule {
-            address: address.to_string(),
-            series,
-        })
+    PickupSchedule {
+        address: address.to_string(),
+        series,
     }
 }
 
@@ -315,4 +318,133 @@ fn addresses_match(
     }
     let req_street = requested.split(',').next().unwrap_or(requested).trim();
     req_street.eq_ignore_ascii_case(hit_addr)
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    const PORTLET: &str = "12.test";
+
+    fn html_with(json: &str) -> String {
+        format!(
+            "<html><body><script>AppRegistry.registerInitialState('{PORTLET}',{json});</script></body></html>"
+        )
+    }
+
+    #[test]
+    fn extract_state_finds_payload() {
+        let html = html_with(r#"{"hits":[],"containers":[],"address":"X"}"#);
+        let state = extract_state(&html, PORTLET).unwrap();
+        assert_eq!(state.address.as_deref(), Some("X"));
+    }
+
+    #[test]
+    fn extract_state_missing_portlet_errors() {
+        let err = extract_state("<html></html>", PORTLET).unwrap_err();
+        assert!(err.0.contains("missing fetchplanner state"));
+    }
+
+    #[test]
+    fn falun_hits_mode_extracts_calendars_per_address() {
+        // Mimics Falun (FEV): hits[] with PickupAddress, ContentTypeName and Calendars.
+        let state: InitialState = serde_json::from_str(
+            r#"{"hits":[
+                {"PickupAddress":"Olovslundsvägen 9","PickupCity":"BROMMA","PickupZipCode":"16772",
+                 "ContentTypeName":"Restavfall","Calendars":[
+                    {"ExecutionDate":"2026-06-16T22:00:00.000Z"},
+                    {"ExecutionDate":"2026-06-30T22:00:00.000Z"}
+                 ]},
+                {"PickupAddress":"Olovslundsvägen 11","PickupCity":"BROMMA","PickupZipCode":"16772",
+                 "ContentTypeName":"Restavfall","Calendars":[
+                    {"ExecutionDate":"2026-06-16T22:00:00.000Z"}
+                 ]}
+            ]}"#,
+        )
+        .unwrap();
+
+        let schedule = build_schedule(state, "Olovslundsvägen 9, Bromma 16772", "Falun");
+        assert_eq!(schedule.series.len(), 1);
+        let rest = &schedule.series[0];
+        assert_eq!(rest.waste_type, "Restavfall");
+        // UTC 22:00 → Europe/Stockholm next day (CEST = UTC+2)
+        assert_eq!(
+            rest.anchor,
+            vec![
+                NaiveDate::from_ymd_opt(2026, 6, 17).unwrap(),
+                NaiveDate::from_ymd_opt(2026, 7, 1).unwrap()
+            ]
+        );
+        assert_eq!(rest.frequency_text, "Varannan vecka");
+    }
+
+    #[test]
+    fn falun_containers_mode_uses_iso_on_container() {
+        // FEV's resolved view puts pickupDateIso directly on each container.
+        let state: InitialState = serde_json::from_str(
+            r#"{"containers":[
+                {"typeText":"Matavfall","pickupDateIso":"2026-06-16T22:00:00.000Z",
+                 "nextPickupDateIso":"2026-06-23T22:00:00.000Z"}
+            ]}"#,
+        )
+        .unwrap();
+        let schedule = build_schedule(state, "Trotzgatan 13, Falun 79171", "Falun");
+        assert_eq!(schedule.series.len(), 1);
+        assert_eq!(schedule.series[0].waste_type, "Matavfall");
+        assert_eq!(schedule.series[0].anchor.len(), 2);
+        assert_eq!(schedule.series[0].frequency_text, "Varje vecka");
+    }
+
+    #[test]
+    fn miva_trips_mode_resolves_dates_via_trips() {
+        // Miva's resolved view: containers lack ISO; trips[] carries the dates
+        // and links back to containers by typeText.
+        let state: InitialState = serde_json::from_str(
+            r#"{"containers":[
+                {"typeText":"Restavfall"},{"typeText":"Matavfall"}
+            ],"trips":[
+                {"containers":[{"typeText":"Restavfall"},{"typeText":"Matavfall"}],
+                 "pickupDateIso":"2026-06-22T22:00:00.000Z",
+                 "nextPickupDateIso":"2026-07-06T22:00:00.000Z"}
+            ]}"#,
+        )
+        .unwrap();
+        let schedule = build_schedule(state, "Storgatan 10, Örnsköldsvik 89164", "Örnsköldsvik");
+        assert_eq!(schedule.series.len(), 2);
+        for s in &schedule.series {
+            assert_eq!(
+                s.anchor,
+                vec![
+                    NaiveDate::from_ymd_opt(2026, 6, 23).unwrap(),
+                    NaiveDate::from_ymd_opt(2026, 7, 7).unwrap()
+                ]
+            );
+            assert_eq!(s.frequency_text, "Varannan vecka");
+        }
+    }
+
+    #[test]
+    fn addresses_match_handles_normalized_and_street_only() {
+        assert!(addresses_match(
+            "Olovslundsvägen 9, Bromma 16772",
+            "Olovslundsvägen 9",
+            "BROMMA",
+            "16772",
+            "Stockholm"
+        ));
+        assert!(addresses_match(
+            "Olovslundsvägen 9",
+            "Olovslundsvägen 9",
+            "BROMMA",
+            "16772",
+            "Stockholm"
+        ));
+        assert!(!addresses_match(
+            "Olovslundsvägen 9",
+            "Olovslundsvägen 11",
+            "BROMMA",
+            "16772",
+            "Stockholm"
+        ));
+    }
 }

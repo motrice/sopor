@@ -73,38 +73,40 @@ impl Provider for Stockholm {
 
     async fn schedule(&self, address: &str) -> Result<PickupSchedule, ProviderError> {
         let url = format!("{BASE}/Search");
-        let raw: BTreeMap<String, Vec<SvoaEntry>> = self
+        let json = self
             .http
             .get(url)
             .query(&[("address", address)])
             .send()
             .await?
             .error_for_status()?
-            .json()
+            .text()
             .await?;
-
-        let mut series = Vec::new();
-        for (waste_type, entries) in raw {
-            for entry in entries {
-                let Some(date) =
-                    NaiveDate::parse_from_str(&entry.execution_date, "%Y-%m-%d").ok()
-                else {
-                    continue;
-                };
-                series.push(PickupSeries {
-                    waste_type: waste_type.clone(),
-                    frequency_text: entry.fetch_frequency.clone(),
-                    interval_weeks: parse_interval_weeks(&entry.fetch_frequency),
-                    anchor: vec![date],
-                });
-            }
-        }
-
-        Ok(PickupSchedule {
-            address: address.to_string(),
-            series,
-        })
+        parse_schedule(&json, address)
     }
+}
+
+fn parse_schedule(json: &str, address: &str) -> Result<PickupSchedule, ProviderError> {
+    let raw: BTreeMap<String, Vec<SvoaEntry>> = serde_json::from_str(json)?;
+    let mut series = Vec::new();
+    for (waste_type, entries) in raw {
+        for entry in entries {
+            let Some(date) = NaiveDate::parse_from_str(&entry.execution_date, "%Y-%m-%d").ok()
+            else {
+                continue;
+            };
+            series.push(PickupSeries {
+                waste_type: waste_type.clone(),
+                frequency_text: entry.fetch_frequency.clone(),
+                interval_weeks: parse_interval_weeks(&entry.fetch_frequency),
+                anchor: vec![date],
+            });
+        }
+    }
+    Ok(PickupSchedule {
+        address: address.to_string(),
+        series,
+    })
 }
 
 fn parse_interval_weeks(freq: &str) -> Option<u32> {
@@ -124,4 +126,42 @@ fn parse_interval_weeks(freq: &str) -> Option<u32> {
         return digits.parse().ok();
     }
     None
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn parses_known_frequencies() {
+        assert_eq!(parse_interval_weeks("Varje vecka"), Some(1));
+        assert_eq!(parse_interval_weeks("Varannan vecka"), Some(2));
+        assert_eq!(parse_interval_weeks("Var 4:e vecka"), Some(4));
+        assert_eq!(parse_interval_weeks("Var 8:e vecka"), Some(8));
+        assert_eq!(parse_interval_weeks("Okänt format"), None);
+    }
+
+    #[test]
+    fn parses_villa_schedule() {
+        let json = r#"{
+            "Matavfall, villa":[{"FetchFrequency":"Varannan vecka","ExecutionDate":"2026-06-30","Weekday":"Tisdag"}],
+            "Restavfall, villa":[{"FetchFrequency":"Var 4:e vecka","ExecutionDate":"2026-06-30","Weekday":"Tisdag"}]
+        }"#;
+        let schedule = parse_schedule(json, "Olovslundsvägen 9, Bromma, 167 72").unwrap();
+        assert_eq!(schedule.address, "Olovslundsvägen 9, Bromma, 167 72");
+        assert_eq!(schedule.series.len(), 2);
+        let mat = schedule
+            .series
+            .iter()
+            .find(|s| s.waste_type == "Matavfall, villa")
+            .expect("matavfall");
+        assert_eq!(mat.interval_weeks, Some(2));
+        assert_eq!(mat.anchor, vec![NaiveDate::from_ymd_opt(2026, 6, 30).unwrap()]);
+    }
+
+    #[test]
+    fn empty_response_yields_no_series() {
+        let schedule = parse_schedule("{}", "Hornsgatan 1, Stockholm").unwrap();
+        assert!(schedule.series.is_empty());
+    }
 }

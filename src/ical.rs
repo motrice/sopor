@@ -169,6 +169,97 @@ fn escape_text(s: &str) -> String {
         .replace(',', "\\,")
 }
 
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::providers::{PickupSchedule, PickupSeries};
+
+    fn schedule_recurring() -> PickupSchedule {
+        PickupSchedule {
+            address: "Olovslundsvägen 9, Bromma, 167 72".into(),
+            series: vec![PickupSeries {
+                waste_type: "Restavfall".into(),
+                frequency_text: "Var 4:e vecka".into(),
+                interval_weeks: Some(4),
+                anchor: vec![NaiveDate::from_ymd_opt(2026, 6, 30).unwrap()],
+            }],
+        }
+    }
+
+    fn schedule_explicit() -> PickupSchedule {
+        PickupSchedule {
+            address: "Trotzgatan 13, Falun 79171".into(),
+            series: vec![PickupSeries {
+                waste_type: "Matavfall".into(),
+                frequency_text: "Varje vecka".into(),
+                interval_weeks: None,
+                anchor: vec![
+                    NaiveDate::from_ymd_opt(2026, 6, 17).unwrap(),
+                    NaiveDate::from_ymd_opt(2026, 6, 24).unwrap(),
+                ],
+            }],
+        }
+    }
+
+    fn count(haystack: &str, needle: &str) -> usize {
+        haystack.matches(needle).count()
+    }
+
+    #[test]
+    fn recurring_emits_single_vevent_with_rrule() {
+        let cal = build_calendar("stockholm", &schedule_recurring());
+        assert!(cal.starts_with("BEGIN:VCALENDAR\r\n"));
+        assert!(cal.contains("END:VCALENDAR\r\n"));
+        assert_eq!(count(&cal, "BEGIN:VEVENT"), 1);
+        assert!(cal.contains("DTSTART;VALUE=DATE:20260630"));
+        assert!(cal.contains("DTEND;VALUE=DATE:20260701"));
+        assert!(cal.contains("RRULE:FREQ=WEEKLY;INTERVAL=4;COUNT=14"));
+        assert!(cal.contains("BEGIN:VALARM"));
+        assert!(cal.contains("TRIGGER:-PT6H"));
+    }
+
+    #[test]
+    fn explicit_dates_emit_one_vevent_each_without_rrule() {
+        let cal = build_calendar("falun", &schedule_explicit());
+        assert_eq!(count(&cal, "BEGIN:VEVENT"), 2);
+        assert!(cal.contains("DTSTART;VALUE=DATE:20260617"));
+        assert!(cal.contains("DTSTART;VALUE=DATE:20260624"));
+        assert!(!cal.contains("RRULE:"));
+    }
+
+    #[test]
+    fn explicit_dates_get_distinct_uids() {
+        let cal = build_calendar("falun", &schedule_explicit());
+        let uids: Vec<&str> = cal
+            .lines()
+            .filter_map(|l| l.strip_prefix("UID:"))
+            .collect();
+        assert_eq!(uids.len(), 2);
+        assert_ne!(uids[0], uids[1]);
+    }
+
+    #[test]
+    fn kommun_id_changes_uid() {
+        let a = build_calendar("a", &schedule_recurring());
+        let b = build_calendar("b", &schedule_recurring());
+        let uid_of = |cal: &str| {
+            cal.lines()
+                .find_map(|l| l.strip_prefix("UID:"))
+                .unwrap()
+                .to_string()
+        };
+        assert_ne!(uid_of(&a), uid_of(&b));
+    }
+
+    #[test]
+    fn special_characters_in_summary_get_escaped() {
+        let mut sched = schedule_recurring();
+        sched.series[0].waste_type = "Matavfall, villa".into();
+        let cal = build_calendar("stockholm", &sched);
+        assert!(cal.contains("SUMMARY:Sophämtning: Matavfall\\, villa"));
+    }
+}
+
 fn fold(line: &str) -> String {
     let mut out = String::new();
     let bytes = line.as_bytes();
