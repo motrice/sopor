@@ -63,12 +63,27 @@ async fn shutdown_signal() {
 }
 
 async fn index(State(state): State<AppState>) -> Html<String> {
-    let kommuner: Vec<(&str, &str)> = state
+    let mut kommuner: Vec<(&str, &str)> = state
         .registry
         .iter()
         .map(|p| (p.id(), p.name()))
         .collect();
+    // Swedish alphabetical order: a–z, then å, ä, ö. Plain Unicode order
+    // gives ä < å (codepoint 228 vs 229) which is wrong for Swedish.
+    kommuner.sort_by_cached_key(|(_, name)| swedish_sort_key(name));
     Html(templates::render_index(&kommuner))
+}
+
+fn swedish_sort_key(name: &str) -> Vec<u32> {
+    name.chars()
+        .flat_map(|c| c.to_lowercase())
+        .map(|c| match c {
+            'å' => 0x10000,
+            'ä' => 0x10001,
+            'ö' => 0x10002,
+            other => other as u32,
+        })
+        .collect()
 }
 
 async fn kommun_page(
