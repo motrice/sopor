@@ -10,6 +10,7 @@ pub mod indecta;
 pub mod roslagsvatten;
 pub mod sitevision_fetchplanner;
 pub mod stockholm;
+pub mod sundsvall;
 pub mod vasyd;
 
 #[derive(Debug, Clone, Serialize)]
@@ -559,12 +560,19 @@ impl Registry {
             }),
         ];
 
+        // Sundsvall — official CC0 open-data dataset published on
+        // dataportal.se (61_6752). Single-kommun provider with an
+        // in-memory cache refreshed every 12 h.
+        let sundsvall_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(sundsvall::Sundsvall::new(http.clone()))];
+
         Self {
             providers: providers
                 .into_iter()
                 .chain(edp_providers.into_iter())
                 .chain(roslagsvatten_providers.into_iter())
                 .chain(exde_providers.into_iter())
+                .chain(sundsvall_providers.into_iter())
                 .collect(),
         }
     }

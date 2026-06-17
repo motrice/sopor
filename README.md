@@ -69,6 +69,7 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Täby | `/taby` | EXDE Systems Mina sidor |
 | Simrishamn | `/simrishamn` | EXDE Systems via Ökrab (samdrift) |
 | Tomelilla | `/tomelilla` | EXDE Systems via Ökrab (samdrift) |
+| Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
 
 ## Endpoints
 
@@ -164,7 +165,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
 | ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
-| ⬜ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ⬜ Svedala |
+| ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ⬜ Svedala |
 | ⬜ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ⬜ Tibro |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |

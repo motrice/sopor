@@ -182,10 +182,14 @@ provider rather than scaling test count for its own sake.
   register/bind dance. Schema drifts per tenant. Decided against until
   there's a clear authorization story. HACS reference impl exists at
   `mampfes/hacs_waste_collection_schedule`.
-- **Open data portals (dataportal.se, kommun ArcGIS hubs)** — checked
-  exhaustively. Zero of 290 kommuner publish address-based pickup
-  schedules as authorized open data. All current adapters are
-  scrape-based by necessity.
+- **Open data portals (dataportal.se, kommun ArcGIS hubs)** — initially
+  scanned and concluded "0 of 290" published open pickup data. That
+  conclusion was wrong — **Sundsvall publishes the entire dataset as
+  CC0** at `https://api.sundsvall.se/Garbage/2281/schedules` (DCAT
+  metadata as dataset `61_6752` on dataportal.se, OpenAPI 3.1 at
+  `/Garbage/api-docs`). Now implemented as `providers/sundsvall.rs`.
+  Lesson for future kommun-investigations: **search dataportal.se by
+  the kommun name** before declaring scrape the only option.
 - **CGI BFUS (Business For Utilities Suite)** — the Mina sidor /
   customer portal layer of CGI's BFUS product. Product page:
   `https://www.cgi.com/se/sv/business-for-utilities-suite` (says 70+
@@ -231,24 +235,15 @@ provider rather than scaling test count for its own sake.
   endpoints. Direct contact: Lasse Andersson, lar.andersson@cgi.com
   (BFUS product manager).
 - **MSVA — Mittsverige Vatten & Avfall (Sundsvall, Timrå, Nordanstig)** —
-  investigated, *not implemented*. The widget on `msva.se` is a custom
-  SiteVision React app (`sv-garbageScheduleExtended`) that fetches via
-  `getUrl("/allAddresses")`. The actual REST URL path is determined by
-  the SiteVision SDK at runtime from the deployed app's registered
-  name, which I could not discover by enumeration (probed
-  `/rest-api/<webapp-id>`, `/rest-api/garbageScheduleExtended`,
-  `/rest-api/sv-garbageScheduleExtended`, several plausible app-name
-  guesses — all return `{"success":false,"type":"invalidParameter",
-  "message":"No RestApp found for ..."}`). The HACS reference uses
-  `https://api.sundsvall.se/Garbage/2281/schedules?street=...&
-  houseNumber=...&postalCode=...&city=...` directly, which works but
-  requires the user to enter postal code (and only covers kommunkod
-  2281 = Sundsvall, not the other MSVA members). Re-attempt either by:
-  (a) finding a postal-code-from-street source for Sundsvall and
-  proxying via api.sundsvall.se, (b) building a special form variant
-  for MSVA that asks for postal code explicitly, or (c) discovering
-  the SiteVision RestApp name via either a SiteVision admin login or
-  observing the actual XHR via a browser DevTools session.
+  ~~previously marked as not implemented~~. **Sundsvall is now
+  supported via official open data** (see `providers/sundsvall.rs` and
+  the open-data-portals note above). The original session-2 dead-end
+  was real for Timrå and Nordanstig — the open dataset is keyed by
+  `municipalityId=2281` (Sundsvall only). The MSVA SiteVision widget
+  fronting `getUrl("/allAddresses")` remains unreachable without
+  knowing the deployed RestApp name, but we no longer need it for
+  Sundsvall. Timrå (kommunkod 2262) and Nordanstig (2132) are still
+  not covered.
 
 ## Deployment
 
