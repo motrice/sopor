@@ -5,6 +5,7 @@ use chrono::NaiveDate;
 use serde::Serialize;
 
 pub mod edp_future;
+pub mod exde;
 pub mod indecta;
 pub mod roslagsvatten;
 pub mod sitevision_fetchplanner;
@@ -517,11 +518,53 @@ impl Registry {
             }),
         ];
 
+        // EXDE Systems Mina sidor — Danderyd, Täby (Azure-hosted),
+        // Simrishamn + Tomelilla (via Ökrab, shared backend).
+        let exde = |cfg: exde::Config| -> Arc<dyn Provider> {
+            Arc::new(exde::Exde::new(http.clone(), cfg))
+        };
+        let exde_note = "Sophämtningsdata via EXDE Systems Mina sidor.";
+        let okrab = "https://minasidor.okrab.se/MinaSidor_API/api/external";
+        let exde_providers: Vec<Arc<dyn Provider>> = vec![
+            exde(exde::Config {
+                id: "danderyd", name: "Danderyd",
+                placeholder: "t.ex. Mörbyvägen 1", note: exde_note,
+                api_url: "https://minasidor-danderyd-az.exdesystems.se/api/api/external",
+                cities: None,
+            }),
+            exde(exde::Config {
+                id: "taby", name: "Täby",
+                placeholder: "t.ex. Marknadsvägen 1", note: exde_note,
+                api_url: "https://minasidor-taby-az.exdesystems.se/api/api/external",
+                cities: None,
+            }),
+            exde(exde::Config {
+                id: "simrishamn", name: "Simrishamn",
+                placeholder: "t.ex. Storgatan 1", note: exde_note,
+                api_url: okrab,
+                cities: Some(&[
+                    "SIMRISHAMN", "KIVIK", "SKILLINGE", "GISLÖV", "HAMMENHÖG",
+                    "S:T OLOF", "GÄRSNÄS", "Ö TOMMARP", "TOMMARP", "BRANTEVIK",
+                    "BORRBY", "VITABY", "RÖRUM",
+                ]),
+            }),
+            exde(exde::Config {
+                id: "tomelilla", name: "Tomelilla",
+                placeholder: "t.ex. Storgatan 1", note: exde_note,
+                api_url: okrab,
+                cities: Some(&[
+                    "TOMELILLA", "TOMELILLLA", "SMEDSTORP", "BRÖSARP",
+                    "ONSLUNDA", "LÖVESTAD", "RAMSÅSA", "TJUSTORP", "ANDRARUM",
+                ]),
+            }),
+        ];
+
         Self {
             providers: providers
                 .into_iter()
                 .chain(edp_providers.into_iter())
                 .chain(roslagsvatten_providers.into_iter())
+                .chain(exde_providers.into_iter())
                 .collect(),
         }
     }

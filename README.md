@@ -65,6 +65,10 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Ekerö | `/ekero` | Roslagsvatten (Drupal-widget) |
 | Vaxholm | `/vaxholm` | Roslagsvatten (Drupal-widget) |
 | Österåker | `/osteraker` | Roslagsvatten (Drupal-widget) |
+| Danderyd | `/danderyd` | EXDE Systems Mina sidor |
+| Täby | `/taby` | EXDE Systems Mina sidor |
+| Simrishamn | `/simrishamn` | EXDE Systems via Ökrab (samdrift) |
+| Tomelilla | `/tomelilla` | EXDE Systems via Ökrab (samdrift) |
 
 ## Endpoints
 
@@ -123,7 +127,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
 | ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
-| 🔬 Båstad | ⬜ Dals-Ed | 🔬 Danderyd | ⬜ Degerfors | ⬜ Dorotea |
+| 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ✅ Fagersta | ⬜ Falkenberg |
 | ⬜ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
@@ -154,7 +158,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
 | ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ✅ Sala |
-| ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ⬜ Simrishamn | ✅ Sjöbo |
+| ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
 | ⬜ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
@@ -163,8 +167,8 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ⬜ Tibro |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
-| ⬜ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
-| ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ⬜ Täby |
+| ✅ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
+| ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
 | ⬜ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
 | ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ⬜ Vara | ⬜ Varberg |
