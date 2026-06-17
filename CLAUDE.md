@@ -19,16 +19,21 @@ running coverage table.
 
 ```
 src/
-  main.rs              Axum routing, handlers. Routes are /:kommun/{autocomplete,preview,ics}.
+  main.rs              Axum routing, handlers, swedish_sort_key for landing list.
   templates.rs         Inline-rendered HTML (no template engine). render_index + render_kommun.
   ical.rs              VCALENDAR generation. Two emission modes (see below).
   providers/
     mod.rs             Provider trait, normalized types, Registry::build (where new kommuner get wired in).
     stockholm.rs       SVOA custom JSON.
-    sitevision_fetchplanner.rs   Limepark widget; multi-tenant by Config.
+    sitevision_fetchplanner.rs   Limepark widget (Falun, Örnsköldsvik); multi-tenant by Config.
     vasyd.rs           Malmö+Burlöv; open POST JSON; multi-tenant by city allow-list.
-    indecta.rs         OGRAB+Sjöbo; PHP/Latin-1; HTML grid parser.
+    indecta.rs         OGRAB (Östra Göinge, Osby) + Sjöbo; PHP 5.4/Latin-1; HTML grid parser.
+    edp_future.rs      Skellefteå + 42 more (Vafab, SSAM, Kretslopp Sydost, Remondis, NVOA, etc.).
+                       Open POST JSON; needs explicit Content-Length: 0 header on IIS.
+    roslagsvatten.rs   Ekerö, Vaxholm, Österåker. Drupal AJAX-array with embedded HTML fragments.
 ```
+
+Current coverage: 54 kommun-routes (alphabetically sorted on landing, Swedish å<ä<ö order).
 
 ## Core abstractions
 
@@ -60,6 +65,13 @@ Existing platforms with multi-tenant configs:
 - `VaSyd` (Malmö, Burlöv) — VA SYD's POST JSON API on `vasyd.se`.
 - `Indecta` (Östra Göinge, Osby, Sjöbo) — for sites embedding the
   `webbservice.indecta.se/kunder/<client>/` iframe.
+- `EdpFuture` (43 kommuner) — for any deployment of EDP
+  `/FutureWeb/SimpleWastePickup` (also `EDPFutureWeb`, `FutureWebBasic`,
+  `FutureWebOS`, etc.). One Config per kommun-route; multi-kommun bolag
+  (SSAM, Vafab Miljö, Kretslopp Sydost, Remondis) use a `cities`
+  allow-list to filter the shared upstream.
+- `Roslagsvatten` (Ekerö, Vaxholm, Österåker) — `/schedule/search` +
+  `/schedule/fetch` POST JSON, returns Drupal AJAX-array.
 
 When adding via existing provider, all you usually need is a `Config`
 literal in `Registry::build`. New platform = new file under
@@ -90,6 +102,27 @@ literal in `Registry::build`. New platform = new file under
   across deployments — keep the parser permissive. HTML calendar is
   a 12-month grid; we walk months by `styleMonthName` headers and pick
   up days via the `class="styleDayHit"` + `dagMedTomClass<code>` pair.
+- **EdpFuture** — IIS returns 411 Length Required if the POST has
+  empty body without `Content-Length: 0` header (reqwest defaults to
+  chunked transfer encoding for empty bodies). Always set it explicitly.
+  Building strings (e.g. `"Frögatan 76 -150, SKELLEFTEÅ (133427)"`)
+  round-trip verbatim — feed them back to GetWastePickupSchedule as-is.
+  Three date formats coexist in `NextWastePickup`: ISO `YYYY-MM-DD`,
+  ISO week `v25 Jun 2026`, and month-only `Jun 2026`. Frequency is
+  derived primarily from `WastePickupsPerYear` (52/26/13 → weekly/
+  biweekly/4-weekly); higher cadences and any frequency text containing
+  a comma (multi-day weekly) emit explicit single dates rather than
+  incorrect RRULE projections. Swedish-character matching in city
+  allow-lists requires Unicode `.to_lowercase()`, not
+  `eq_ignore_ascii_case`.
+- **Roslagsvatten** — Drupal AJAX. The endpoints return a JSON array
+  of `{command, method, selector, data}` where `data` is an HTML
+  fragment string. Extract addresses via regex on `data-bid="ID"`+text;
+  extract schedule entries via `<h3>type</h3>` + `Frekvens: ...` +
+  `Nästa hämtning: YYYY-MM-DD` within each `<div class="waste-schedule-inner">`.
+  Search endpoint returns HTTP 500 for queries < 3 characters — mirror
+  the upstream's 3-char Drupal debounce in our autocomplete or upstream
+  errors out. `"udda vecka"` / `"jämn vecka"` both map to biweekly.
 
 ## ical.rs conventions
 
@@ -111,7 +144,7 @@ free function (`parse_schedule`, `build_schedule`, `parse_calendar`)
 that takes a string/struct and returns `PickupSchedule`. Fixtures are
 inline string literals — small enough to keep readable.
 
-`cargo test --quiet` should always pass. Currently 27 tests; add
+`cargo test --quiet` should always pass. Currently 46 tests; add
 specific cases for new edge cases discovered while implementing a
 provider rather than scaling test count for its own sake.
 
@@ -132,6 +165,9 @@ provider rather than scaling test count for its own sake.
   minimal: axum, tokio, reqwest, serde, chrono(+tz), sha2,
   percent-encoding, tracing, async-trait, regex. Don't pull in
   `scraper`, `html5ever`, `anyhow`, etc., without discussing.
+- **Sort kommun lists in Swedish alphabetical order** (a–z, then å, ä, ö).
+  Use `swedish_sort_key()` in `main.rs` rather than plain `.to_lowercase()`
+  which gives Unicode order ä < å.
 
 ## Things tried and rejected
 
@@ -146,15 +182,29 @@ provider rather than scaling test count for its own sake.
   register/bind dance. Schema drifts per tenant. Decided against until
   there's a clear authorization story. HACS reference impl exists at
   `mampfes/hacs_waste_collection_schedule`.
-- **EDP Future / FutureWeb (VertiGIS)** — biggest unexplored target
-  (~100 kommuner including Luleå, Skellefteå, Uppsala, Roslagsvatten
-  region, Sörmland Vatten, Vakin). Each instance has its own subdomain
-  and the entry point is a `/EDPLogin/LogIn`-fronted iframe. Not yet
-  built. This is the next high-leverage target if expansion continues.
 - **Open data portals (dataportal.se, kommun ArcGIS hubs)** — checked
   exhaustively. Zero of 290 kommuner publish address-based pickup
   schedules as authorized open data. All current adapters are
   scrape-based by necessity.
+- **MSVA — Mittsverige Vatten & Avfall (Sundsvall, Timrå, Nordanstig)** —
+  investigated, *not implemented*. The widget on `msva.se` is a custom
+  SiteVision React app (`sv-garbageScheduleExtended`) that fetches via
+  `getUrl("/allAddresses")`. The actual REST URL path is determined by
+  the SiteVision SDK at runtime from the deployed app's registered
+  name, which I could not discover by enumeration (probed
+  `/rest-api/<webapp-id>`, `/rest-api/garbageScheduleExtended`,
+  `/rest-api/sv-garbageScheduleExtended`, several plausible app-name
+  guesses — all return `{"success":false,"type":"invalidParameter",
+  "message":"No RestApp found for ..."}`). The HACS reference uses
+  `https://api.sundsvall.se/Garbage/2281/schedules?street=...&
+  houseNumber=...&postalCode=...&city=...` directly, which works but
+  requires the user to enter postal code (and only covers kommunkod
+  2281 = Sundsvall, not the other MSVA members). Re-attempt either by:
+  (a) finding a postal-code-from-street source for Sundsvall and
+  proxying via api.sundsvall.se, (b) building a special form variant
+  for MSVA that asks for postal code explicitly, or (c) discovering
+  the SiteVision RestApp name via either a SiteVision admin login or
+  observing the actual XHR via a browser DevTools session.
 
 ## Deployment
 
