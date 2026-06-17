@@ -19,6 +19,49 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Östra Göinge | `/ostra-goinge` | Indecta OnlineKalender via OGRAB |
 | Osby | `/osby` | Indecta OnlineKalender via OGRAB (samdrift) |
 | Sjöbo | `/sjobo` | Indecta OnlineKalender |
+| Skellefteå | `/skelleftea` | EDP Future / SimpleWastePickup |
+| Boden | `/boden` | EDP Future / SimpleWastePickup |
+| Uppsala | `/uppsala` | EDP Future via Uppsala Vatten |
+| Borås | `/boras` | EDP Future via Borås Energi och Miljö |
+| Mark | `/mark` | EDP Future via Marks kommun |
+| Lycksele | `/lycksele` | EDP Future |
+| Kiruna | `/kiruna` | EDP Future via Tekniska Verken |
+| Lidköping | `/lidkoping` | EDP Future |
+| Stenungsund | `/stenungsund` | EDP Future |
+| Orust | `/orust` | EDP Future |
+| Ljungby | `/ljungby` | EDP Future |
+| Örebro | `/orebro` | EDP Future |
+| Nacka | `/nacka` | EDP Future via NVOA |
+| Herrljunga | `/herrljunga` | EDP Future via Remondis (samdrift) |
+| Vårgårda | `/vargarda` | EDP Future via Remondis (samdrift) |
+| Växjö | `/vaxjo` | EDP Future via SSAM (samdrift) |
+| Älmhult | `/almhult` | EDP Future via SSAM (samdrift) |
+| Tingsryd | `/tingsryd` | EDP Future via SSAM (samdrift) |
+| Markaryd | `/markaryd` | EDP Future via SSAM (samdrift) |
+| Lessebo | `/lessebo` | EDP Future via SSAM (samdrift) |
+| Västerås | `/vasteras` | EDP Future via Vafab Miljö (samdrift) |
+| Enköping | `/enkoping` | EDP Future via Vafab Miljö (samdrift) |
+| Hallstahammar | `/hallstahammar` | EDP Future via Vafab Miljö (samdrift) |
+| Heby | `/heby` | EDP Future via Vafab Miljö (samdrift) |
+| Köping | `/koping` | EDP Future via Vafab Miljö (samdrift) |
+| Norberg | `/norberg` | EDP Future via Vafab Miljö (samdrift) |
+| Sala | `/sala` | EDP Future via Vafab Miljö (samdrift) |
+| Skinnskatteberg | `/skinnskatteberg` | EDP Future via Vafab Miljö (samdrift) |
+| Surahammar | `/surahammar` | EDP Future via Vafab Miljö (samdrift) |
+| Fagersta | `/fagersta` | EDP Future via Vafab Miljö (samdrift) |
+| Kungsör | `/kungsor` | EDP Future via Vafab Miljö (samdrift) |
+| Kalmar | `/kalmar` | EDP Future via Kretslopp Sydost (samdrift) |
+| Mörbylånga | `/morbylanga` | EDP Future via Kretslopp Sydost (samdrift) |
+| Nybro | `/nybro` | EDP Future via Kretslopp Sydost (samdrift) |
+| Oskarshamn | `/oskarshamn` | EDP Future via Kretslopp Sydost (samdrift) |
+| Torsås | `/torsas` | EDP Future via Kretslopp Sydost (samdrift) |
+| Borgholm | `/borgholm` | EDP Future via Kretslopp Sydost (samdrift) |
+| Mönsterås | `/monsteras` | EDP Future via Kretslopp Sydost (samdrift) |
+| Hultsfred | `/hultsfred` | EDP Future via Kretslopp Sydost (samdrift) |
+| Högsby | `/hogsby` | EDP Future via Kretslopp Sydost (samdrift) |
+| Vetlanda | `/vetlanda` | EDP Future via Kretslopp Sydost (samdrift) |
+| Sävsjö | `/savsjo` | EDP Future via Kretslopp Sydost (samdrift) |
+| Uppvidinge | `/uppvidinge` | EDP Future via Kretslopp Sydost (samdrift) |
 
 ## Endpoints
 
@@ -74,61 +117,61 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | --- | --- | --- | --- | --- |
 | ⬜ Ale | ⬜ Alingsås | ⬜ Alvesta | ⬜ Aneby | ⬜ Arboga |
 | ⬜ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
-| ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ⬜ Boden |
-| ⬜ Bollebygd | ⬜ Bollnäs | ⬜ Borgholm | ⬜ Borlänge | ⬜ Borås |
+| ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
+| ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
 | ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | 🔬 Danderyd | ⬜ Degerfors | ⬜ Dorotea |
-| ⬜ Eda | 🔬 Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ⬜ Enköping |
-| ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ⬜ Fagersta | ⬜ Falkenberg |
+| ⬜ Eda | 🔬 Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
+| ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ✅ Fagersta | ⬜ Falkenberg |
 | ⬜ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
 | ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ⬜ Gislaved | ⬜ Gnesta |
 | ⬜ Gnosjö | ⬜ Gotland | ⬜ Grums | ⬜ Grästorp | ⬜ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ⬜ Götene | ⬜ Habo |
-| ⬜ Hagfors | ⬜ Hallsberg | ⬜ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
-| ⬜ Haninge | ⬜ Haparanda | ⬜ Heby | ⬜ Hedemora | 🔬 Helsingborg |
-| ⬜ Herrljunga | ⬜ Hjo | ⬜ Hofors | ⬜ Huddinge | ⬜ Hudiksvall |
-| ⬜ Hultsfred | 🔬 Hylte | ⬜ Håbo | ⬜ Hällefors | ⬜ Härjedalen |
-| ⬜ Härnösand | ⬜ Härryda | ⬜ Hässleholm | 🔬 Höganäs | ⬜ Högsby |
+| ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
+| ⬜ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
+| ✅ Herrljunga | ⬜ Hjo | ⬜ Hofors | ⬜ Huddinge | ⬜ Hudiksvall |
+| ✅ Hultsfred | 🔬 Hylte | ⬜ Håbo | ⬜ Hällefors | ⬜ Härjedalen |
+| ⬜ Härnösand | ⬜ Härryda | ⬜ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ⬜ Jönköping |
-| ⬜ Kalix | ⬜ Kalmar | ⬜ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
+| ⬜ Kalix | ✅ Kalmar | ⬜ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
-| ⬜ Kiruna | ⬜ Klippan | 🔬 Knivsta | ⬜ Kramfors | ⬜ Kristianstad |
-| ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ⬜ Kungsör |
-| ⬜ Kungälv | ⬜ Kävlinge | ⬜ Köping | ⬜ Laholm | ⬜ Landskrona |
-| ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ⬜ Lessebo |
-| ⬜ Lidingö | ⬜ Lidköping | ⬜ Lilla Edet | ⬜ Lindesberg | ⬜ Linköping |
-| ⬜ Ljungby | ⬜ Ljusdal | ⬜ Ljusnarsberg | ⬜ Lomma | ⬜ Ludvika |
-| 🔬 Luleå | ⬜ Lund | ⬜ Lycksele | ⬜ Lysekil | ✅ Malmö |
-| ⬜ Malung-Sälen | ⬜ Malå | ⬜ Mariestad | ⬜ Mark | ⬜ Markaryd |
+| ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ⬜ Kramfors | ⬜ Kristianstad |
+| ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
+| ⬜ Kungälv | ⬜ Kävlinge | ✅ Köping | ⬜ Laholm | ⬜ Landskrona |
+| ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
+| ⬜ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ⬜ Lindesberg | ⬜ Linköping |
+| ✅ Ljungby | ⬜ Ljusdal | ⬜ Ljusnarsberg | ⬜ Lomma | ⬜ Ludvika |
+| 🔬 Luleå | ⬜ Lund | ✅ Lycksele | ⬜ Lysekil | ✅ Malmö |
+| ⬜ Malung-Sälen | ⬜ Malå | ⬜ Mariestad | ✅ Mark | ✅ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ⬜ Mullsjö |
-| ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ⬜ Mönsterås | ⬜ Mörbylånga |
-| ⬜ Nacka | ⬜ Nora | ⬜ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
-| ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ⬜ Nybro | ⬜ Nykvarn |
+| ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
+| ✅ Nacka | ⬜ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
+| ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ✅ Nybro | ⬜ Nykvarn |
 | ⬜ Nyköping | ⬜ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
-| ⬜ Orsa | ⬜ Orust | ✅ Osby | ⬜ Oskarshamn | ⬜ Ovanåker |
+| ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
-| ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ⬜ Sala |
+| ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ✅ Sala |
 | ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ⬜ Simrishamn | ✅ Sjöbo |
-| ⬜ Skara | 🔬 Skellefteå | ⬜ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
+| ⬜ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
-| ⬜ Sotenäs | ⬜ Staffanstorp | ⬜ Stenungsund | ✅ Stockholm | ⬜ Storfors |
+| ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
 | ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
-| ⬜ Sundsvall | ⬜ Sunne | ⬜ Surahammar | ⬜ Svalöv | ⬜ Svedala |
-| ⬜ Svenljunga | ⬜ Säffle | ⬜ Säter | ⬜ Sävsjö | ⬜ Söderhamn |
+| ⬜ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ⬜ Svedala |
+| ⬜ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ⬜ Tibro |
-| ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ⬜ Tingsryd | ⬜ Tjörn |
-| ⬜ Tomelilla | ⬜ Torsby | ⬜ Torsås | ⬜ Tranemo | ⬜ Tranås |
+| ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
+| ⬜ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ⬜ Täby |
 | ⬜ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
-| ⬜ Upplands Väsby | 🔬 Uppsala | ⬜ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
+| ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
 | ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ⬜ Vara | ⬜ Varberg |
-| 🔬 Vaxholm | ⬜ Vellinge | ⬜ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
-| 🔬 Vindeln | 🔬 Vingåker | ⬜ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
-| 🔬 Värmdö | ⬜ Värnamo | ⬜ Västervik | ⬜ Västerås | ⬜ Växjö |
+| 🔬 Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
+| 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
+| 🔬 Värmdö | ⬜ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ⬜ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ⬜ Åre |
-| ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ⬜ Älmhult |
+| ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
 | ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
-| ⬜ Ödeshög | ⬜ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
+| ⬜ Ödeshög | ✅ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
 | 🔬 Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
 
 Status motsvarar status i kodbasen idag. 🔬 betyder att jag identifierat
