@@ -201,6 +201,11 @@ provider rather than scaling test count for its own sake.
     frontend, see session 1), `/Environments/STOVA/`
   - Karlstads Energi — `minasidor.karlstadsenergi.se`,
     `/Environments/KARLS/`
+  - Alingsås Energi — `minasidor.alingsasenergi.se`,
+    `/Environments/ALING/`. Note: Alingsås kommun also runs a separate
+    Java-based e-tjänster portal at `minasidor.alingsas.se` (ISO-8859-1,
+    `JSESSIONID`) — that's the kommun's general services portal, NOT
+    waste data, which lives in Alingsås Energi's BFUS.
 
   Identification fingerprints (any one is sufficient):
   - `Portal-Version` meta with `CGI.Utility.Application.CPU.Client.Web.dll`
