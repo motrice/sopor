@@ -62,6 +62,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Vetlanda | `/vetlanda` | EDP Future via Kretslopp Sydost (samdrift) |
 | Sävsjö | `/savsjo` | EDP Future via Kretslopp Sydost (samdrift) |
 | Uppvidinge | `/uppvidinge` | EDP Future via Kretslopp Sydost (samdrift) |
+| Ekerö | `/ekero` | Roslagsvatten (Drupal-widget) |
+| Vaxholm | `/vaxholm` | Roslagsvatten (Drupal-widget) |
+| Österåker | `/osteraker` | Roslagsvatten (Drupal-widget) |
 
 ## Endpoints
 
@@ -121,7 +124,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
 | ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | 🔬 Danderyd | ⬜ Degerfors | ⬜ Dorotea |
-| ⬜ Eda | 🔬 Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
+| ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ✅ Fagersta | ⬜ Falkenberg |
 | ⬜ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
 | ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ⬜ Gislaved | ⬜ Gnesta |
@@ -165,14 +168,14 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
 | ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ⬜ Vara | ⬜ Varberg |
-| 🔬 Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
+| ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
 | 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
 | 🔬 Värmdö | ⬜ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ⬜ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ⬜ Åre |
 | ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
 | ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
 | ⬜ Ödeshög | ✅ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
-| 🔬 Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
+| ✅ Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
 
 Status motsvarar status i kodbasen idag. 🔬 betyder att jag identifierat
 sannolik plattform via offentlig källa men inte verifierat eller byggt

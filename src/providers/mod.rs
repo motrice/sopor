@@ -6,6 +6,7 @@ use serde::Serialize;
 
 pub mod edp_future;
 pub mod indecta;
+pub mod roslagsvatten;
 pub mod sitevision_fetchplanner;
 pub mod stockholm;
 pub mod vasyd;
@@ -492,10 +493,35 @@ impl Registry {
             cities: Some(&["Åseda", "Lenhovda", "Norrhult", "Älghult", "Alstermo", "Klavreström"]),
         }));
 
+        // Roslagsvatten — Drupal-baserad widget för Ekerö, Vaxholm,
+        // Österåker. Knivsta och Vallentuna har migrerats bort.
+        let rv = |cfg: roslagsvatten::Config| -> Arc<dyn Provider> {
+            Arc::new(roslagsvatten::Roslagsvatten::new(http.clone(), cfg))
+        };
+        let rv_note = "Sophämtningsdata från Roslagsvatten.";
+        let roslagsvatten_providers: Vec<Arc<dyn Provider>> = vec![
+            rv(roslagsvatten::Config {
+                id: "ekero", name: "Ekerö",
+                placeholder: "t.ex. Storgatan 1", note: rv_note,
+                municipality: "ekero",
+            }),
+            rv(roslagsvatten::Config {
+                id: "vaxholm", name: "Vaxholm",
+                placeholder: "t.ex. Hamngatan 1", note: rv_note,
+                municipality: "vaxholm",
+            }),
+            rv(roslagsvatten::Config {
+                id: "osteraker", name: "Österåker",
+                placeholder: "t.ex. Andromedavägen 1", note: rv_note,
+                municipality: "osteraker",
+            }),
+        ];
+
         Self {
             providers: providers
                 .into_iter()
                 .chain(edp_providers.into_iter())
+                .chain(roslagsvatten_providers.into_iter())
                 .collect(),
         }
     }
