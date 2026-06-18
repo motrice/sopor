@@ -245,6 +245,22 @@ provider rather than scaling test count for its own sake.
   Sundsvall. Timrå (kommunkod 2262) and Nordanstig (2132) are still
   not covered.
 
+  **Exhaustive probe (session 3)**: tested every kommunkod 1100–2599
+  against `api.sundsvall.se/Garbage/{kod}/schedules`. Only 2281 has
+  data — every other code returns `[]`. The dataset does contain a
+  small handful of border addresses outside Sundsvall (Bergeforsen=10
+  records in Timrå, Torpshammar=37 in Ånge, Bispgården=80 in Ragunda)
+  but these are individual addresses MSVA happens to serve across
+  borders, not systematic coverage of those kommuner. Don't try to
+  expose `/timra`, `/nordanstig`, `/ange`, `/ragunda` etc. via
+  api.sundsvall.se — it would mislead users.
+
+  Adjacent probes that also failed: `api.timra.se`, `api.nordanstig.se`
+  (DNS NXDOMAIN); `?city=Timrå|Timra|TIMRÅ|Nordanstig|NORDANSTIG|Bergsjö`
+  against 2281 (zero matches). Re-attempt only if MSVA publishes
+  Timrå/Nordanstig under their own municipalityIds (suggest mailing
+  `kundservice@msva.se`), or if the SiteVision RestApp name leaks.
+
 ## Deployment
 
 Multi-stage `Dockerfile` (rust:1.95-bookworm → debian:bookworm-slim,
