@@ -261,6 +261,16 @@ provider rather than scaling test count for its own sake.
   Timrå/Nordanstig under their own municipalityIds (suggest mailing
   `kundservice@msva.se`), or if the SiteVision RestApp name leaks.
 
+  **MSVA widget URL was solved (session 3)**: the SiteVision widget
+  on `msva.se/avfall/villa-och-fritidshus/...` is reachable via
+  `?sv.target=12.558e1c7219d9a61701a2c4&sv.12.558e1c7219d9a61701a2c4.route=/allAddresses&svAjaxReqParam=ajax`
+  (the `svAjaxReqParam=ajax` hint is the magic). It returns a 9.7 MB
+  HTML page with the address dataset embedded in a `"allAddresses":[…]`
+  JSON blob. **The dataset is identical to api.sundsvall.se/2281** —
+  same 23 556 records, same city distribution. So the widget doesn't
+  unlock Timrå/Nordanstig either. There is no further data to extract
+  from MSVA. Skip.
+
 ## Deployment
 
 Multi-stage `Dockerfile` (rust:1.95-bookworm → debian:bookworm-slim,
