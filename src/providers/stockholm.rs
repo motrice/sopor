@@ -1,5 +1,3 @@
-use std::collections::BTreeMap;
-
 use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Deserialize;
@@ -26,12 +24,16 @@ struct SvoaSuggestion {
     _data: Option<String>,
 }
 
+// SVOA's Search endpoint returns a flat array of entries, one per pickup.
+// Historical shape (PascalCase, keyed by waste type) was replaced in
+// September 2026 by a camelCase array with an explicit `group` field.
 #[derive(Deserialize)]
-#[serde(rename_all = "PascalCase")]
+#[serde(rename_all = "camelCase")]
 struct SvoaEntry {
+    group: String,
     fetch_frequency: String,
     execution_date: String,
-    #[serde(rename = "Weekday")]
+    #[serde(default, rename = "weekday")]
     _weekday: String,
 }
 
@@ -87,21 +89,21 @@ impl Provider for Stockholm {
 }
 
 fn parse_schedule(json: &str, address: &str) -> Result<PickupSchedule, ProviderError> {
-    let raw: BTreeMap<String, Vec<SvoaEntry>> = serde_json::from_str(json)?;
+    let entries: Vec<SvoaEntry> = serde_json::from_str(json)?;
     let mut series = Vec::new();
-    for (waste_type, entries) in raw {
-        for entry in entries {
-            let Some(date) = NaiveDate::parse_from_str(&entry.execution_date, "%Y-%m-%d").ok()
-            else {
-                continue;
-            };
-            series.push(PickupSeries {
-                waste_type: waste_type.clone(),
-                frequency_text: entry.fetch_frequency.clone(),
-                interval_weeks: parse_interval_weeks(&entry.fetch_frequency),
-                anchor: vec![date],
-            });
+    for entry in entries {
+        let Some(date) = NaiveDate::parse_from_str(&entry.execution_date, "%Y-%m-%d").ok() else {
+            continue;
+        };
+        if entry.group.trim().is_empty() {
+            continue;
         }
+        series.push(PickupSeries {
+            waste_type: entry.group,
+            frequency_text: entry.fetch_frequency.clone(),
+            interval_weeks: parse_interval_weeks(&entry.fetch_frequency),
+            anchor: vec![date],
+        });
     }
     Ok(PickupSchedule {
         address: address.to_string(),
@@ -143,10 +145,10 @@ mod tests {
 
     #[test]
     fn parses_villa_schedule() {
-        let json = r#"{
-            "Matavfall, villa":[{"FetchFrequency":"Varannan vecka","ExecutionDate":"2026-06-30","Weekday":"Tisdag"}],
-            "Restavfall, villa":[{"FetchFrequency":"Var 4:e vecka","ExecutionDate":"2026-06-30","Weekday":"Tisdag"}]
-        }"#;
+        let json = r#"[
+            {"group":"Matavfall, villa","fetchFrequency":"Varannan vecka","executionDate":"2026-06-30","weekday":"Tisdag"},
+            {"group":"Restavfall, villa","fetchFrequency":"Var 4:e vecka","executionDate":"2026-06-30","weekday":"Tisdag"}
+        ]"#;
         let schedule = parse_schedule(json, "Olovslundsvägen 9, Bromma, 167 72").unwrap();
         assert_eq!(schedule.address, "Olovslundsvägen 9, Bromma, 167 72");
         assert_eq!(schedule.series.len(), 2);
@@ -161,7 +163,38 @@ mod tests {
 
     #[test]
     fn empty_response_yields_no_series() {
-        let schedule = parse_schedule("{}", "Hornsgatan 1, Stockholm").unwrap();
+        let schedule = parse_schedule("[]", "Hornsgatan 1, Stockholm").unwrap();
         assert!(schedule.series.is_empty());
+    }
+
+    #[test]
+    fn parses_live_svoa_response_shape() {
+        // Captured verbatim from SVOA's Search endpoint 2026-09-06 while
+        // debugging the "invalid type: sequence, expected a map" incident.
+        let json = r#"[{"group":"Kärl 2 - papper och plast","fetchFrequency":"Varannan vecka","executionDate":"2026-09-09","weekday":"Onsdag"},{"group":"Matavfall, villa","fetchFrequency":"Varannan vecka","executionDate":"2026-09-09","weekday":"Onsdag"},{"group":"Kärl 3 - glas och metall","fetchFrequency":"Var 4:e vecka","executionDate":"2026-09-10","weekday":"Torsdag"},{"group":"Restavfall, villa","fetchFrequency":"Var 8:e vecka","executionDate":"2026-09-23","weekday":"Onsdag"}]"#;
+        let schedule = parse_schedule(json, "Skördevägen 80, Enskededalen, 121 33").unwrap();
+        assert_eq!(schedule.series.len(), 4);
+        let rest = schedule
+            .series
+            .iter()
+            .find(|s| s.waste_type == "Restavfall, villa")
+            .expect("restavfall");
+        assert_eq!(rest.interval_weeks, Some(8));
+        assert_eq!(
+            rest.anchor,
+            vec![NaiveDate::from_ymd_opt(2026, 9, 23).unwrap()]
+        );
+    }
+
+    #[test]
+    fn skips_entries_with_blank_group() {
+        let json = r#"[
+            {"group":"","fetchFrequency":"Varje vecka","executionDate":"2026-06-30","weekday":"Tisdag"},
+            {"group":"Restavfall, villa","fetchFrequency":"Var 8:e vecka","executionDate":"2026-09-23","weekday":"Onsdag"}
+        ]"#;
+        let schedule = parse_schedule(json, "X").unwrap();
+        assert_eq!(schedule.series.len(), 1);
+        assert_eq!(schedule.series[0].waste_type, "Restavfall, villa");
+        assert_eq!(schedule.series[0].interval_weeks, Some(8));
     }
 }
