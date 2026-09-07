@@ -53,7 +53,7 @@ impl EdpFuture {
         // The upstream IIS deployments return HTTP 411 unless an explicit
         // Content-Length header is set on the POST. reqwest uses chunked
         // transfer encoding by default for empty bodies, which IIS rejects.
-        let resp: SearchResp = self
+        let text = self
             .http
             .post(&url)
             .query(&[("searchText", query)])
@@ -62,8 +62,22 @@ impl EdpFuture {
             .send()
             .await?
             .error_for_status()?
-            .json()
+            .text()
             .await?;
+        // Some tenants sit behind an F5 ASM WAF that returns HTTP 200 with
+        // an HTML "Request Rejected" body when it blocks a request (seen
+        // from Cloud Run egress IPs against futureweb.nvoa.se). Detect that
+        // shape and degrade autocomplete to "no suggestions" rather than a
+        // misleading JSON decode error.
+        if is_waf_reject(&text) {
+            tracing::warn!(
+                target: "edp_future",
+                provider = self.cfg.id,
+                "upstream WAF rejected SearchAdress request"
+            );
+            return Ok(vec![]);
+        }
+        let resp: SearchResp = serde_json::from_str(&text)?;
         if !resp.succeeded {
             return Ok(vec![]);
         }
@@ -81,6 +95,12 @@ impl EdpFuture {
             .error_for_status()?
             .text()
             .await?;
+        if is_waf_reject(&text) {
+            return Err(ProviderError(format!(
+                "upstream WAF rejected GetWastePickupSchedule request for {}",
+                self.cfg.id
+            )));
+        }
         Ok(text)
     }
 
@@ -228,6 +248,11 @@ fn strip_id(s: &str) -> &str {
         (Some(idx), true) => &s[..idx],
         _ => s,
     }
+}
+
+fn is_waf_reject(body: &str) -> bool {
+    let head = body.trim_start();
+    head.starts_with('<') && head.contains("Request Rejected")
 }
 
 fn parse_schedule_response(json: &str) -> Vec<PickupSeries> {
@@ -535,5 +560,15 @@ mod tests {
     fn strip_id_helper() {
         assert_eq!(strip_id("X, ORT (123)"), "X, ORT");
         assert_eq!(strip_id("X, ORT"), "X, ORT");
+    }
+
+    #[test]
+    fn detects_f5_waf_reject_page() {
+        let body = "<html><head><title>Request Rejected</title></head>\
+                    <body>The requested URL was rejected.</body></html>";
+        assert!(is_waf_reject(body));
+        assert!(is_waf_reject(&format!("   \n{body}")));
+        assert!(!is_waf_reject(r#"{"Succeeded":true,"Buildings":[]}"#));
+        assert!(!is_waf_reject("<html>something else</html>"));
     }
 }
