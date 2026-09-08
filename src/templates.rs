@@ -98,7 +98,7 @@ pub fn render_index(base_url: &str, kommuner: &[(&str, &str)]) -> String {
 <link rel="canonical" href="{url}">
 
 <meta property="og:type" content="website">
-<meta property="og:site_name" content="sopor.motrice.se">
+<meta property="og:site_name" content="sopkalender.se">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{url}">
@@ -336,7 +336,7 @@ pub fn render_pitch(base_url: &str) -> String {
 <link rel="canonical" href="{page_url}">
 
 <meta property="og:type" content="article">
-<meta property="og:site_name" content="sopor.motrice.se">
+<meta property="og:site_name" content="sopkalender.se">
 <meta property="og:title" content="{title}">
 <meta property="og:description" content="{desc}">
 <meta property="og:url" content="{page_url}">
@@ -394,7 +394,7 @@ pub fn render_pitch(base_url: &str) -> String {
    <a href="{linkedin}" target="_blank" rel="noopener">LinkedIn</a> ·
    <a href="{github}" target="_blank" rel="noopener">Källkod på GitHub</a></p>
 <footer>
-  <a href="/">← Tillbaka till sopor.motrice.se</a><br>
+  <a href="/">← Tillbaka till sopkalender.se</a><br>
   100% vibe kodat
 </footer>
 </body>
