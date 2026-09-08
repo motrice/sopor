@@ -9,6 +9,7 @@ RUN mkdir src && echo "fn main(){}" > src/main.rs && \
     rm -rf src target/release/deps/sopor*
 
 COPY src ./src
+COPY assets ./assets
 RUN cargo build --release
 
 FROM debian:bookworm-slim
