@@ -38,6 +38,7 @@ async fn main() {
         .route("/healthz", get(|| async { "ok" }))
         .route("/pitch", get(pitch))
         .route("/pitch-og.jpg", get(pitch_og))
+        .route("/index-og.jpg", get(index_og))
         .route("/{kommun}", get(kommun_page))
         .route("/{kommun}/autocomplete", get(autocomplete))
         .route("/{kommun}/preview", get(preview))
@@ -64,7 +65,7 @@ async fn shutdown_signal() {
     let _ = tokio::signal::ctrl_c().await;
 }
 
-async fn index(State(state): State<AppState>) -> Html<String> {
+async fn index(State(state): State<AppState>, headers: HeaderMap) -> Html<String> {
     let mut kommuner: Vec<(&str, &str)> = state
         .registry
         .iter()
@@ -73,7 +74,24 @@ async fn index(State(state): State<AppState>) -> Html<String> {
     // Swedish alphabetical order: a–z, then å, ä, ö. Plain Unicode order
     // gives ä < å (codepoint 228 vs 229) which is wrong for Swedish.
     kommuner.sort_by_cached_key(|(_, name)| swedish_sort_key(name));
-    Html(templates::render_index(&kommuner))
+    Html(templates::render_index(&base_url(&headers), &kommuner))
+}
+
+fn base_url(headers: &HeaderMap) -> String {
+    let host = headers
+        .get("x-forwarded-host")
+        .or_else(|| headers.get(header::HOST))
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("sopor.motrice.se");
+    let proto = if host.starts_with("localhost") || host.starts_with("127.") {
+        "http"
+    } else {
+        headers
+            .get("x-forwarded-proto")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("https")
+    };
+    format!("{proto}://{host}")
 }
 
 fn swedish_sort_key(name: &str) -> Vec<u32> {
@@ -214,25 +232,23 @@ async fn ics(
 }
 
 async fn pitch(headers: HeaderMap) -> Html<String> {
-    let host = headers
-        .get("x-forwarded-host")
-        .or_else(|| headers.get(header::HOST))
-        .and_then(|v| v.to_str().ok())
-        .unwrap_or("sopor.motrice.se");
-    let proto = if host.starts_with("localhost") || host.starts_with("127.") {
-        "http"
-    } else {
-        headers
-            .get("x-forwarded-proto")
-            .and_then(|v| v.to_str().ok())
-            .unwrap_or("https")
-    };
-    let base = format!("{proto}://{host}");
-    Html(templates::render_pitch(&base))
+    Html(templates::render_pitch(&base_url(&headers)))
 }
 
 async fn pitch_og() -> Response {
     static JPG: &[u8] = include_bytes!("../assets/pitch-og.jpg");
+    (
+        [
+            (header::CONTENT_TYPE, "image/jpeg"),
+            (header::CACHE_CONTROL, "public, max-age=86400"),
+        ],
+        JPG,
+    )
+        .into_response()
+}
+
+async fn index_og() -> Response {
+    static JPG: &[u8] = include_bytes!("../assets/index-og.jpg");
     (
         [
             (header::CONTENT_TYPE, "image/jpeg"),

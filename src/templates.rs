@@ -2,13 +2,14 @@ const LINKEDIN_URL: &str = "https://www.linkedin.com/in/bj%C3%B6rn-molin-1843aa3
 const GITHUB_URL: &str = "https://github.com/motrice/sopor";
 const AUTHOR: &str = "Björn Molin";
 
-const HEAD: &str = r#"<!doctype html>
+const HEAD_OPEN: &str = r#"<!doctype html>
 <html lang="sv">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sopor — kalenderprenumeration för sophämtning</title>
-<style>
+"#;
+
+const HEAD_STYLE: &str = r#"<style>
   :root { --fg:#1a1a1a; --muted:#666; --bg:#fafaf7; --card:#fff; --acc:#2f6f3d; --border:#e3e3dc; }
   * { box-sizing: border-box; }
   body { margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
@@ -72,9 +73,55 @@ const TAIL: &str = r#"
 </html>
 "#;
 
-pub fn render_index(kommuner: &[(&str, &str)]) -> String {
+fn head(title: &str, extra_meta: &str) -> String {
+    let mut s = String::new();
+    s.push_str(HEAD_OPEN);
+    s.push_str("<title>");
+    s.push_str(&escape(title));
+    s.push_str("</title>\n");
+    s.push_str(extra_meta);
+    s.push_str(HEAD_STYLE);
+    s
+}
+
+pub fn render_index(base_url: &str, kommuner: &[(&str, &str)]) -> String {
+    let title = "Sophämtning i din kalender — Google, Apple, Outlook";
+    let desc = format!(
+        "Prenumerera på sophämtningsschemat för din adress i {} svenska kommuner. \
+         Notis kvällen innan. Fungerar med Google Calendar, Apple Kalender och \
+         Outlook. Ingen inloggning, ingen app.",
+        kommuner.len()
+    );
+    let img_url = format!("{base_url}/index-og.jpg");
+    let og = format!(
+        r##"<meta name="description" content="{desc}">
+<link rel="canonical" href="{url}">
+
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="sopor.motrice.se">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{url}">
+<meta property="og:image" content="{img}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Fyra färgade sopkärl (matavfall, restavfall, pappersförpackningar, plastförpackningar) med olika hämtningsdagar och kalendericoner — sophämtning som kalenderprenumeration.">
+<meta property="og:locale" content="sv_SE">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{img}">
+
+"##,
+        title = escape(title),
+        desc = escape(&desc),
+        url = escape(base_url),
+        img = escape(&img_url),
+    );
     let mut out = String::new();
-    out.push_str(HEAD);
+    out.push_str(&head(title, &og));
     out.push_str(&format!(
         r#"<main>
   <p class="byline">Av <a href="{linkedin}" target="_blank" rel="noopener">{author}</a> ·
@@ -117,7 +164,7 @@ pub fn render_index(kommuner: &[(&str, &str)]) -> String {
 
 pub fn render_kommun(slug: &str, name: &str, placeholder: &str, note: &str) -> String {
     let mut out = String::new();
-    out.push_str(HEAD);
+    out.push_str(&head("Sopor — kalenderprenumeration för sophämtning", ""));
     out.push_str(&format!(
         r#"<main>
   <a href="/" class="back">← Alla kommuner</a>
@@ -271,10 +318,11 @@ fn escape(s: &str) -> String {
 const PITCH_BODY: &str = include_str!("../assets/pitch.html");
 
 pub fn render_pitch(base_url: &str) -> String {
-    let title = "Öppna sopdata i Sverige — varför är detta så svårt?";
-    let desc = "EU-direktivet är tydligt: öppna data, standardformat, inga onödiga hinder. \
-                Av 290 svenska kommuner har en enda — Sundsvall — förstått det. Övriga gömmer \
-                sopdatat bakom BankID, obskyra widgets eller brandväggar mot molnet.";
+    let title = "Varför har bara 1 av 290 svenska kommuner öppen sopdata?";
+    let desc = "Jag ville bara ha en kalenderprenumeration på när soporna hämtas. \
+                Det blev en resa genom BankID-portaler, PHP 5.4-scrapers och \
+                brandväggar som blockerar Google Cloud. Sundsvall visar att det \
+                tar en eftermiddag — om man vill.";
     let page_url = format!("{base_url}/pitch");
     let img_url = format!("{base_url}/pitch-og.jpg");
     format!(
