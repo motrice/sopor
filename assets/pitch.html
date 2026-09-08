@@ -1,0 +1,94 @@
+<article>
+<h1>Öppna sopdata i Sverige — varför är detta så svårt?</h1>
+
+<h2>Det jag ville göra</h2>
+
+<p>Vi fick fler soptunnor. Det var inget vi valde — det är en följd av <strong>EU:s reviderade ramdirektiv om avfall</strong> (2018/851), svensk lagstiftning (bl.a. förpackningsförordningen SFS 2022:1274 som flyttar ansvaret för fastighetsnära insamling av förpackningar till kommunerna) och lokala kommunala beslut om hur separationen ska verkställas. Samma politiska maskineri som fastslog att jag ska sortera i fyra fraktioner beslutade också om olika hämtningsintervall för olika fraktioner.</p>
+
+<p>Resultatet: fyra kärl, fyra olika tömningsdagar, olika veckor för olika fraktioner. Att hålla koll i huvudet är hopplöst.</p>
+
+<p>Det jag ville ha var enkelt: en <strong>iCalendar-prenumeration</strong> — standardformatet som Google Calendar, Apple Kalender och Outlook har stött i över tjugo år. En URL, en gång, klart. Notis dagen innan. Fungerar på telefonen, datorn, klockan.</p>
+
+<p>Det jag fick var något helt annat: en webbportal som kräver <strong>BankID varje gång</strong>, en app per kommun, en PDF som beskriver en "typisk vecka", eller — vanligast — en söksida som visar nästa hämtning som text på skärmen. Inget som en kalender kan konsumera. Inget som fungerar när jag är stressad, borta, eller bara vill bli påmind kvällen innan.</p>
+
+<p>Det är en märklig asymmetri: staten kan ålägga mig fyra kärl, men inte ålägga sig själv att publicera schemat i ett format min kalender förstår.</p>
+
+<h2>Vad EU faktiskt kräver — även av datat</h2>
+
+<p>Det här är inte en teknisk gråzon. Det är reglerat, sedan flera år.</p>
+
+<ul>
+  <li><strong>Öppna data-direktivet</strong> (EU) 2019/1024 — offentlig information <em>ska</em> tillgängliggöras i maskinläsbart format, via API:er, utan onödiga tekniska eller juridiska hinder.</li>
+  <li><strong>Öppna data-lagen</strong> (SFS 2022:818) — den svenska implementeringen. Gäller myndigheter, kommuner och kommunala bolag.</li>
+  <li><strong>Genomförandeförordning (EU) 2023/138 — värdefulla dataset (HVD)</strong> — vissa datakategorier ska vara fria, avgiftsfria och tillgängliga via API. Miljö- och geodata står uttryckligen med.</li>
+  <li><strong>Interoperable Europe Act</strong> (2024) — offentliga digitala tjänster ska interoperera över gränser. <strong>Standardformat framför proprietära portaler.</strong></li>
+</ul>
+
+<p>Samma unionslagstiftare som skärpte avfallsdirektivet skärpte också datadirektiven. Riktningen är otvetydig: hämtningsscheman är exakt den sortens data som EU förutsätter att kommunerna publicerar öppet.</p>
+
+<h2>Verkligheten idag</h2>
+
+<p>Av Sveriges 290 kommuner har jag hittat <strong>en enda</strong> som gör det här rätt.</p>
+
+<h3>⭐ Sundsvall — så här ska det se ut</h3>
+
+<p>Sundsvall publicerar hela datasetet — samtliga 23 556 adresser, alla hämtningsscheman — som <strong>CC0 öppen data</strong> på <code>api.sundsvall.se/Garbage/2281/schedules</code>. Med DCAT-metadata registrerad på <strong>dataportal.se</strong>. Med <strong>OpenAPI 3.1-spec</strong> på <code>/Garbage/api-docs</code>. Utan inloggning. Utan token. Utan mailkorrespondens.</p>
+
+<p>Det är exakt så här öppna data-direktivet är tänkt att fungera. En utvecklare i vilket EU-land som helst kan bygga en tjänst ovanpå på en eftermiddag. <a href="/">sopor.motrice.se</a> använder Sundsvalls data direkt — noll scraping, noll gissningar.</p>
+
+<h3>Resten av Sverige</h3>
+
+<p>För övriga 289 kommuner ser bilden ut så här:</p>
+
+<div class="table-wrap">
+<table>
+  <thead>
+    <tr><th>Mönster</th><th>Typiska exempel</th><th>Vad det innebär</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><strong>BankID-låst "Mina sidor"</strong></td>
+      <td>CGI BFUS (Stockholm Vatten, Vakin/UMEVA, Karlstads Energi, Alingsås Energi)</td>
+      <td>Ingen tredjepartsintegration möjlig utan att bygga BankID-flöde — och då hamnar man i personuppgiftshantering för data som inte är personlig</td>
+    </tr>
+    <tr>
+      <td><strong>Oformellt widget-API</strong></td>
+      <td>SiteVision Fetchplanner (Falun, Örnsköldsvik), Limepark, EDP Future (43 kommuner via Vafab, SSAM, Kretslopp Sydost, Remondis)</td>
+      <td>Fungerar bara så länge kommunens webbleverantör inte byter format. Ingen dokumentation, ingen SLA, ingen garanti</td>
+    </tr>
+    <tr>
+      <td><strong>PHP 5.4 + ISO-8859-1</strong></td>
+      <td>Indecta (Östra Göinge, Osby, Sjöbo)</td>
+      <td>Måste percent-koda <code>Å</code> som <code>%C5</code> på utvägen och sniffa encoding på inkommande. 2008 ringde och vill ha sitt teckenformat tillbaka</td>
+    </tr>
+    <tr>
+      <td><strong>Proprietär mobilapp med Bearer-token</strong></td>
+      <td>Avfallsappen/Bozzanova (~50 kommuner)</td>
+      <td>Kräver att man extraherar token ur den kompilerade mobilapp-binären och gör en register/bind-dans per tenant</td>
+    </tr>
+  </tbody>
+</table>
+</div>
+
+<p>Datat <em>finns</em> — det är bara inlåst bakom portaler, appar och obskyra widgets. <a href="/">sopor.motrice.se</a> täcker idag 54 kommuner. Varenda en av dem, förutom Sundsvall, är resultatet av att <strong>scrapea en webbsidas backend</strong>, hantera legacy-encodingar, eller reverse engineera vilken JSON-nyckel ett SiteVision-portlet råkar heta just i år. När en kommun byter leverantör går integrationen sönder utan förvarning.</p>
+
+<p>Och för de kommuner vi inte täcker alls — hittills bekräftat <strong>Nacka och Malmö</strong> — har vi identifierat att den upstream de använder aktivt <strong>blockerar Google Clouds IP-adresser i brandväggen</strong>. Så även när ett bakvägs-API existerar kan det blockeras för molnbaserade tjänster. Data som betalats av skattebetalare, tekniskt oåtkomlig från infrastruktur som <em>också</em> betalats av skattebetalare.</p>
+
+<h2>Vad som borde hända</h2>
+
+<ol>
+  <li><strong>Publicera hämtningsdata som HVD</strong> enligt (EU) 2023/138 — CC0, via API, utan autentisering. Sundsvall bevisar att det är trivialt.</li>
+  <li><strong>Standardformat, inte portaler.</strong> En iCalendar-feed är en helgeftermiddag för en junior utvecklare — om datat är öppet.</li>
+  <li><strong>Registrera på dataportal.se med DCAT-metadata</strong> — så att det går att hitta utan att gissa URL:er.</li>
+  <li><strong>Sluta gömma data bakom BankID</strong> när ingen personuppgift är inblandad. "Vilken vecka töms kärl 3 på Storgatan 5?" är inte en känslig uppgift.</li>
+  <li><strong>Sluta blockera moln-IP-adresser i brandväggen.</strong> Om datat är publikt är det publikt.</li>
+</ol>
+
+<p>Om lagstiftaren kan besluta att jag ska ha fyra kärl, kan lagstiftaren också se till att jag får veta när de töms — i ett format som min kalender förstår.</p>
+
+<p>Datat är redan betalt. Direktivet är redan på plats. Sundsvall visar att det går.</p>
+
+<p class="closer"><strong>Frågan till resten av Sverige: vad väntar ni på?</strong></p>
+
+<p class="cta"><a href="/">Prova sopor.motrice.se →</a></p>
+</article>

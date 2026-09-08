@@ -7,7 +7,7 @@ use std::sync::Arc;
 
 use axum::{
     extract::{Path, Query, State},
-    http::{header, StatusCode},
+    http::{header, HeaderMap, StatusCode},
     response::{Html, IntoResponse, Response},
     routing::get,
     Json, Router,
@@ -36,6 +36,8 @@ async fn main() {
     let app = Router::new()
         .route("/", get(index))
         .route("/healthz", get(|| async { "ok" }))
+        .route("/pitch", get(pitch))
+        .route("/pitch-og.jpg", get(pitch_og))
         .route("/:kommun", get(kommun_page))
         .route("/:kommun/autocomplete", get(autocomplete))
         .route("/:kommun/preview", get(preview))
@@ -207,6 +209,36 @@ async fn ics(
             ),
         ],
         body,
+    )
+        .into_response()
+}
+
+async fn pitch(headers: HeaderMap) -> Html<String> {
+    let host = headers
+        .get("x-forwarded-host")
+        .or_else(|| headers.get(header::HOST))
+        .and_then(|v| v.to_str().ok())
+        .unwrap_or("sopor.motrice.se");
+    let proto = if host.starts_with("localhost") || host.starts_with("127.") {
+        "http"
+    } else {
+        headers
+            .get("x-forwarded-proto")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("https")
+    };
+    let base = format!("{proto}://{host}");
+    Html(templates::render_pitch(&base))
+}
+
+async fn pitch_og() -> Response {
+    static JPG: &[u8] = include_bytes!("../assets/pitch-og.jpg");
+    (
+        [
+            (header::CONTENT_TYPE, "image/jpeg"),
+            (header::CACHE_CONTROL, "public, max-age=86400"),
+        ],
+        JPG,
     )
         .into_response()
 }

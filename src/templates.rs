@@ -1,3 +1,7 @@
+const LINKEDIN_URL: &str = "https://www.linkedin.com/in/bj%C3%B6rn-molin-1843aa3";
+const GITHUB_URL: &str = "https://github.com/motrice/sopor";
+const AUTHOR: &str = "Björn Molin";
+
 const HEAD: &str = r#"<!doctype html>
 <html lang="sv">
 <head>
@@ -49,6 +53,15 @@ const HEAD: &str = r#"<!doctype html>
   .kommun-list a:hover { background: #f0f4ee; border-color: var(--acc); }
   .back { color: var(--muted); text-decoration: none; font-size: .85rem; }
   .back:hover { text-decoration: underline; }
+  .pitch-link { margin: 0 0 1.25rem 0; }
+  .pitch-link a { display: inline-block; padding: .5rem .85rem; background: #eef4ea;
+                  border: 1px solid var(--border); border-left: 3px solid var(--acc);
+                  border-radius: 6px; color: var(--acc); text-decoration: none;
+                  font-weight: 600; font-size: .9rem; }
+  .pitch-link a:hover { background: #e3ecdd; }
+  .byline { margin: 0 0 .75rem 0; color: var(--muted); font-size: .85rem; }
+  .byline a { color: var(--acc); text-decoration: none; font-weight: 600; }
+  .byline a:hover { text-decoration: underline; }
 </style>
 </head>
 <body>
@@ -62,8 +75,12 @@ const TAIL: &str = r#"
 pub fn render_index(kommuner: &[(&str, &str)]) -> String {
     let mut out = String::new();
     out.push_str(HEAD);
-    out.push_str(
+    out.push_str(&format!(
         r#"<main>
+  <p class="byline">Av <a href="{linkedin}" target="_blank" rel="noopener">{author}</a> ·
+     <a href="{linkedin}" target="_blank" rel="noopener">LinkedIn</a> ·
+     <a href="{github}" target="_blank" rel="noopener">GitHub</a></p>
+  <p class="pitch-link"><a href="/pitch">Varför är detta så svårt? Om öppna sopdata i Sverige →</a></p>
   <h1>Sophämtningskalender</h1>
   <p class="lede">Välj din kommun för att skapa en kalenderprenumeration
     med dina sophämtningsdatum.</p>
@@ -72,7 +89,10 @@ pub fn render_index(kommuner: &[(&str, &str)]) -> String {
     <label>Kommuner</label>
     <ul class="kommun-list">
 "#,
-    );
+        linkedin = LINKEDIN_URL,
+        github = GITHUB_URL,
+        author = AUTHOR,
+    ));
     for (id, name) in kommuner {
         out.push_str(&format!(
             r#"      <li><a href="/{id}">{name}</a></li>
@@ -86,7 +106,8 @@ pub fn render_index(kommuner: &[(&str, &str)]) -> String {
   </div>
 
   <footer>
-    Inofficiell tjänst — kontakta din kommun för officiella uppgifter.
+    Inofficiell tjänst — kontakta din kommun för officiella uppgifter.<br>
+    100% vibe kodat
   </footer>
 </main>"#,
     );
@@ -245,4 +266,99 @@ fn escape(s: &str) -> String {
         .replace('>', "&gt;")
         .replace('"', "&quot;")
         .replace('\'', "&#39;")
+}
+
+const PITCH_BODY: &str = include_str!("../assets/pitch.html");
+
+pub fn render_pitch(base_url: &str) -> String {
+    let title = "Öppna sopdata i Sverige — varför är detta så svårt?";
+    let desc = "EU-direktivet är tydligt: öppna data, standardformat, inga onödiga hinder. \
+                Av 290 svenska kommuner har en enda — Sundsvall — förstått det. Övriga gömmer \
+                sopdatat bakom BankID, obskyra widgets eller brandväggar mot molnet.";
+    let page_url = format!("{base_url}/pitch");
+    let img_url = format!("{base_url}/pitch-og.jpg");
+    format!(
+        r##"<!doctype html>
+<html lang="sv">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{title}</title>
+<meta name="description" content="{desc}">
+<link rel="canonical" href="{page_url}">
+
+<meta property="og:type" content="article">
+<meta property="og:site_name" content="sopor.motrice.se">
+<meta property="og:title" content="{title}">
+<meta property="og:description" content="{desc}">
+<meta property="og:url" content="{page_url}">
+<meta property="og:image" content="{img_url}">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="627">
+<meta property="og:image:alt" content="Infografik: Sundsvall som lysande öppna-data-stjärna med höga poäng (98/100, 96/100, 95/100), bredvid tre ledsna soptunnor som representerar andra kommuner med lägre tillgänglighet.">
+<meta property="og:locale" content="sv_SE">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{title}">
+<meta name="twitter:description" content="{desc}">
+<meta name="twitter:image" content="{img_url}">
+
+<style>
+  :root {{ --fg:#1a1a1a; --muted:#666; --bg:#fafaf7; --card:#fff;
+          --acc:#2f6f3d; --border:#e3e3dc; --star:#c07a00; }}
+  * {{ box-sizing: border-box; }}
+  body {{ margin:0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+         background: var(--bg); color: var(--fg); line-height: 1.65; }}
+  article {{ max-width: 760px; margin: 3rem auto 4rem; padding: 0 1.25rem; }}
+  h1 {{ font-size: 2.2rem; line-height: 1.2; margin: 0 0 2rem 0; }}
+  h2 {{ font-size: 1.5rem; margin: 2.5rem 0 1rem 0; border-top: 1px solid var(--border); padding-top: 1.75rem; }}
+  h3 {{ font-size: 1.15rem; margin: 1.75rem 0 .75rem 0; }}
+  p {{ margin: 0 0 1rem 0; }}
+  ul, ol {{ padding-left: 1.4rem; margin: 0 0 1rem 0; }}
+  li {{ margin-bottom: .5rem; }}
+  a {{ color: var(--acc); }}
+  code {{ font-family: ui-monospace, SFMono-Regular, monospace; font-size: .9em;
+         background: #eef1ec; padding: 1px 5px; border-radius: 3px; }}
+  strong {{ color: #111; }}
+  .table-wrap {{ overflow-x: auto; margin: 1rem -.25rem 1.5rem; }}
+  table {{ width: 100%; border-collapse: collapse; font-size: .92rem; background: var(--card);
+          border: 1px solid var(--border); border-radius: 8px; overflow: hidden; }}
+  th, td {{ text-align: left; padding: .7rem .85rem; border-bottom: 1px solid var(--border);
+           vertical-align: top; }}
+  th {{ background: #f0f4ee; font-weight: 700; }}
+  tr:last-child td {{ border-bottom: 0; }}
+  .closer {{ font-size: 1.15rem; margin-top: 2rem; }}
+  .cta {{ margin-top: 2rem; }}
+  .cta a {{ display: inline-block; background: var(--acc); color: #fff; padding: .75rem 1.25rem;
+           border-radius: 8px; text-decoration: none; font-weight: 700; }}
+  footer {{ max-width: 760px; margin: 0 auto 3rem; padding: 0 1.25rem; color: var(--muted);
+           font-size: .85rem; text-align: center; }}
+  .author {{ max-width: 760px; margin: 0 auto 2rem; padding: 1.5rem 1.25rem 0;
+             border-top: 1px solid var(--border); color: var(--muted); font-size: .95rem; }}
+  .author a {{ color: var(--acc); font-weight: 600; text-decoration: none; }}
+  .author a:hover {{ text-decoration: underline; }}
+</style>
+</head>
+<body>
+{body}
+<p class="author">Skriven av <a href="{linkedin}" target="_blank" rel="noopener">{author}</a> —
+   <a href="{linkedin}" target="_blank" rel="noopener">LinkedIn</a> ·
+   <a href="{github}" target="_blank" rel="noopener">Källkod på GitHub</a></p>
+<footer>
+  <a href="/">← Tillbaka till sopor.motrice.se</a><br>
+  100% vibe kodat
+</footer>
+</body>
+</html>
+"##,
+        title = escape(title),
+        desc = escape(desc),
+        page_url = escape(&page_url),
+        img_url = escape(&img_url),
+        body = PITCH_BODY,
+        linkedin = LINKEDIN_URL,
+        github = GITHUB_URL,
+        author = AUTHOR,
+    )
 }
