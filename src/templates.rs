@@ -380,6 +380,10 @@ pub fn render_pitch(base_url: &str) -> String {
   .cta {{ margin-top: 2rem; }}
   .cta a {{ display: inline-block; background: var(--acc); color: #fff; padding: .75rem 1.25rem;
            border-radius: 8px; text-decoration: none; font-weight: 700; }}
+  .pmpc {{ margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--border);
+           font-size: .9rem; color: var(--muted); text-align: center; }}
+  .pmpc img {{ max-width: 100%; height: auto; margin-bottom: .75rem; }}
+  .pmpc-credit {{ font-size: .8rem; }}
   footer {{ max-width: 760px; margin: 0 auto 3rem; padding: 0 1.25rem; color: var(--muted);
            font-size: .85rem; text-align: center; }}
   .author {{ max-width: 760px; margin: 0 auto 2rem; padding: 1.5rem 1.25rem 0;

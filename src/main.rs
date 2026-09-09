@@ -39,6 +39,7 @@ async fn main() {
         .route("/pitch", get(pitch))
         .route("/pitch-og.jpg", get(pitch_og))
         .route("/index-og.jpg", get(index_og))
+        .route("/pmpc-logo.jpg", get(pmpc_logo))
         .route("/{kommun}", get(kommun_page))
         .route("/{kommun}/autocomplete", get(autocomplete))
         .route("/{kommun}/preview", get(preview))
@@ -253,6 +254,18 @@ async fn index_og() -> Response {
         [
             (header::CONTENT_TYPE, "image/jpeg"),
             (header::CACHE_CONTROL, "public, max-age=86400"),
+        ],
+        JPG,
+    )
+        .into_response()
+}
+
+async fn pmpc_logo() -> Response {
+    static JPG: &[u8] = include_bytes!("../assets/pmpc-logo.jpg");
+    (
+        [
+            (header::CONTENT_TYPE, "image/jpeg"),
+            (header::CACHE_CONTROL, "public, max-age=604800"),
         ],
         JPG,
     )
