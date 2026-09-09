@@ -31,9 +31,10 @@ src/
     edp_future.rs      Skellefteå + 42 more (Vafab, SSAM, Kretslopp Sydost, Remondis, NVOA, etc.).
                        Open POST JSON; needs explicit Content-Length: 0 header on IIS.
     roslagsvatten.rs   Ekerö, Vaxholm, Österåker. Drupal AJAX-array with embedded HTML fragments.
+    hassleholm.rs      Hässleholm Miljö. Appbolaget API (search) + SiteVision webapp JSON (months).
 ```
 
-Current coverage: 54 kommun-routes (alphabetically sorted on landing, Swedish å<ä<ö order).
+Current coverage: 55 kommun-routes (alphabetically sorted on landing, Swedish å<ä<ö order).
 
 ## Core abstractions
 
@@ -115,6 +116,17 @@ literal in `Registry::build`. New platform = new file under
   incorrect RRULE projections. Swedish-character matching in city
   allow-lists requires Unicode `.to_lowercase()`, not
   `eq_ignore_ascii_case`.
+- **Hässleholm** — address search via Appbolaget's open API
+  (`api-universal.appbolaget.se/@universal/waste/addresses/search/?unit=…&query=…`,
+  capped at 25 hits); the schedule has no public API endpoint, so months
+  come from the `hsm.recycling-calendar` SiteVision webapp's `/getmonth`
+  route (`?sv.target=<portlet>&sv.<portlet>.route=/getmonth&date=…&alias=…&svAjaxReqParam=ajax`).
+  `X-Requested-With: XMLHttpRequest` is REQUIRED or SiteVision returns
+  the full HTML page. Upstream publishes only the near-term calendar
+  period (later months return `services: null`), so we emit explicit
+  dates for current+2 months and rely on client refresh. The Appbolaget
+  PDF export is date-shifted -1 day vs the widget (upstream UTC bug) —
+  never use it as a data source.
 - **Roslagsvatten** — Drupal AJAX. The endpoints return a JSON array
   of `{command, method, selector, data}` where `data` is an HTML
   fragment string. Extract addresses via regex on `data-bid="ID"`+text;
