@@ -2,6 +2,23 @@
 
 Kalenderprenumeration (iCalendar) för sophämtning i svenska kommuner.
 
+**Detta är en demonstrationsapplikation** — den finns för att påvisa
+vikten av **öppna data** och **öppna standarder** i den offentliga
+sektorn. Av Sveriges 290 kommuner publicerar exakt en (Sundsvall)
+hämtningsscheman som riktig öppen data. För övriga behöver den här
+tjänsten scrapea proprietära widgets, sniffa legacy-encodingar och
+reverse engineera JSON-nycklar — arbete som borde vara helt onödigt.
+Läs [pitchen](https://sopkalender.se/pitch) för hela resonemanget.
+
+**Licens och förvaltning.** Koden är fri och öppen under GPL-3.0-only
+och får användas fritt inom licensens ramar. Jag driver dock inte det
+här som ett förvaltat projekt — förvänta dig ingen löpande support,
+felrättning eller anpassning för nya kommuner utan förfrågan. Om din
+organisation vill realisera lösningen på riktigt (produktionssättning,
+utökad kommun-täckning, förvaltningsåtagande) tar jag gärna sådana
+uppdrag — hör av dig via GitHub eller på
+[LinkedIn](https://www.linkedin.com/in/bj%C3%B6rn-molin-1843aa3).
+
 Backend (Rust + Axum) hämtar data live från respektive kommuns offentliga
 adressuppslagstjänst, och returnerar en `text/calendar`-feed med
 återkommande events (RRULE) eller explicit listade datum, plus VALARM 6
