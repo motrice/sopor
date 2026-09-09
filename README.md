@@ -86,6 +86,7 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Täby | `/taby` | EXDE Systems Mina sidor |
 | Simrishamn | `/simrishamn` | EXDE Systems via Ökrab (samdrift) |
 | Tomelilla | `/tomelilla` | EXDE Systems via Ökrab (samdrift) |
+| Hässleholm | `/hassleholm` | Hässleholm Miljö (Appbolaget-API + SiteVision-webapp) |
 | Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
 
 ## Endpoints
@@ -157,7 +158,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
 | ✅ Herrljunga | ⬜ Hjo | ⬜ Hofors | ⬜ Huddinge | ⬜ Hudiksvall |
 | ✅ Hultsfred | 🔬 Hylte | ⬜ Håbo | ⬜ Hällefors | ⬜ Härjedalen |
-| ⬜ Härnösand | ⬜ Härryda | ⬜ Hässleholm | 🔬 Höganäs | ✅ Högsby |
+| ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ⬜ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ⬜ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |

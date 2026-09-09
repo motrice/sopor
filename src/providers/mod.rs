@@ -6,6 +6,7 @@ use serde::Serialize;
 
 pub mod edp_future;
 pub mod exde;
+pub mod hassleholm;
 pub mod indecta;
 pub mod roslagsvatten;
 pub mod sitevision_fetchplanner;
@@ -560,6 +561,24 @@ impl Registry {
             }),
         ];
 
+        // Hässleholm Miljö — Appbolaget universal waste API for search,
+        // SiteVision hsm.recycling-calendar webapp for the month data.
+        let hassleholm_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(hassleholm::Hassleholm::new(
+                http.clone(),
+                hassleholm::Config {
+                    id: "hassleholm",
+                    name: "Hässleholm",
+                    placeholder: "t.ex. Vankivavägen 15",
+                    note: "Sophämtningsdata från Hässleholm Miljö. Kalendern \
+                           publiceras löpande — kommande månader dyker upp i \
+                           flödet när de släpps.",
+                    unit: "e34d7050-1b2a-4917-a921-0ea7742d0a6e",
+                    calendar_url: "https://hassleholmmiljo.se/privat/sophamtning/tomningskalender",
+                    portlet_id: "12.55ed8fe718ecb61f78a3204d",
+                },
+            ))];
+
         // Sundsvall — official CC0 open-data dataset published on
         // dataportal.se (61_6752). Single-kommun provider with an
         // in-memory cache refreshed every 12 h.
@@ -572,6 +591,7 @@ impl Registry {
                 .chain(edp_providers.into_iter())
                 .chain(roslagsvatten_providers.into_iter())
                 .chain(exde_providers.into_iter())
+                .chain(hassleholm_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .collect(),
         }
