@@ -10,6 +10,7 @@ pub mod hassleholm;
 pub mod indecta;
 pub mod roslagsvatten;
 pub mod sitevision_fetchplanner;
+pub mod sodertorn;
 pub mod stockholm;
 pub mod sundsvall;
 pub mod vasyd;
@@ -62,6 +63,12 @@ pub trait Provider: Send + Sync {
     fn name(&self) -> &'static str;
     fn placeholder(&self) -> &'static str;
     fn note(&self) -> &'static str;
+    /// Extra labels for the index page that all resolve to `id()`. Used by
+    /// SRV Återvinning where Botkyrka/Haninge/Huddinge/Nynäshamn/Salem all
+    /// share one Södertörns-sida. Default: no aliases, index uses `name()`.
+    fn index_aliases(&self) -> &'static [&'static str] {
+        &[]
+    }
     async fn autocomplete(&self, query: &str) -> Result<Vec<Suggestion>, ProviderError>;
     async fn schedule(&self, address: &str) -> Result<PickupSchedule, ProviderError>;
 }
@@ -585,6 +592,12 @@ impl Registry {
         let sundsvall_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(sundsvall::Sundsvall::new(http.clone()))];
 
+        // SRV Återvinning — samlingsprovider "Södertörn" som täcker
+        // Botkyrka, Haninge, Huddinge, Nynäshamn och Salem via ett
+        // gemensamt öppet REST-API på srvatervinning.se.
+        let sodertorn_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(sodertorn::Sodertorn::new(http.clone()))];
+
         Self {
             providers: providers
                 .into_iter()
@@ -593,6 +606,7 @@ impl Registry {
                 .chain(exde_providers.into_iter())
                 .chain(hassleholm_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
+                .chain(sodertorn_providers.into_iter())
                 .collect(),
         }
     }

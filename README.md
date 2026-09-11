@@ -88,6 +88,11 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Tomelilla | `/tomelilla` | EXDE Systems via Ökrab (samdrift) |
 | Hässleholm | `/hassleholm` | Hässleholm Miljö (Appbolaget-API + SiteVision-webapp) |
 | Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
+| Botkyrka | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
+| Haninge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
+| Huddinge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
+| Nynäshamn | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
+| Salem | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 
 ## Endpoints
 
@@ -146,7 +151,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
-| ⬜ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
+| ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ✅ Fagersta | ⬜ Falkenberg |
@@ -155,8 +160,8 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Gnosjö | ⬜ Gotland | ⬜ Grums | ⬜ Grästorp | ⬜ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ⬜ Götene | ⬜ Habo |
 | ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
-| ⬜ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
-| ✅ Herrljunga | ⬜ Hjo | ⬜ Hofors | ⬜ Huddinge | ⬜ Hudiksvall |
+| ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
+| ✅ Herrljunga | ⬜ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
 | ✅ Hultsfred | 🔬 Hylte | ⬜ Håbo | ⬜ Hällefors | ⬜ Härjedalen |
 | ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ⬜ Jönköping |
@@ -174,11 +179,11 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
 | ✅ Nacka | ⬜ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
 | ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ✅ Nybro | ⬜ Nykvarn |
-| ⬜ Nyköping | ⬜ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
+| ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
 | ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
 | ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ✅ Sala |
-| ⬜ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
+| ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
 | ⬜ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |

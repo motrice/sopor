@@ -32,9 +32,13 @@ src/
                        Open POST JSON; needs explicit Content-Length: 0 header on IIS.
     roslagsvatten.rs   Ekerö, Vaxholm, Österåker. Drupal AJAX-array with embedded HTML fragments.
     hassleholm.rs      Hässleholm Miljö. Appbolaget API (search) + SiteVision webapp JSON (months).
+    sodertorn.rs       SRV Återvinning (Botkyrka, Haninge, Huddinge, Nynäshamn, Salem).
+                       Open GET JSON at /rest-api/core/sewagePickup/{getSuggestions,search}.
 ```
 
-Current coverage: 55 kommun-routes (alphabetically sorted on landing, Swedish å<ä<ö order).
+Current coverage: one `/sodertorn` route covers 5 kommuner via `index_aliases()`
+(5 landing-list entries all linking to the shared page — unusual pattern, only SRV).
+All other kommuner have their own routes.
 
 ## Core abstractions
 
@@ -73,6 +77,11 @@ Existing platforms with multi-tenant configs:
   allow-list to filter the shared upstream.
 - `Roslagsvatten` (Ekerö, Vaxholm, Österåker) — `/schedule/search` +
   `/schedule/fetch` POST JSON, returns Drupal AJAX-array.
+- `Sodertorn` (Botkyrka, Haninge, Huddinge, Nynäshamn, Salem) — single
+  provider on `/sodertorn` with 5 index aliases. SRV Återvinning's
+  BM FetchPlanner backend (`fpservice.bmsystem.se/1839SRVProd/`) is
+  BankID-gated, but a public REST facade exists on their SiteVision
+  frontend at `www.srvatervinning.se/rest-api/core/sewagePickup/`.
 
 When adding via existing provider, all you usually need is a `Config`
 literal in `Registry::build`. New platform = new file under
@@ -127,6 +136,17 @@ literal in `Registry::build`. New platform = new file under
   dates for current+2 months and rely on client refresh. The Appbolaget
   PDF export is date-shifted -1 day vs the widget (upstream UTC bug) —
   never use it as a data source.
+- **Södertörn (SRV Återvinning)** — public REST at `www.srvatervinning.se/
+  rest-api/core/sewagePickup/`. `getSuggestions?query=<term>` returns
+  autocomplete names shaped `"<Street>, <Zip> <CITY>"`. `search?query=`
+  accepts ONLY the bare street — passing the full autocomplete string
+  back yields zero results, so `sodertorn.rs::split_address` strips the
+  `", zip CITY"` tail and re-sends the city as a separate `city=` query
+  parameter. That's also how we disambiguate cross-postort collisions
+  (e.g. Strandvägen exists in Muskö, Dalarö, Uttran). `calendars[]` is
+  pre-baked ~52 dates for weekly containers; emit as explicit anchors
+  (no RRULE projection). `hasFrequency=false` on slam containers where
+  `frequency` is literally the string `"False"` — filter to empty.
 - **Roslagsvatten** — Drupal AJAX. The endpoints return a JSON array
   of `{command, method, selector, data}` where `data` is an HTML
   fragment string. Extract addresses via regex on `data-bid="ID"`+text;
