@@ -9,6 +9,7 @@ pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
 pub mod rambo;
+pub mod sysav;
 pub mod edp_future;
 pub mod exde;
 pub mod hassleholm;
@@ -843,6 +844,30 @@ impl Registry {
         let rambo_note = "Sophämtningsdata från Rambo AB. API:t returnerar \
                           bara nästa tömning per fraktion — kalendern uppdateras \
                           löpande när klienten hämtar in feeden på nytt.";
+        let sysav_note = "Sophämtningsdata från Sysav via publik EDP-proxy. \
+                          Endpointen returnerar bara nästa tömning per fraktion — \
+                          kalendern uppdateras när klienten hämtar in feeden på nytt.";
+        let sysav_p = |cfg: sysav::Config| -> Arc<dyn Provider> {
+            Arc::new(sysav::Sysav::new(http.clone(), cfg))
+        };
+        let sysav_providers: Vec<Arc<dyn Provider>> = vec![
+            sysav_p(sysav::Config {
+                id: "kavlinge", name: "Kävlinge",
+                placeholder: "t.ex. Storgatan 12", note: sysav_note,
+                cities: &["Kävlinge", "Furulund", "Löddeköpinge", "Hofterup", "Barsebäck", "Barsebäckshamn"],
+            }),
+            sysav_p(sysav::Config {
+                id: "lomma", name: "Lomma",
+                placeholder: "t.ex. Storgatan 10", note: sysav_note,
+                cities: &["Lomma", "Bjärred", "Borgeby", "Flädie"],
+            }),
+            sysav_p(sysav::Config {
+                id: "svedala", name: "Svedala",
+                placeholder: "t.ex. Storgatan 10", note: sysav_note,
+                cities: &["Svedala", "Bara", "Klågerup", "Skabersjö", "Tjustorp"],
+            }),
+        ];
+
         let rambo_providers: Vec<Arc<dyn Provider>> = vec![
             rambo_p(rambo::Config {
                 id: "lysekil", name: "Lysekil",
@@ -1002,6 +1027,7 @@ impl Registry {
                 .chain(arjeplog_providers.into_iter())
                 .chain(arvidsjaur_providers.into_iter())
                 .chain(rambo_providers.into_iter())
+                .chain(sysav_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }
