@@ -58,10 +58,14 @@ kräver användarens BankID-inloggning.
 - **HEMAB Härnösand** — SiteVision-widget som returnerar rikt schema
   men bara vid *exakt gatunamn* utan husnummer. Autocomplete-UX blir
   ovanlig — kanske dropdown över kommunens ~200 gatunamn?
-- **NÅRAB** (Klippan/Perstorp/Örkelljunga) — samma PHP-motor som
-  Indecta, men färgade `background:#…`-markers istället för
-  `dagMedTomClass<code>`-CSS. Kräver ny provider (kan inte utöka
-  befintlig `indecta.rs`). ~3 kommuner för 4-6h arbete.
+- **NÅRAB** (Klippan/Perstorp/Örkelljunga) — **verifierat 2026-09-12
+  som svårare än research-agenten uppskattade**: PHP-endpointen
+  `online_kalender_skapa.php` returnerar ett tomt kalender-template
+  utan pickup-datum. Datumen genereras klient-side via minifierad JS
+  när användaren klickar en PDF-knapp. Skulle kräva reverse
+  engineering av `jq.motor.js`-baserad PDF-generator (flera hundra
+  rader minifierad JS). Inte samma svårighet som OGRAB som har
+  server-renderade `dagMedTomClass`-markers.
 
 ### Låg ROI, hög komplexitet: PDF/OCR/xlsx-parsing (~7 kommuner)
 
