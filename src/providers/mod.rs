@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Serialize;
 
+pub mod alvesta;
 pub mod arjeplog;
 pub mod avfallsappen;
 pub mod edp_future;
@@ -612,6 +613,12 @@ impl Registry {
         let arjeplog_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(arjeplog::Arjeplog::new())];
 
+        // Alvesta — publikt bulk-JSON på arabschema.alvesta.se. SPA:n
+        // hämtar hela datasetet (~2,5 MB) i förväg; vi speglar den
+        // strategin med in-memory cache och 12 h TTL.
+        let alvesta_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(alvesta::Alvesta::new(http.clone()))];
+
         // SRV Återvinning — samlingsprovider "Södertörn" som täcker
         // Botkyrka, Haninge, Huddinge, Nynäshamn och Salem via ett
         // gemensamt öppet REST-API på srvatervinning.se.
@@ -734,6 +741,7 @@ impl Registry {
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())
                 .chain(arjeplog_providers.into_iter())
+                .chain(alvesta_providers.into_iter())
                 .collect(),
         }
     }
