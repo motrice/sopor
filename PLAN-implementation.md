@@ -3,7 +3,7 @@
 Konsoliderat från 8 parallella research-agenters fynd över alla ~206
 oimplementerade svenska kommuner.
 
-Startläge: 76 kommuner. Efter alla implementerade steg: **132 kommuner (46% av 290).**
+Startläge: 76 kommuner. Efter alla implementerade steg: **133 kommuner (46% av 290).**
 
 ## Status per steg
 
@@ -20,8 +20,9 @@ Startläge: 76 kommuner. Efter alla implementerade steg: **132 kommuner (46% av 
 | 7c | MERAB Gatsby+EDP | 0 | ⛔ skipped (auth-gated) | — |
 | 9 | Strömstad + VMAB Bromölla + Ronneby | +3 | ✅ | `9496dee` |
 | 8/10 | area_based ×19 kommuner | +19 | ✅ | `c70872f` |
+| 11 | HEMAB Härnösand | +1 | ✅ | `a296c72` |
 
-**Summa: +56 kommuner via 11 nya providers + 3 tenant-utökningar.**
+**Summa: +57 kommuner via 12 nya providers + 3 tenant-utökningar.**
 
 ## Kvarstår att bygga
 
@@ -53,11 +54,15 @@ kräver användarens BankID-inloggning.
 ### Låg ROI men rimlig komplexitet: single-kommun (~4 kommuner)
 
 - **Kristianstad** Vue-widget (`renhallningen-kristianstad.se`) —
-  minifierad Vue-app; endpoint-namn ej i klar-text. Skulle behöva
-  browser-devtools-session för att observera XHR:er.
-- **HEMAB Härnösand** — SiteVision-widget som returnerar rikt schema
-  men bara vid *exakt gatunamn* utan husnummer. Autocomplete-UX blir
-  ovanlig — kanske dropdown över kommunens ~200 gatunamn?
+  **verifierat trasig 2026-09-12**: Vue-mallen finns i HTML:en med
+  `v-model="calendarValue"`, `@click="calendarPickAdress(result)"`
+  etc, men *ingen* Vue-komponent med dessa metoder är laddad — bara
+  `#sort-guide`- och `#faq`-Vue-apparna finns i script.js. WP-JSON
+  `kr/`-namespace innehåller bara `kr/centrals` (återvinningscentraler).
+  Widgeten är deployad utan sitt backend-JS. Ingenting att skrapa.
+- ~~**HEMAB Härnösand**~~ — implementerad `a296c72`: `?query=*`
+  returnerar hela datasetet (1790 adresser). Cachas 12 h och
+  substring-matchas lokalt.
 - **NÅRAB** (Klippan/Perstorp/Örkelljunga) — **verifierat 2026-09-12
   som svårare än research-agenten uppskattade**: PHP-endpointen
   `online_kalender_skapa.php` returnerar ett tomt kalender-template
