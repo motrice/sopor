@@ -49,6 +49,8 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Ljungby | `/ljungby` | EDP Future |
 | Örebro | `/orebro` | EDP Future |
 | Nacka | `/nacka` | EDP Future via NVOA |
+| Ale | `/ale` | EDP Future |
+| Kungälv | `/kungalv` | EDP Future |
 | Herrljunga | `/herrljunga` | EDP Future via Remondis (samdrift) |
 | Vårgårda | `/vargarda` | EDP Future via Remondis (samdrift) |
 | Växjö | `/vaxjo` | EDP Future via SSAM (samdrift) |
@@ -161,7 +163,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 
 | | | | | |
 | --- | --- | --- | --- | --- |
-| ⬜ Ale | ⬜ Alingsås | ⬜ Alvesta | ⬜ Aneby | ⬜ Arboga |
+| ✅ Ale | ⬜ Alingsås | ⬜ Alvesta | ⬜ Aneby | ⬜ Arboga |
 | ✅ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
@@ -183,7 +185,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
 | ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ⬜ Kramfors | ⬜ Kristianstad |
 | ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
-| ⬜ Kungälv | ⬜ Kävlinge | ✅ Köping | ⬜ Laholm | ⬜ Landskrona |
+| ✅ Kungälv | ⬜ Kävlinge | ✅ Köping | ⬜ Laholm | ⬜ Landskrona |
 | ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
 | ⬜ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ⬜ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ⬜ Ljusnarsberg | ⬜ Lomma | ⬜ Ludvika |

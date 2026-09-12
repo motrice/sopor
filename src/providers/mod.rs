@@ -279,6 +279,18 @@ impl Registry {
                 api_url: "https://futureweb.nvoa.se/EDP/FutureWebBasic/SimpleWastePickup",
                 cities: None,
             }),
+            edp(edp_future::Config {
+                id: "ale", name: "Ale",
+                placeholder: "t.ex. Ledetvägen 6", note: edp_note,
+                api_url: "https://edp.ale.se/FutureWeb/SimpleWastePickup",
+                cities: None,
+            }),
+            edp(edp_future::Config {
+                id: "kungalv", name: "Kungälv",
+                placeholder: "t.ex. Komministergatan 4", note: edp_note,
+                api_url: "https://minasidor-va-avfall.kungalv.se/FutureWeb/SimpleWastePickup",
+                cities: None,
+            }),
         ];
 
         // Remondis-portalen täcker Herrljunga och Vårgårda.
