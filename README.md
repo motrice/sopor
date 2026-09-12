@@ -137,6 +137,8 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Kävlinge | `/kavlinge` | Sysav (publik Azure EDP-proxy) |
 | Lomma | `/lomma` | Sysav (publik Azure EDP-proxy) |
 | Svedala | `/svedala` | Sysav (publik Azure EDP-proxy) |
+| Landskrona | `/landskrona` | LSR (Landskrona-Svalöv Renhållnings AB, öppet REST) |
+| Svalöv | `/svalov` | LSR (samdrift) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -214,7 +216,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
 | ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ⬜ Kristianstad |
 | ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
-| ✅ Kungälv | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ⬜ Landskrona |
+| ✅ Kungälv | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ✅ Landskrona |
 | ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
 | ✅ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ✅ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ✅ Ljusnarsberg | ✅ Lomma | ✅ Ludvika |
@@ -233,7 +235,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ✅ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
 | ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
-| ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ✅ Svedala |
+| ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ✅ Svalöv | ✅ Svedala |
 | ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ✅ Tanum | ✅ Tibro |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |

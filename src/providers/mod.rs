@@ -8,6 +8,7 @@ pub mod alvesta;
 pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
+pub mod lsr;
 pub mod rambo;
 pub mod sysav;
 pub mod edp_future;
@@ -868,6 +869,33 @@ impl Registry {
             }),
         ];
 
+        // LSR — Landskrona-Svalövs Renhållnings AB. Publik REST-fasad
+        // på minasidor.lsr.nu/api/api/external/ (POST JSON, ingen auth).
+        let lsr_note = "Sophämtningsdata från LSR (Landskrona-Svalöv). \
+                        API:t returnerar hela årsplanen som explicit \
+                        datum-lista per fraktion.";
+        let lsr_p = |cfg: lsr::Config| -> Arc<dyn Provider> {
+            Arc::new(lsr::Lsr::new(http.clone(), cfg))
+        };
+        let lsr_providers: Vec<Arc<dyn Provider>> = vec![
+            lsr_p(lsr::Config {
+                id: "landskrona", name: "Landskrona",
+                placeholder: "t.ex. Storgatan 12", note: lsr_note,
+                cities: &[
+                    "Landskrona", "Häljarp", "Asmundtorp", "Glumslöv",
+                    "Ålabodarna", "Ven", "Hilleshög", "Sankt Ibb",
+                ],
+            }),
+            lsr_p(lsr::Config {
+                id: "svalov", name: "Svalöv",
+                placeholder: "t.ex. Storgatan 1", note: lsr_note,
+                cities: &[
+                    "Svalöv", "Teckomatorp", "Kågeröd", "Röstånga",
+                    "Tågarp", "Billeberga",
+                ],
+            }),
+        ];
+
         let rambo_providers: Vec<Arc<dyn Provider>> = vec![
             rambo_p(rambo::Config {
                 id: "lysekil", name: "Lysekil",
@@ -1028,6 +1056,7 @@ impl Registry {
                 .chain(arvidsjaur_providers.into_iter())
                 .chain(rambo_providers.into_iter())
                 .chain(sysav_providers.into_iter())
+                .chain(lsr_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }
