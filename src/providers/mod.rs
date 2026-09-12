@@ -8,6 +8,7 @@ pub mod alvesta;
 pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
+pub mod rambo;
 pub mod edp_future;
 pub mod exde;
 pub mod hassleholm;
@@ -833,6 +834,44 @@ impl Registry {
         let arvidsjaur_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(arvidsjaur::Arvidsjaur::new())];
 
+        // Rambo AB — Lysekil, Munkedal, Sotenäs, Tanum. Delad WP-JSON-
+        // instans på rambo.se med statisk X-App-Identifier extraherad
+        // ur pickup-widgetens JS-bundle.
+        let rambo_p = |cfg: rambo::Config| -> Arc<dyn Provider> {
+            Arc::new(rambo::Rambo::new(http.clone(), cfg))
+        };
+        let rambo_note = "Sophämtningsdata från Rambo AB. API:t returnerar \
+                          bara nästa tömning per fraktion — kalendern uppdateras \
+                          löpande när klienten hämtar in feeden på nytt.";
+        let rambo_providers: Vec<Arc<dyn Provider>> = vec![
+            rambo_p(rambo::Config {
+                id: "lysekil", name: "Lysekil",
+                placeholder: "t.ex. Kungsgatan 1", note: rambo_note,
+                cities: &["Lysekil", "Brastad", "Fiskebäckskil", "Grundsund", "Skaftö", "Rågårdsdal"],
+            }),
+            rambo_p(rambo::Config {
+                id: "munkedal", name: "Munkedal",
+                placeholder: "t.ex. Storgatan 1", note: rambo_note,
+                cities: &["Munkedal", "Hedekas", "Håby", "Hällevadsholm", "Dingle"],
+            }),
+            rambo_p(rambo::Config {
+                id: "sotenas", name: "Sotenäs",
+                placeholder: "t.ex. Storgatan 1", note: rambo_note,
+                cities: &[
+                    "Kungshamn", "Hunnebostrand", "Bovallstrand", "Smögen",
+                    "Väjern", "Malmön",
+                ],
+            }),
+            rambo_p(rambo::Config {
+                id: "tanum", name: "Tanum",
+                placeholder: "t.ex. Storgatan 1", note: rambo_note,
+                cities: &[
+                    "Tanumshede", "Grebbestad", "Fjällbacka", "Kämpersvik",
+                    "Rabbalshede", "Havstenssund", "Hamburgsund", "Lur", "Bullaren",
+                ],
+            }),
+        ];
+
         // Alvesta — publikt bulk-JSON på arabschema.alvesta.se. SPA:n
         // hämtar hela datasetet (~2,5 MB) i förväg; vi speglar den
         // strategin med in-memory cache och 12 h TTL.
@@ -962,6 +1001,7 @@ impl Registry {
                 .chain(avfallsappen_providers.into_iter())
                 .chain(arjeplog_providers.into_iter())
                 .chain(arvidsjaur_providers.into_iter())
+                .chain(rambo_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }

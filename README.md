@@ -130,6 +130,10 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Vara | `/vara` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 | Arjeplog | `/arjeplog` | Statiska rutt-slingor från arjeplog.se (ingen adress-uppslag) |
 | Arvidsjaur | `/arvidsjaur` | Statiska rutt-slingor från arvidsjaur.se (ingen adress-uppslag) |
+| Lysekil | `/lysekil` | Rambo AB (WP-JSON på rambo.se) |
+| Munkedal | `/munkedal` | Rambo AB (samdrift) |
+| Sotenäs | `/sotenas` | Rambo AB (samdrift) |
+| Tanum | `/tanum` | Rambo AB (samdrift) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -211,10 +215,10 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
 | ✅ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ✅ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ✅ Ljusnarsberg | ⬜ Lomma | ✅ Ludvika |
-| 🔬 Luleå | ✅ Lund | ✅ Lycksele | ⬜ Lysekil | ✅ Malmö |
+| 🔬 Luleå | ✅ Lund | ✅ Lycksele | ✅ Lysekil | ✅ Malmö |
 | ⬜ Malung-Sälen | ⬜ Malå | ✅ Mariestad | ✅ Mark | ✅ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ✅ Mullsjö |
-| ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
+| ✅ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
 | ✅ Nacka | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
 | ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ✅ Nybro | ⬜ Nykvarn |
 | ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
@@ -224,11 +228,11 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
 | ✅ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde |
 | ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
-| ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
+| ✅ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
 | ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
 | ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ⬜ Svedala |
 | ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
-| ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ✅ Tibro |
+| ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ✅ Tanum | ✅ Tibro |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
 | ✅ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
