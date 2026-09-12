@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Serialize;
 
+pub mod arjeplog;
 pub mod avfallsappen;
 pub mod edp_future;
 pub mod exde;
@@ -593,6 +594,12 @@ impl Registry {
         let sundsvall_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(sundsvall::Sundsvall::new(http.clone()))];
 
+        // Arjeplog — statisk rutt-baserad kalender. Ingen extern
+        // adressuppslag; provider genererar biweekly-datum lokalt från en
+        // transkriberad rutt-tabell (arjeplog.se).
+        let arjeplog_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(arjeplog::Arjeplog::new())];
+
         // SRV Återvinning — samlingsprovider "Södertörn" som täcker
         // Botkyrka, Haninge, Huddinge, Nynäshamn och Salem via ett
         // gemensamt öppet REST-API på srvatervinning.se.
@@ -714,6 +721,7 @@ impl Registry {
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())
+                .chain(arjeplog_providers.into_iter())
                 .collect(),
         }
     }
