@@ -5,6 +5,8 @@ use chrono::NaiveDate;
 use serde::Serialize;
 
 pub mod alvesta;
+pub mod area_based;
+pub mod area_based_routes;
 pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
@@ -840,6 +842,23 @@ impl Registry {
         let arvidsjaur_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(arvidsjaur::Arvidsjaur::new())];
 
+        // Delade area-based-providers: kommuner som publicerar statiska
+        // slingor per veckodag + parity utan adress-uppslag. Data
+        // transkriberad från respektive kommuns webbsida i
+        // `area_based_routes.rs`.
+        let area_based_providers: Vec<Arc<dyn Provider>> = area_based_routes::CONFIGS
+            .iter()
+            .map(|cfg| {
+                Arc::new(area_based::AreaBased::new(area_based::Config {
+                    id: cfg.id,
+                    name: cfg.name,
+                    placeholder: cfg.placeholder,
+                    note: cfg.note,
+                    routes: cfg.routes,
+                })) as Arc<dyn Provider>
+            })
+            .collect();
+
         // Rambo AB — Lysekil, Munkedal, Sotenäs, Tanum. Delad WP-JSON-
         // instans på rambo.se med statisk X-App-Identifier extraherad
         // ur pickup-widgetens JS-bundle.
@@ -1147,6 +1166,7 @@ impl Registry {
                 .chain(avfallsappen_providers.into_iter())
                 .chain(arjeplog_providers.into_iter())
                 .chain(arvidsjaur_providers.into_iter())
+                .chain(area_based_providers.into_iter())
                 .chain(rambo_providers.into_iter())
                 .chain(sysav_providers.into_iter())
                 .chain(lsr_providers.into_iter())

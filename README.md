@@ -148,6 +148,25 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Strömstad | `/stromstad` | Strömstads kommun (SiteVision-widget) |
 | Bromölla | `/bromolla` | VMAB (jQuery + fullcalendar) |
 | Ronneby | `/ronneby` | Ronneby Miljöteknik (samma software som VMAB) |
+| Ydre | `/ydre` | Statisk rutt-slinga (Ydre Åkeri AB) |
+| Sorsele | `/sorsele` | Statisk rutt-slinga från sorsele.se |
+| Norsjö | `/norsjo` | Statisk rutt-slinga från norsjo.se |
+| Bjurholm | `/bjurholm` | Statisk rutt-slinga från bjurholm.se |
+| Malå | `/mala` | Statisk rutt-slinga från mala.se |
+| Åre | `/are` | Statisk rutt-slinga (Lundstams Återvinning) |
+| Åsele | `/asele` | Statisk rutt-slinga (SAV — Södra Lapplands Avfall) |
+| Dorotea | `/dorotea` | Statisk rutt-slinga (SAV, samdrift med Åsele) |
+| Jokkmokk | `/jokkmokk` | Statisk rutt-slinga (Jokkmokks Lastbilscentral) |
+| Årjäng | `/arjang` | Statisk rutt-slinga från arjang.se |
+| Valdemarsvik | `/valdemarsvik` | Statisk rutt-slinga från valdemarsvik.se |
+| Vilhelmina | `/vilhelmina` | Statisk rutt-slinga från vilhelmina.se |
+| Övertorneå | `/overtornea` | Statisk rutt-slinga (kompost varannan vecka) |
+| Filipstad | `/filipstad` | Statisk rutt-slinga från filipstad.se |
+| Storuman | `/storuman` | Statisk rutt-slinga från storuman.se |
+| Vännäs | `/vannas` | Statisk rutt-slinga från vannas.se |
+| Strömsund | `/stromsund` | Statisk rutt-slinga från stromsund.se |
+| Ragunda | `/ragunda` | Statisk rutt-slinga (gäller t.o.m. 2026-12-31) |
+| Pajala | `/pajala` | Statisk rutt-slinga (endast A-områden) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -205,13 +224,13 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | --- | --- | --- | --- | --- |
 | ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ✅ Arboga |
 | ✅ Arjeplog | ✅ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
-| ⬜ Bengtsfors | ✅ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
+| ⬜ Bengtsfors | ✅ Berg | ✅ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
 | ✅ Botkyrka | ⬜ Boxholm | ✅ Bromölla | ✅ Bräcke | ✅ Burlöv |
-| 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
+| 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ✅ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
-| ✅ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
+| ✅ Falköping | ✅ Falun | ✅ Filipstad | ⬜ Finspång | 🔬 Flen |
 | ✅ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
 | ✅ Gnosjö | ⬜ Gotland | ✅ Grums | ✅ Grästorp | ✅ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ✅ Habo |
@@ -220,7 +239,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
 | ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ✅ Härjedalen |
 | ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
-| ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
+| ⬜ Hörby | ⬜ Höör | ✅ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
 | ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ⬜ Kristianstad |
@@ -230,20 +249,20 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ✅ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ✅ Ljusnarsberg | ✅ Lomma | ✅ Ludvika |
 | 🔬 Luleå | ✅ Lund | ✅ Lycksele | ✅ Lysekil | ✅ Malmö |
-| ⬜ Malung-Sälen | ⬜ Malå | ✅ Mariestad | ✅ Mark | ✅ Markaryd |
+| ⬜ Malung-Sälen | ✅ Malå | ✅ Mariestad | ✅ Mark | ✅ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ✅ Mullsjö |
 | ✅ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
 | ✅ Nacka | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
-| ⬜ Norrköping | ⬜ Norrtälje | ⬜ Norsjö | ✅ Nybro | ⬜ Nykvarn |
+| ⬜ Norrköping | ⬜ Norrtälje | ✅ Norsjö | ✅ Nybro | ⬜ Nykvarn |
 | ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
 | ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
-| ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
-| ⬜ Ragunda | ⬜ Robertsfors | ✅ Ronneby | ⬜ Rättvik | ✅ Sala |
+| ⬜ Oxelösund | ✅ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
+| ✅ Ragunda | ⬜ Robertsfors | ✅ Ronneby | ⬜ Rättvik | ✅ Sala |
 | ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
 | ✅ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde |
-| ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
+| ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ✅ Sorsele |
 | ✅ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
-| ⬜ Storuman | ⬜ Strängnäs | ✅ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
+| ✅ Storuman | ⬜ Strängnäs | ✅ Strömstad | ✅ Strömsund | ⬜ Sundbyberg |
 | ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ✅ Svalöv | ✅ Svedala |
 | ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ✅ Tanum | ✅ Tibro |
@@ -252,15 +271,15 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
 | ✅ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ✅ Vaggeryd |
-| ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
-| ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
-| 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
+| ✅ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
+| ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ✅ Vilhelmina | ⬜ Vimmerby |
+| 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
 | 🔬 Värmdö | ✅ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
-| ⬜ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ⬜ Åre |
-| ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
+| ✅ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ✅ Åre |
+| ✅ Årjäng | ✅ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
 | ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
 | ⬜ Ödeshög | ✅ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
-| ✅ Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ⬜ Övertorneå |
+| ✅ Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ✅ Övertorneå |
 
 Status motsvarar status i kodbasen idag. 🔬 betyder att jag identifierat
 sannolik plattform via offentlig källa men inte verifierat eller byggt
