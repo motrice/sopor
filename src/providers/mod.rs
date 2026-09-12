@@ -525,6 +525,146 @@ impl Registry {
             cities: Some(&["Åseda", "Lenhovda", "Norrhult", "Älghult", "Alstermo", "Klavreström"]),
         }));
 
+        // Samhällsbyggnad Bergslagen (SBB) — Ljusnarsberg, Lindesberg,
+        // Nora, Hällefors. Delad EDP FutureWeb-instans.
+        let sbb = "https://futureweb.sbbergslagen.se/FutureWeb/SimpleWastePickup";
+        edp_providers.push(edp(edp_future::Config {
+            id: "lindesberg", name: "Lindesberg",
+            placeholder: "t.ex. Kristinavägen 1", note: edp_note,
+            api_url: sbb,
+            cities: Some(&[
+                "Lindesberg", "Frövi", "Storå", "Ramsberg", "Fellingsbro",
+                "Vedevåg", "Guldsmedshyttan", "Gusselby", "Löa",
+            ]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "nora", name: "Nora",
+            placeholder: "t.ex. Storgatan 1", note: edp_note,
+            api_url: sbb,
+            cities: Some(&["Nora", "Gyttorp", "Pershyttan", "Ås", "Striberg"]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "hallefors", name: "Hällefors",
+            placeholder: "t.ex. Sikforsvägen 1", note: edp_note,
+            api_url: sbb,
+            cities: Some(&["Hällefors", "Grythyttan", "Sikfors", "Bredsjö"]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "ljusnarsberg", name: "Ljusnarsberg",
+            placeholder: "t.ex. Kyrkvägen 1", note: edp_note,
+            api_url: sbb,
+            cities: Some(&["Kopparberg", "Ställdalen", "Bångbro", "Ljusnarsberg"]),
+        }));
+
+        // Vivab / FutureWebFalken — Falkenberg (Varberg körs på en
+        // separat login-gated instans och täcks inte).
+        edp_providers.push(edp(edp_future::Config {
+            id: "falkenberg", name: "Falkenberg",
+            placeholder: "t.ex. Storgatan 1", note: edp_note,
+            api_url: "https://minasidor.vivab.info/FutureWebFalken/SimpleWastePickup",
+            cities: Some(&[
+                "Falkenberg", "Ullared", "Vessigebro", "Slöinge", "Långås",
+                "Ätran", "Fegen", "Vinberg", "Skällinge", "Sibbarp",
+                "Källsjö", "Okome", "Vinberg", "Morup",
+            ]),
+        }));
+
+        // June Avfall & Miljö / FutureWebJuneBasic — Jönköping, Habo, Mullsjö.
+        // Delad EDP-instans; filter per kommun via cities allow-list. Notera
+        // att datasetet innehåller enstaka poster märkta "NÄSSJÖ" (Sandhem-
+        // varianter) som filtreras bort automatiskt.
+        let june = "https://minasidor.juneavfall.se/FutureWebJuneBasic/SimpleWastePickup";
+        edp_providers.push(edp(edp_future::Config {
+            id: "jonkoping", name: "Jönköping",
+            placeholder: "t.ex. Storgatan 1", note: edp_note,
+            api_url: june,
+            cities: Some(&[
+                "Jönköping", "Huskvarna", "Norrahammar", "Bankeryd", "Taberg",
+                "Tenhult", "Kaxholmen", "Skärstad", "Månsarp", "Öggestorp",
+                "Örserum", "Bottnaryd", "Barnarp", "Ölmstad", "Visingsö",
+                "Gränna", "Hakarp", "Lekeryd",
+            ]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "habo", name: "Habo",
+            placeholder: "t.ex. Storgatan 1", note: edp_note,
+            api_url: june,
+            cities: Some(&[
+                "Habo", "Furusjö", "Fiskebäck", "Baskarp", "Kärnekulla",
+                "Brandstorp",
+            ]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "mullsjo", name: "Mullsjö",
+            placeholder: "t.ex. Kyrkgatan 1", note: edp_note,
+            api_url: june,
+            cities: Some(&["Mullsjö", "Bjurbäck", "Nykyrka", "Sandhem"]),
+        }));
+
+        // WBAB — Ludvika och Smedjebacken (två separata FutureWeb-instanser
+        // på samma bolag).
+        edp_providers.push(edp(edp_future::Config {
+            id: "ludvika", name: "Ludvika",
+            placeholder: "t.ex. Storgatan 1", note: edp_note,
+            api_url: "https://futureweb.wbab.se/EDPFutureweb/SimpleWastePickup",
+            cities: Some(&[
+                "Ludvika", "Grängesberg", "Sunnansjö", "Blötberget", "Nyhammar",
+                "Grangärde", "Saxdalen", "Fredriksberg",
+            ]),
+        }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "smedjebacken", name: "Smedjebacken",
+            placeholder: "t.ex. Vasagatan 1", note: edp_note,
+            api_url: "https://futureweb.wbab.se/EDPFuturewebSmedjebacken/SimpleWastePickup",
+            cities: Some(&[
+                "Smedjebacken", "Söderbärke", "Vad", "Hagge", "Morgårdshammar",
+            ]),
+        }));
+
+        // Kramfors — enskild EDP-instans (FutureWebBasic).
+        edp_providers.push(edp(edp_future::Config {
+            id: "kramfors", name: "Kramfors",
+            placeholder: "t.ex. Kungsgatan 1", note: edp_note,
+            api_url: "https://futureweb.kramfors.se/EDPFutureWebBasic/SimpleWastePickup",
+            cities: Some(&[
+                "Kramfors", "Nyland", "Bollstabruk", "Docksta", "Ullånger",
+                "Nordingrå", "Lugnvik", "Bjärtrå", "Frånö", "Salsåker",
+                "Nyadal", "Norrfällsviken",
+            ]),
+        }));
+
+        // Lidingö — enskild kommun, adress-etikett saknar city-suffix så
+        // vi låter allowlisten vara tom (matchar allt).
+        edp_providers.push(edp(edp_future::Config {
+            id: "lidingo", name: "Lidingö",
+            placeholder: "t.ex. Stockholmsvägen 1", note: edp_note,
+            api_url: "https://vaochavfall.lidingo.se/Futureweb/SimpleWastePickup",
+            cities: None,
+        }));
+
+        // Lund — LRV. Datasetet skriver "S Sandby" som förkortning för
+        // Södra Sandby; båda formerna ingår för säkerhets skull.
+        edp_providers.push(edp(edp_future::Config {
+            id: "lund", name: "Lund",
+            placeholder: "t.ex. Kyrkogatan 1", note: edp_note,
+            api_url: "https://eservice431601.lund.se/lund/FutureWeb/SimpleWastePickup",
+            cities: Some(&[
+                "Lund", "S Sandby", "Södra Sandby", "Dalby", "Veberöd",
+                "Genarp", "Torna Hällestad", "Revingeby", "Stångby",
+            ]),
+        }));
+
+        // Svenljunga — enskild EDP-instans.
+        edp_providers.push(edp(edp_future::Config {
+            id: "svenljunga", name: "Svenljunga",
+            placeholder: "t.ex. Kyrkogatan 1", note: edp_note,
+            api_url: "https://edpfutureweb.svenljunga.se/FutureWeb/SimpleWastePickup",
+            cities: Some(&[
+                "Svenljunga", "Överlida", "Mjöbäck", "Sexdrega", "Kalv",
+                "Håcksvik", "Mårdaklev", "Östra Frölunda", "Björketorp",
+            ]),
+        }));
+
         // Roslagsvatten — Drupal-baserad widget för Ekerö, Vaxholm,
         // Österåker. Knivsta och Vallentuna har migrerats bort.
         let rv = |cfg: roslagsvatten::Config| -> Arc<dyn Provider> {
