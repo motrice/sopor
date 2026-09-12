@@ -302,6 +302,38 @@ provider rather than scaling test count for its own sake.
   same 23 556 records, same city distribution. So the widget doesn't
   unlock Timrå/Nordanstig either. There is no further data to extract
   from MSVA. Skip.
+- **BM FetchPlanner (`fpservice.bmsystem.se`) — non-SRV tenants** —
+  the same product family SRV Södertörn runs on, but without SRV's
+  SiteVision REST facade. Confirmed dead-end for AMAQ (Aneby Miljö &
+  Vatten, tenant `1802Nassjo`): frontend is a Next.js SPA at
+  `aen.minasidor.info` that calls `fpservice.bmsystem.se/1802Nassjo/
+  CustomerAccountHandler.svc/*` with a session token bound to
+  personnummer via BankID.
+
+  WCF methods leaked in Next.js chunks (all session-gated):
+  `InitiateCustomerAccount`, `GetSessionToken`, `GetSessionTokenForSSN`,
+  `GetSessionTokenForCustomerId`, `GetCustomerInfo`, `GetPickupAddresses`,
+  `UpdatePickupAddresses`, `CreateCustomerAccount`, `SetCustomerInfo`,
+  `OrderElectronicServiceJob`, `APITest` (all 404 anonymously). Referenced
+  return-code enums (`GetCalendarAndHistoryReturnCodes`,
+  `GetContainerDataReturnCodes`, `GetContainerServicesReturnCodes`,
+  `GetPickupAddressesReturnCodes`) confirm there IS a calendar/container
+  endpoint on `CustomerDataProvider.svc`, but it's session-gated too.
+
+  Only anonymous method is `CustomerAccountHandler.svc/GetMyPagesImage`
+  (branding assets). `?wsdl` responds but only documents the same
+  contract. **The SRV pattern (public REST facade on the SiteVision
+  frontend) does not generalize** — it was a quirk of SRV's own site
+  design, not a BM system feature. Skip BM FetchPlanner tenants unless
+  the kommun's own frontend exposes an equivalent facade (probe
+  `www.<kommun>.se/rest-api/core/sewagePickup/getSuggestions?query=…`
+  before giving up).
+
+  Also confirmed dead for AMAQ specifically: EDP FutureWeb at
+  `edpfutureweb.aneby.se/EDPFutureWeb` is the shared **Höglandsportalen**
+  (Aneby/Eksjö/Nässjö/Sävsjö/Vetlanda) but only handles vatten —
+  `/SimpleWastePickup` returns 404, unlike our 43 supported EDP kommuner.
+  Do not re-probe the other Höglandet kommuner on this host for waste.
 
 ## Deployment
 
