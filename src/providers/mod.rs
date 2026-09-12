@@ -11,6 +11,7 @@ pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
 pub mod hemab;
+pub mod kristianstad;
 pub mod lsr;
 pub mod optigon;
 pub mod rambo;
@@ -839,6 +840,12 @@ impl Registry {
         let hemab_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(hemab::Hemab::new(http.clone()))];
 
+        // Renhållningen Kristianstad — Appbolaget-universal-API med
+        // Unit-header. Vue-widgeten på renhallningen-kristianstad.se
+        // anropar samma två endpoints (search + address).
+        let kristianstad_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(kristianstad::Kristianstad::new(http.clone()))];
+
         // Arjeplog — statisk rutt-baserad kalender. Ingen extern
         // adressuppslag; provider genererar biweekly-datum lokalt från en
         // transkriberad rutt-tabell (arjeplog.se).
@@ -1170,6 +1177,7 @@ impl Registry {
                 .chain(exde_providers.into_iter())
                 .chain(hassleholm_providers.into_iter())
                 .chain(hemab_providers.into_iter())
+                .chain(kristianstad_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())

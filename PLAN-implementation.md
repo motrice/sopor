@@ -3,7 +3,7 @@
 Konsoliderat från 8 parallella research-agenters fynd över alla ~206
 oimplementerade svenska kommuner.
 
-Startläge: 76 kommuner. Efter alla implementerade steg: **133 kommuner (46% av 290).**
+Startläge: 76 kommuner. Efter alla implementerade steg: **134 kommuner (46% av 290).**
 
 ## Status per steg
 
@@ -21,8 +21,9 @@ Startläge: 76 kommuner. Efter alla implementerade steg: **133 kommuner (46% av 
 | 9 | Strömstad + VMAB Bromölla + Ronneby | +3 | ✅ | `9496dee` |
 | 8/10 | area_based ×19 kommuner | +19 | ✅ | `c70872f` |
 | 11 | HEMAB Härnösand | +1 | ✅ | `a296c72` |
+| 12 | Kristianstad (Appbolaget) | +1 | ✅ | *(current)* |
 
-**Summa: +57 kommuner via 12 nya providers + 3 tenant-utökningar.**
+**Summa: +58 kommuner via 13 nya providers + 3 tenant-utökningar.**
 
 ## Kvarstår att bygga
 
@@ -53,13 +54,14 @@ kräver användarens BankID-inloggning.
 
 ### Låg ROI men rimlig komplexitet: single-kommun (~4 kommuner)
 
-- **Kristianstad** Vue-widget (`renhallningen-kristianstad.se`) —
-  **verifierat trasig 2026-09-12**: Vue-mallen finns i HTML:en med
-  `v-model="calendarValue"`, `@click="calendarPickAdress(result)"`
-  etc, men *ingen* Vue-komponent med dessa metoder är laddad — bara
-  `#sort-guide`- och `#faq`-Vue-apparna finns i script.js. WP-JSON
-  `kr/`-namespace innehåller bara `kr/centrals` (återvinningscentraler).
-  Widgeten är deployad utan sitt backend-JS. Ingenting att skrapa.
+- ~~**Kristianstad**~~ — implementerad `<pending>`. Retract av
+  min tidigare "trasig"-slutsats: Vue-komponentens metoder lever
+  i `utility-bar.js` (1.2 MB), inte i `script.js` som jag först
+  granskade. Widgeten anropar Appbolaget-universal-API:t
+  (`api-universal.appbolaget.se/waste/addresses/...`) med
+  `Unit: dd905ce7-b16d-4422-be36-564169af4035`-header, samma format
+  som Hässleholm. Full search + schedule med `services[]` (next
+  pickup per fraktion).
 - ~~**HEMAB Härnösand**~~ — implementerad `a296c72`: `?query=*`
   returnerar hela datasetet (1790 adresser). Cachas 12 h och
   substring-matchas lokalt.

@@ -110,6 +110,7 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Tomelilla | `/tomelilla` | EXDE Systems via Ökrab (samdrift) |
 | Hässleholm | `/hassleholm` | Hässleholm Miljö (Appbolaget-API + SiteVision-webapp) |
 | Härnösand | `/harnosand` | HEMAB (SiteVision-sökportlet, bulk-fetch via ?query=*) |
+| Kristianstad | `/kristianstad` | Renhållningen Kristianstad (Appbolaget-universal API) |
 | Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
 | Botkyrka | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Haninge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
@@ -243,7 +244,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Hörby | ⬜ Höör | ✅ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
-| ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ⬜ Kristianstad |
+| ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ✅ Kristianstad |
 | ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
 | ✅ Kungälv | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ✅ Landskrona |
 | ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
