@@ -10,6 +10,7 @@ pub mod area_based_routes;
 pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
+pub mod hemab;
 pub mod lsr;
 pub mod optigon;
 pub mod rambo;
@@ -831,6 +832,13 @@ impl Registry {
         let sundsvall_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(sundsvall::Sundsvall::new(http.clone()))];
 
+        // HEMAB (Härnösand) — SiteVision-sökportlet där `?query=*`
+        // returnerar hela datasetet (1790 adresser × veckodag +
+        // veckolistor per fyrfackskärl). Cachas 12 h; datum genereras
+        // lokalt via ISO week + weekday.
+        let hemab_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(hemab::Hemab::new(http.clone()))];
+
         // Arjeplog — statisk rutt-baserad kalender. Ingen extern
         // adressuppslag; provider genererar biweekly-datum lokalt från en
         // transkriberad rutt-tabell (arjeplog.se).
@@ -1161,6 +1169,7 @@ impl Registry {
                 .chain(roslagsvatten_providers.into_iter())
                 .chain(exde_providers.into_iter())
                 .chain(hassleholm_providers.into_iter())
+                .chain(hemab_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())
