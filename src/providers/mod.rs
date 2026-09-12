@@ -4,6 +4,7 @@ use async_trait::async_trait;
 use chrono::NaiveDate;
 use serde::Serialize;
 
+pub mod avfallsappen;
 pub mod edp_future;
 pub mod exde;
 pub mod hassleholm;
@@ -598,6 +599,111 @@ impl Registry {
         let sodertorn_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(sodertorn::Sodertorn::new(http.clone()))];
 
+        // Avfall & Återvinning Skaraborg (AÅS) — 13 kommuner täcks via
+        // en delad Avfallsappen-widget (Bozzanova) på tenant
+        // gullspang.avfallsapp.se. Statisk bearer + X-App-Identifier
+        // extraherade ur widgetens Vue-bundle på avfallskaraborg.se.
+        let aas = |cfg: avfallsappen::Config| -> Arc<dyn Provider> {
+            Arc::new(avfallsappen::Avfallsappen::new(http.clone(), cfg))
+        };
+        let aas_tenant = "gullspang";
+        let aas_bearer = "J6lD4hVH8pRMQZeBSoCvtCZj1V0wvgg0QvBqSDTH9fce942d";
+        let aas_app_id = "70bae483-3268-4875-93f5-14f2274ec7cb";
+        let aas_note = "Sophämtningsdata från Avfall & Återvinning Skaraborg (AÅS) \
+                        via Avfallsappen. API:t returnerar bara nästa tömning \
+                        per fraktion — kalendern uppdateras löpande när klienten \
+                        hämtar in feeden på nytt.";
+        let avfallsappen_providers: Vec<Arc<dyn Provider>> = vec![
+            aas(avfallsappen::Config {
+                id: "essunga", name: "Essunga",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Nossebro", "Essunga"],
+            }),
+            aas(avfallsappen::Config {
+                id: "falkoping", name: "Falköping",
+                placeholder: "t.ex. Storgatan 10", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &[
+                    "Falköping", "Floby", "Stenstorp", "Kättilstorp",
+                    "Kinnarp", "Slutarp", "Åsarp", "Gudhem",
+                    "Vartofta", "Broddetorp",
+                ],
+            }),
+            aas(avfallsappen::Config {
+                id: "grastorp", name: "Grästorp",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Grästorp", "Tråvad"],
+            }),
+            aas(avfallsappen::Config {
+                id: "gullspang", name: "Gullspång",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &[
+                    "Gullspång", "Hova", "Gårdsjö", "Otterbäcken",
+                    "Skagersvik", "Aspa Bruk", "Aspabruk",
+                ],
+            }),
+            aas(avfallsappen::Config {
+                id: "gotene", name: "Götene",
+                placeholder: "t.ex. Skolgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Götene", "Källby", "Lundsbrunn", "Hällekis"],
+            }),
+            aas(avfallsappen::Config {
+                id: "hjo", name: "Hjo",
+                placeholder: "t.ex. Skolgatan 11", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Hjo", "Fagersanna"],
+            }),
+            aas(avfallsappen::Config {
+                id: "karlsborg", name: "Karlsborg",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Karlsborg", "Mölltorp", "Undenäs", "Forsvik"],
+            }),
+            aas(avfallsappen::Config {
+                id: "mariestad", name: "Mariestad",
+                placeholder: "t.ex. Kyrkogatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Mariestad", "Lyrestad", "Moholm", "Sjötorp", "Torsö"],
+            }),
+            aas(avfallsappen::Config {
+                id: "skara", name: "Skara",
+                placeholder: "t.ex. Skolgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Skara", "Axvall", "Varnhem"],
+            }),
+            aas(avfallsappen::Config {
+                id: "skovde", name: "Skövde",
+                placeholder: "t.ex. Skolgatan 17", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &[
+                    "Skövde", "Timmersdala", "Tidan", "Väring",
+                    "Lerdala", "Värsås",
+                ],
+            }),
+            aas(avfallsappen::Config {
+                id: "tibro", name: "Tibro",
+                placeholder: "t.ex. Skolgatan 10", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Tibro"],
+            }),
+            aas(avfallsappen::Config {
+                id: "toreboda", name: "Töreboda",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Töreboda", "Älgarås", "Finnerödja"],
+            }),
+            aas(avfallsappen::Config {
+                id: "vara", name: "Vara",
+                placeholder: "t.ex. Storgatan 1", note: aas_note,
+                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                cities: &["Vara", "Kvänum", "Vedum", "Stora Levene", "Larv"],
+            }),
+        ];
+
         Self {
             providers: providers
                 .into_iter()
@@ -607,6 +713,7 @@ impl Registry {
                 .chain(hassleholm_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
+                .chain(avfallsappen_providers.into_iter())
                 .collect(),
         }
     }

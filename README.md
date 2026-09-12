@@ -93,6 +93,19 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Huddinge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Nynäshamn | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Salem | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
+| Essunga | `/essunga` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Falköping | `/falkoping` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Grästorp | `/grastorp` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Gullspång | `/gullspang` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Götene | `/gotene` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Hjo | `/hjo` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Karlsborg | `/karlsborg` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Mariestad | `/mariestad` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Skara | `/skara` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Skövde | `/skovde` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Tibro | `/tibro` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Töreboda | `/toreboda` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Vara | `/vara` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 
 ## Endpoints
 
@@ -154,18 +167,18 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
-| ⬜ Eskilstuna | ⬜ Eslöv | ⬜ Essunga | ✅ Fagersta | ⬜ Falkenberg |
-| ⬜ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
+| ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ⬜ Falkenberg |
+| ✅ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
 | ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ⬜ Gislaved | ⬜ Gnesta |
-| ⬜ Gnosjö | ⬜ Gotland | ⬜ Grums | ⬜ Grästorp | ⬜ Gullspång |
-| ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ⬜ Götene | ⬜ Habo |
+| ⬜ Gnosjö | ⬜ Gotland | ⬜ Grums | ✅ Grästorp | ✅ Gullspång |
+| ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ⬜ Habo |
 | ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
 | ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
-| ✅ Herrljunga | ⬜ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
+| ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
 | ✅ Hultsfred | 🔬 Hylte | ⬜ Håbo | ⬜ Hällefors | ⬜ Härjedalen |
 | ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ⬜ Jönköping |
-| ⬜ Kalix | ✅ Kalmar | ⬜ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
+| ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
 | ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
 | ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ⬜ Kramfors | ⬜ Kristianstad |
 | ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
@@ -174,7 +187,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ⬜ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ⬜ Ljusnarsberg | ⬜ Lomma | ⬜ Ludvika |
 | 🔬 Luleå | ⬜ Lund | ✅ Lycksele | ⬜ Lysekil | ✅ Malmö |
-| ⬜ Malung-Sälen | ⬜ Malå | ⬜ Mariestad | ✅ Mark | ✅ Markaryd |
+| ⬜ Malung-Sälen | ⬜ Malå | ✅ Mariestad | ✅ Mark | ✅ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ⬜ Mullsjö |
 | ⬜ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
 | ✅ Nacka | ⬜ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
@@ -184,19 +197,19 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
 | ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ✅ Sala |
 | ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
-| ⬜ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ⬜ Skövde |
+| ✅ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde |
 | ⬜ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ⬜ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
 | ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
 | ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ⬜ Svalöv | ⬜ Svedala |
 | ⬜ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
-| ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ⬜ Tibro |
+| ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ⬜ Tanum | ✅ Tibro |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
 | ✅ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
-| ⬜ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
+| ✅ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
-| ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ⬜ Vara | ⬜ Varberg |
+| ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
 | ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
 | 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
 | 🔬 Värmdö | ⬜ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
