@@ -3,7 +3,7 @@
 Konsoliderat från 8 parallella research-agenters fynd över alla ~206
 oimplementerade svenska kommuner.
 
-Startläge: 76 kommuner. Efter alla implementerade steg: **134 kommuner (46% av 290).**
+Startläge: 76 kommuner. Efter alla implementerade steg: **137 kommuner (47% av 290).**
 
 ## Status per steg
 
@@ -15,15 +15,16 @@ Startläge: 76 kommuner. Efter alla implementerade steg: **134 kommuner (46% av 
 | 4 | Sysav Azure EDP-proxy | +3 | ✅ | `66a5258` |
 | 5 | LSR öppet REST | +2 | ✅ | `29c65e8` |
 | 6 | VMR (Härjedalen/Berg/Bräcke) | +3 | ✅ | `dd4b614` |
-| 7a | Sörmland Vatten | 0 | ⛔ skipped (nonce+xlsx dep) | — |
+| 7a | ~~Sörmland Vatten~~ | +3 | ✅ | `9d58466` (retract av "nonce blocker" — jag skickade fel param-namn) |
 | 7b | Optigon Avfallskollen | +3 | ✅ | `15ddf99` |
 | 7c | MERAB Gatsby+EDP | 0 | ⛔ skipped (auth-gated) | — |
 | 9 | Strömstad + VMAB Bromölla + Ronneby | +3 | ✅ | `9496dee` |
 | 8/10 | area_based ×19 kommuner | +19 | ✅ | `c70872f` |
 | 11 | HEMAB Härnösand | +1 | ✅ | `a296c72` |
-| 12 | Kristianstad (Appbolaget) | +1 | ✅ | *(current)* |
+| 12 | Kristianstad (Appbolaget) | +1 | ✅ | `45d9027` |
+| 13 | Sörmland Vatten (Katrineholm/Vingåker/Flen) | +3 | ✅ | `9d58466` |
 
-**Summa: +58 kommuner via 13 nya providers + 3 tenant-utökningar.**
+**Summa: +61 kommuner via 14 nya providers + 3 tenant-utökningar.**
 
 ## Kvarstår att bygga
 
