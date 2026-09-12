@@ -36,6 +36,11 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Östra Göinge | `/ostra-goinge` | Indecta OnlineKalender via OGRAB |
 | Osby | `/osby` | Indecta OnlineKalender via OGRAB (samdrift) |
 | Sjöbo | `/sjobo` | Indecta OnlineKalender |
+| Gislaved | `/gislaved` | Indecta OnlineKalender via SÅM (samdrift) |
+| Gnosjö | `/gnosjo` | Indecta OnlineKalender via SÅM (samdrift) |
+| Hylte | `/hylte` | Indecta OnlineKalender via SÅM (samdrift) |
+| Vaggeryd | `/vaggeryd` | Indecta OnlineKalender via SÅM (samdrift) |
+| Värnamo | `/varnamo` | Indecta OnlineKalender via SÅM (samdrift) |
 | Skellefteå | `/skelleftea` | EDP Future / SimpleWastePickup |
 | Boden | `/boden` | EDP Future / SimpleWastePickup |
 | Uppsala | `/uppsala` | EDP Future via Uppsala Vatten |
@@ -189,13 +194,13 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
 | ✅ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
-| ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ⬜ Gislaved | ⬜ Gnesta |
-| ⬜ Gnosjö | ⬜ Gotland | ⬜ Grums | ✅ Grästorp | ✅ Gullspång |
+| ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
+| ✅ Gnosjö | ⬜ Gotland | ⬜ Grums | ✅ Grästorp | ✅ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ✅ Habo |
 | ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
 | ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
 | ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
-| ✅ Hultsfred | 🔬 Hylte | ⬜ Håbo | ✅ Hällefors | ⬜ Härjedalen |
+| ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ⬜ Härjedalen |
 | ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
@@ -228,11 +233,11 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
 | ✅ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
-| ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ⬜ Vaggeryd |
+| ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ✅ Vaggeryd |
 | ⬜ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
 | ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ⬜ Vilhelmina | ⬜ Vimmerby |
 | 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ⬜ Vännäs |
-| 🔬 Värmdö | ⬜ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
+| 🔬 Värmdö | ✅ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ⬜ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ⬜ Åre |
 | ⬜ Årjäng | ⬜ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
 | ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |

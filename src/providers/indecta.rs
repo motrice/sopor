@@ -103,17 +103,17 @@ struct AddressRow {
 fn parse_address_rows(body: &str) -> Vec<AddressRow> {
     body.lines()
         .filter_map(|line| {
-            let parts: Vec<&str> = line.splitn(4, '|').collect();
-            if parts.len() < 2 {
-                return None;
-            }
-            let street = parts[0].trim().to_string();
-            let city = parts[1].trim().to_string();
+            // Field count varies per tenant: Sjöbo → 2, OGRAB → 4, SÅM → 5.
+            // We consume the first four (street|city|kundnr|anlnr); anything
+            // trailing (t.ex. fastighetsbeteckning i SÅM) ignoreras.
+            let mut parts = line.split('|');
+            let street = parts.next()?.trim().to_string();
+            let city = parts.next()?.trim().to_string();
             if street.is_empty() || city.is_empty() {
                 return None;
             }
-            let kundnr = parts.get(2).map(|s| s.trim().to_string()).unwrap_or_default();
-            let anlnr = parts.get(3).map(|s| s.trim().to_string()).unwrap_or_default();
+            let kundnr = parts.next().map(|s| s.trim().to_string()).unwrap_or_default();
+            let anlnr = parts.next().map(|s| s.trim().to_string()).unwrap_or_default();
             Some(AddressRow {
                 street,
                 city,
@@ -321,13 +321,13 @@ fn swedish_month_to_num(name: &str) -> Option<u32> {
 fn map_fraction(code: &str) -> String {
     match code.to_uppercase().as_str() {
         "RE" => "Restavfall".into(),
-        "MA" => "Matavfall".into(),
+        "MA" | "M" => "Matavfall".into(),
         "PA" | "PK" => "Pappersförpackningar".into(),
         "PL" => "Plastförpackningar".into(),
         "TI" => "Tidningar".into(),
         "WE" => "Wellpapp".into(),
         "ME" => "Metallförpackningar".into(),
-        "GL" => "Glasförpackningar".into(),
+        "GL" | "GO" => "Glasförpackningar".into(),
         "GF" => "Grovavfall".into(),
         "FA" => "Farligt avfall".into(),
         "TR" => "Trädgårdsavfall".into(),

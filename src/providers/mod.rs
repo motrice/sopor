@@ -189,6 +189,74 @@ impl Registry {
                     cities: &["Sjöbo", "Lövestad", "Vollsjö", "Blentarp"],
                 },
             )),
+            // SÅM — Samverkan Återvinning Miljö. Delad Indecta-tenant
+            // (client `sam`) för fem GGVV-kommuner + Hylte. Datasetet
+            // har 5 pipe-separerade fält per rad (tredje och femte
+            // fältet är kundinformation som ignoreras av parsern).
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "gislaved",
+                    name: "Gislaved",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från SÅM (Samverkan Återvinning Miljö).",
+                    client: "sam",
+                    cities: &[
+                        "Gislaved", "Anderstorp", "Reftele", "Smålandsstenar",
+                        "Broaryd", "Burseryd", "Skeppshult", "Öreryd", "Hestra",
+                    ],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "gnosjo",
+                    name: "Gnosjö",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från SÅM (samdrift).",
+                    client: "sam",
+                    cities: &["Gnosjö", "Hillerstorp", "Nissafors", "Kulltorp"],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "hylte",
+                    name: "Hylte",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från SÅM (samdrift).",
+                    client: "sam",
+                    cities: &[
+                        "Hyltebruk", "Kinnared", "Torup", "Landeryd",
+                        "Rydöbruk", "Unnaryd", "Långaryd",
+                    ],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "vaggeryd",
+                    name: "Vaggeryd",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från SÅM (samdrift).",
+                    client: "sam",
+                    cities: &["Vaggeryd", "Skillingaryd", "Klevshult", "Åker"],
+                },
+            )),
+            Arc::new(indecta::Indecta::new(
+                http.clone(),
+                indecta::Config {
+                    id: "varnamo",
+                    name: "Värnamo",
+                    placeholder: "t.ex. Storgatan 1",
+                    note: "Sophämtningsdata från SÅM (samdrift).",
+                    client: "sam",
+                    cities: &[
+                        "Värnamo", "Bor", "Bredaryd", "Forsheda", "Horda",
+                        "Rydaholm", "Kärda", "Lanna",
+                    ],
+                },
+            )),
         ];
 
         // EDP Future / SimpleWastePickup — shared JSON API across many
