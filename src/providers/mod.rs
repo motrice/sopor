@@ -6,6 +6,7 @@ use serde::Serialize;
 
 pub mod alvesta;
 pub mod arjeplog;
+pub mod arvidsjaur;
 pub mod avfallsappen;
 pub mod edp_future;
 pub mod exde;
@@ -619,6 +620,11 @@ impl Registry {
         let arjeplog_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(arjeplog::Arjeplog::new())];
 
+        // Arvidsjaur — samma mönster som Arjeplog. 13 slingor
+        // transkriberade från arvidsjaur.se.
+        let arvidsjaur_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(arvidsjaur::Arvidsjaur::new())];
+
         // Alvesta — publikt bulk-JSON på arabschema.alvesta.se. SPA:n
         // hämtar hela datasetet (~2,5 MB) i förväg; vi speglar den
         // strategin med in-memory cache och 12 h TTL.
@@ -747,6 +753,7 @@ impl Registry {
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())
                 .chain(arjeplog_providers.into_iter())
+                .chain(arvidsjaur_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }

@@ -110,6 +110,7 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Töreboda | `/toreboda` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 | Vara | `/vara` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 | Arjeplog | `/arjeplog` | Statiska rutt-slingor från arjeplog.se (ingen adress-uppslag) |
+| Arvidsjaur | `/arvidsjaur` | Statiska rutt-slingor från arvidsjaur.se (ingen adress-uppslag) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -166,7 +167,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | | | | | |
 | --- | --- | --- | --- | --- |
 | ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ✅ Arboga |
-| ✅ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
+| ✅ Arjeplog | ✅ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
 | ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
