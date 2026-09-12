@@ -69,6 +69,7 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Surahammar | `/surahammar` | EDP Future via Vafab Miljö (samdrift) |
 | Fagersta | `/fagersta` | EDP Future via Vafab Miljö (samdrift) |
 | Kungsör | `/kungsor` | EDP Future via Vafab Miljö (samdrift) |
+| Arboga | `/arboga` | EDP Future via Vafab Miljö (samdrift) |
 | Kalmar | `/kalmar` | EDP Future via Kretslopp Sydost (samdrift) |
 | Mörbylånga | `/morbylanga` | EDP Future via Kretslopp Sydost (samdrift) |
 | Nybro | `/nybro` | EDP Future via Kretslopp Sydost (samdrift) |
@@ -164,7 +165,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 
 | | | | | |
 | --- | --- | --- | --- | --- |
-| ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ⬜ Arboga |
+| ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ✅ Arboga |
 | ✅ Arjeplog | ⬜ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |

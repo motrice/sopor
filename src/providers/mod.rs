@@ -431,6 +431,12 @@ impl Registry {
             api_url: vafab,
             cities: Some(&["Kungsör", "Valskog", "Torpa"]),
         }));
+        edp_providers.push(edp(edp_future::Config {
+            id: "arboga", name: "Arboga",
+            placeholder: "t.ex. Centrumleden 6", note: edp_note,
+            api_url: vafab,
+            cities: Some(&["Arboga"]),
+        }));
 
         // Kretslopp Sydost — Kalmar län m.fl.
         let ksydost = "https://kundportal.kretsloppsydost.se/FutureWeb/SimpleWastePickup";
