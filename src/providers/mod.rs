@@ -9,6 +9,7 @@ pub mod arjeplog;
 pub mod arvidsjaur;
 pub mod avfallsappen;
 pub mod lsr;
+pub mod optigon;
 pub mod rambo;
 pub mod sysav;
 pub mod vattenmiljoresurs;
@@ -913,6 +914,32 @@ impl Registry {
             }),
         ];
 
+        // Optigon Avfallskollen — Forshaga, Grums, Hammarö. Publik
+        // REST-fasad på avfallskollen-api.optigon.se (locations +
+        // pickup-events per UUID).
+        let optigon_note = "Sophämtningsdata via Optigon Avfallskollen. \
+                            API:t returnerar hela årets hämtningar per fraktion.";
+        let optigon_p = |cfg: optigon::Config| -> Arc<dyn Provider> {
+            Arc::new(optigon::Optigon::new(http.clone(), cfg))
+        };
+        let optigon_providers: Vec<Arc<dyn Provider>> = vec![
+            optigon_p(optigon::Config {
+                id: "forshaga", name: "Forshaga",
+                placeholder: "t.ex. Storgatan 1", note: optigon_note,
+                cities: &["Forshaga", "Deje", "Olsäter"],
+            }),
+            optigon_p(optigon::Config {
+                id: "grums", name: "Grums",
+                placeholder: "t.ex. Storgatan 1", note: optigon_note,
+                cities: &["Grums", "Slottsbron", "Slottbron", "Segmon", "Borgvik"],
+            }),
+            optigon_p(optigon::Config {
+                id: "hammaro", name: "Hammarö",
+                placeholder: "t.ex. Mörmovägen 1", note: optigon_note,
+                cities: &["Hammarö"],
+            }),
+        ];
+
         let lsr_providers: Vec<Arc<dyn Provider>> = vec![
             lsr_p(lsr::Config {
                 id: "landskrona", name: "Landskrona",
@@ -1094,6 +1121,7 @@ impl Registry {
                 .chain(sysav_providers.into_iter())
                 .chain(lsr_providers.into_iter())
                 .chain(vmr_providers.into_iter())
+                .chain(optigon_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }

@@ -142,6 +142,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Härjedalen | `/harjedalen` | Vatten och miljöresurs (SiteVision-webbapp) |
 | Berg | `/berg` | Vatten och miljöresurs (samdrift) |
 | Bräcke | `/bracke` | Vatten och miljöresurs (samdrift) |
+| Forshaga | `/forshaga` | Optigon Avfallskollen (öppet REST) |
+| Grums | `/grums` | Optigon Avfallskollen (samdrift) |
+| Hammarö | `/hammaro` | Optigon Avfallskollen (samdrift) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -206,10 +209,10 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
 | ✅ Falköping | ✅ Falun | ⬜ Filipstad | ⬜ Finspång | 🔬 Flen |
-| ⬜ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
-| ✅ Gnosjö | ⬜ Gotland | ⬜ Grums | ✅ Grästorp | ✅ Gullspång |
+| ✅ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
+| ✅ Gnosjö | ⬜ Gotland | ✅ Grums | ✅ Grästorp | ✅ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ✅ Habo |
-| ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
+| ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ✅ Hammarö |
 | ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
 | ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
 | ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ✅ Härjedalen |
