@@ -145,6 +145,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Forshaga | `/forshaga` | Optigon Avfallskollen (öppet REST) |
 | Grums | `/grums` | Optigon Avfallskollen (samdrift) |
 | Hammarö | `/hammaro` | Optigon Avfallskollen (samdrift) |
+| Strömstad | `/stromstad` | Strömstads kommun (SiteVision-widget) |
+| Bromölla | `/bromolla` | VMAB (jQuery + fullcalendar) |
+| Ronneby | `/ronneby` | Ronneby Miljöteknik (samma software som VMAB) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -204,7 +207,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Arjeplog | ✅ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ✅ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
-| ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ✅ Bräcke | ✅ Burlöv |
+| ✅ Botkyrka | ⬜ Boxholm | ✅ Bromölla | ✅ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
@@ -235,12 +238,12 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
 | ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ⬜ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
-| ⬜ Ragunda | ⬜ Robertsfors | ⬜ Ronneby | ⬜ Rättvik | ✅ Sala |
+| ⬜ Ragunda | ⬜ Robertsfors | ✅ Ronneby | ⬜ Rättvik | ✅ Sala |
 | ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
 | ✅ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde |
 | ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ⬜ Sorsele |
 | ✅ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
-| ⬜ Storuman | ⬜ Strängnäs | ⬜ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
+| ⬜ Storuman | ⬜ Strängnäs | ✅ Strömstad | ⬜ Strömsund | ⬜ Sundbyberg |
 | ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ✅ Svalöv | ✅ Svedala |
 | ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
 | ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ✅ Tanum | ✅ Tibro |

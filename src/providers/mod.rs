@@ -11,8 +11,10 @@ pub mod avfallsappen;
 pub mod lsr;
 pub mod optigon;
 pub mod rambo;
+pub mod stromstad;
 pub mod sysav;
 pub mod vattenmiljoresurs;
+pub mod vmab;
 pub mod edp_future;
 pub mod exde;
 pub mod hassleholm;
@@ -914,6 +916,34 @@ impl Registry {
             }),
         ];
 
+        // Strömstad — SiteVision-widget som returnerar en HTML-tabell
+        // för ?query=<adress>.
+        let stromstad_providers: Vec<Arc<dyn Provider>> =
+            vec![Arc::new(stromstad::Stromstad::new(http.clone()))];
+
+        // VMAB / Rabadang — jQuery + fullcalendar-widget med två
+        // anonyma PHP-endpoints. Samma software på cal-bromolla.vmab.se
+        // och kalender.fyrfackronneby.se.
+        let vmab_p = |cfg: vmab::Config| -> Arc<dyn Provider> {
+            Arc::new(vmab::Vmab::new(http.clone(), cfg))
+        };
+        let vmab_providers: Vec<Arc<dyn Provider>> = vec![
+            vmab_p(vmab::Config {
+                id: "bromolla", name: "Bromölla",
+                placeholder: "t.ex. Storgatan 1",
+                note: "Sophämtningsdata från VMAB (Västblekinge Miljö AB). \
+                       API:t returnerar 2+ års ordinarie hämtningsdagar per fraktion.",
+                base_url: "https://cal-bromolla.vmab.se",
+            }),
+            vmab_p(vmab::Config {
+                id: "ronneby", name: "Ronneby",
+                placeholder: "t.ex. Kungsgatan 2",
+                note: "Sophämtningsdata från Ronneby Miljöteknik (fyrfackskalendern). \
+                       Samma software som VMAB — 2+ års ordinarie hämtningsdagar per fraktion.",
+                base_url: "https://kalender.fyrfackronneby.se",
+            }),
+        ];
+
         // Optigon Avfallskollen — Forshaga, Grums, Hammarö. Publik
         // REST-fasad på avfallskollen-api.optigon.se (locations +
         // pickup-events per UUID).
@@ -1122,6 +1152,8 @@ impl Registry {
                 .chain(lsr_providers.into_iter())
                 .chain(vmr_providers.into_iter())
                 .chain(optigon_providers.into_iter())
+                .chain(stromstad_providers.into_iter())
+                .chain(vmab_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }
