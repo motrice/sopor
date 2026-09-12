@@ -267,9 +267,11 @@ impl Provider for Arvidsjaur {
          Arvidsjaurs tätort är uppdelad i område 1–4 som endast är \
          utmärkta på kommunens karta — slå upp ditt område där och välj \
          motsvarande slinga (område 1 → Slinga 4, område 2 → Slinga 13, \
-         område 3 → Slinga 9, område 4 → Slinga 6). För fritidshus finns \
-         ett sommarabonnemang vecka 20–43; kontakta Avfallsenheten för att \
-         ansluta din fastighet."
+         område 3 → Slinga 9, område 4 → Slinga 6). Kartan och full \
+         områdesförteckning finns på \
+         https://arvidsjaur.se/byggabomiljo/avfallochatervinning/sophamtning.711.html. \
+         För fritidshus finns ett sommarabonnemang vecka 20–43; kontakta \
+         Avfallsenheten för att ansluta din fastighet."
     }
 
     async fn autocomplete(&self, query: &str) -> Result<Vec<Suggestion>, ProviderError> {

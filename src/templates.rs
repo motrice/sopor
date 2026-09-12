@@ -299,7 +299,7 @@ function escapeHtml(s) {{
 function escapeAttr(s) {{ return escapeHtml(s); }}
 </script>"#,
         name = escape(name),
-        note = escape(note),
+        note = autolink(&escape(note)),
         placeholder = escape(placeholder),
         slug_json = serde_json::to_string(slug).unwrap_or_else(|_| "\"\"".into()),
     ));
@@ -313,6 +313,25 @@ fn escape(s: &str) -> String {
         .replace('>', "&gt;")
         .replace('"', "&quot;")
         .replace('\'', "&#39;")
+}
+
+/// Wrap bare `https?://…` URLs as clickable links. Input is expected to
+/// already be HTML-escaped; the regex stops at whitespace and common
+/// trailing punctuation so surrounding sentence punctuation stays outside
+/// the anchor.
+fn autolink(escaped: &str) -> String {
+    use std::sync::OnceLock;
+    static RE: OnceLock<regex::Regex> = OnceLock::new();
+    let re = RE.get_or_init(|| regex::Regex::new(r"https?://[^\s<>]+").unwrap());
+    re.replace_all(escaped, |c: &regex::Captures| {
+        let raw = &c[0];
+        let (url, trail) = match raw.rfind(|ch: char| !matches!(ch, '.' | ',' | ')' | ';' | ':' | '!' | '?')) {
+            Some(i) => (&raw[..=i], &raw[i + 1..]),
+            None => (raw, ""),
+        };
+        format!("<a href=\"{url}\" target=\"_blank\" rel=\"noopener\">{url}</a>{trail}")
+    })
+    .into_owned()
 }
 
 const PITCH_BODY: &str = include_str!("../assets/pitch.html");
