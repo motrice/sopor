@@ -11,6 +11,7 @@ pub mod avfallsappen;
 pub mod lsr;
 pub mod rambo;
 pub mod sysav;
+pub mod vattenmiljoresurs;
 pub mod edp_future;
 pub mod exde;
 pub mod hassleholm;
@@ -877,6 +878,41 @@ impl Registry {
         let lsr_p = |cfg: lsr::Config| -> Arc<dyn Provider> {
             Arc::new(lsr::Lsr::new(http.clone(), cfg))
         };
+        // Vatten och miljöresurs (VMR) — Härjedalen, Berg, Bräcke.
+        // SiteVision-webbapp `garbage-collection` exponerar hela
+        // adressdatasetet + frekvenskoder anonymt via portlet-route
+        // /allAddresses. Vi genererar hämtningsdatum lokalt från
+        // koderna (samma logik som widgetens JS).
+        let vmr_note = "Sophämtningsdata från Vatten och miljöresurs. \
+                        Frekvenskoderna avkodas lokalt (varje/varannan vecka × \
+                        udda/jämna × veckodag) och datumen genereras framåt.";
+        let vmr_p = |cfg: vattenmiljoresurs::Config| -> Arc<dyn Provider> {
+            Arc::new(vattenmiljoresurs::VattenMiljoResurs::new(
+                http.clone(),
+                cfg,
+            ))
+        };
+        let vmr_providers: Vec<Arc<dyn Provider>> = vec![
+            vmr_p(vattenmiljoresurs::Config {
+                id: "harjedalen", name: "Härjedalen",
+                placeholder: "t.ex. Sonfjällsgatan 12", note: vmr_note,
+                path: "harjedalen",
+                portlet_id: "12.383d66bc198bb6c1bead0d",
+            }),
+            vmr_p(vattenmiljoresurs::Config {
+                id: "berg", name: "Berg",
+                placeholder: "t.ex. Storgatan 1", note: vmr_note,
+                path: "berg",
+                portlet_id: "12.383d66bc198bb6c1bead06",
+            }),
+            vmr_p(vattenmiljoresurs::Config {
+                id: "bracke", name: "Bräcke",
+                placeholder: "t.ex. Storgatan 1", note: vmr_note,
+                path: "bracke",
+                portlet_id: "12.383d66bc198bb6c1bead09",
+            }),
+        ];
+
         let lsr_providers: Vec<Arc<dyn Provider>> = vec![
             lsr_p(lsr::Config {
                 id: "landskrona", name: "Landskrona",
@@ -1057,6 +1093,7 @@ impl Registry {
                 .chain(rambo_providers.into_iter())
                 .chain(sysav_providers.into_iter())
                 .chain(lsr_providers.into_iter())
+                .chain(vmr_providers.into_iter())
                 .chain(alvesta_providers.into_iter())
                 .collect(),
         }

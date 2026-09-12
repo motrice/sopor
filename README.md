@@ -139,6 +139,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Svedala | `/svedala` | Sysav (publik Azure EDP-proxy) |
 | Landskrona | `/landskrona` | LSR (Landskrona-Svalöv Renhållnings AB, öppet REST) |
 | Svalöv | `/svalov` | LSR (samdrift) |
+| Härjedalen | `/harjedalen` | Vatten och miljöresurs (SiteVision-webbapp) |
+| Berg | `/berg` | Vatten och miljöresurs (samdrift) |
+| Bräcke | `/bracke` | Vatten och miljöresurs (samdrift) |
 | Alvesta | `/alvesta` | Alvesta Renhållnings AB — publik bulk-JSON på arabschema.alvesta.se |
 
 ## Endpoints
@@ -196,9 +199,9 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | --- | --- | --- | --- | --- |
 | ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ✅ Arboga |
 | ✅ Arjeplog | ✅ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
-| ⬜ Bengtsfors | ⬜ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
+| ⬜ Bengtsfors | ✅ Berg | ⬜ Bjurholm | 🔬 Bjuv | ✅ Boden |
 | ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
-| ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ⬜ Bräcke | ✅ Burlöv |
+| ✅ Botkyrka | ⬜ Boxholm | ⬜ Bromölla | ✅ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ⬜ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
@@ -209,7 +212,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ⬜ Hammarö |
 | ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
 | ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
-| ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ⬜ Härjedalen |
+| ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ✅ Härjedalen |
 | ⬜ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ⬜ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
