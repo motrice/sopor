@@ -15,6 +15,7 @@ pub mod kristianstad;
 pub mod lsr;
 pub mod optigon;
 pub mod rambo;
+pub mod sormland_vatten;
 pub mod stromstad;
 pub mod sysav;
 pub mod vattenmiljoresurs;
@@ -846,6 +847,32 @@ impl Registry {
         let kristianstad_providers: Vec<Arc<dyn Provider>> =
             vec![Arc::new(kristianstad::Kristianstad::new(http.clone()))];
 
+        // Sörmland Vatten — Katrineholm/Vingåker/Flen via WordPress
+        // admin-ajax med roterande nonce (skrapas + cachas 12 h).
+        let sv_p = |cfg: sormland_vatten::Config| -> Arc<dyn Provider> {
+            Arc::new(sormland_vatten::SormlandVatten::new(http.clone(), cfg))
+        };
+        let sv_providers: Vec<Arc<dyn Provider>> = vec![
+            sv_p(sormland_vatten::Config {
+                id: "katrineholm", name: "Katrineholm",
+                placeholder: "t.ex. Storgatan 7",
+                cities: &["Katrineholm", "Valla", "Sköldinge", "Julita",
+                    "Björkvik", "Forssjö", "Strångsjö", "Äsköping"],
+            }),
+            sv_p(sormland_vatten::Config {
+                id: "vingaker", name: "Vingåker",
+                placeholder: "t.ex. Storgatan 1",
+                cities: &["Vingåker", "Högsjö", "Marmorbyn", "Baggetorp",
+                    "Läppe", "Österåker"],
+            }),
+            sv_p(sormland_vatten::Config {
+                id: "flen", name: "Flen",
+                placeholder: "t.ex. Storgatan 16",
+                cities: &["Flen", "Malmköping", "Sparreholm", "Bettna",
+                    "Mellösa", "Skebokvarn", "Hälleforsnäs", "Vadsbro"],
+            }),
+        ];
+
         // Arjeplog — statisk rutt-baserad kalender. Ingen extern
         // adressuppslag; provider genererar biweekly-datum lokalt från en
         // transkriberad rutt-tabell (arjeplog.se).
@@ -1178,6 +1205,7 @@ impl Registry {
                 .chain(hassleholm_providers.into_iter())
                 .chain(hemab_providers.into_iter())
                 .chain(kristianstad_providers.into_iter())
+                .chain(sv_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())

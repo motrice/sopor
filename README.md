@@ -111,6 +111,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Hässleholm | `/hassleholm` | Hässleholm Miljö (Appbolaget-API + SiteVision-webapp) |
 | Härnösand | `/harnosand` | HEMAB (SiteVision-sökportlet, bulk-fetch via ?query=*) |
 | Kristianstad | `/kristianstad` | Renhållningen Kristianstad (Appbolaget-universal API) |
+| Katrineholm | `/katrineholm` | Sörmland Vatten & Avfall (WP admin-ajax) |
+| Vingåker | `/vingaker` | Sörmland Vatten & Avfall (samdrift) |
+| Flen | `/flen` | Sörmland Vatten & Avfall (samdrift) |
 | Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
 | Botkyrka | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Haninge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
@@ -232,7 +235,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ✅ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
 | ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
-| ✅ Falköping | ✅ Falun | ✅ Filipstad | ⬜ Finspång | 🔬 Flen |
+| ✅ Falköping | ✅ Falun | ✅ Filipstad | ⬜ Finspång | ✅ Flen |
 | ✅ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
 | ✅ Gnosjö | ⬜ Gotland | ✅ Grums | ✅ Grästorp | ✅ Gullspång |
 | ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ✅ Habo |
@@ -243,7 +246,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ✅ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
 | ⬜ Hörby | ⬜ Höör | ✅ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
 | ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
-| ⬜ Karlskrona | ⬜ Karlstad | 🔬 Katrineholm | ⬜ Kil | ⬜ Kinda |
+| ⬜ Karlskrona | ⬜ Karlstad | ✅ Katrineholm | ⬜ Kil | ⬜ Kinda |
 | ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ✅ Kristianstad |
 | ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
 | ✅ Kungälv | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ✅ Landskrona |
@@ -275,7 +278,7 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ✅ Vaggeryd |
 | ✅ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
 | ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ✅ Vilhelmina | ⬜ Vimmerby |
-| 🔬 Vindeln | 🔬 Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
+| 🔬 Vindeln | ✅ Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
 | 🔬 Värmdö | ✅ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ✅ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ✅ Åre |
 | ✅ Årjäng | ✅ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
