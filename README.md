@@ -133,6 +133,10 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Tibro | `/tibro` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 | Töreboda | `/toreboda` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
 | Vara | `/vara` | Avfallsappen via Avfall & Återvinning Skaraborg (samdrift) |
+| Söderköping | `/soderkoping` | Avfallsappen (mobil-API) — opt-in via `SOPOR_AVFALLSAPPEN_MOBILE=1` |
+| Motala | `/motala` | Avfallsappen (mobil-API) — opt-in via `SOPOR_AVFALLSAPPEN_MOBILE=1` |
+| Vadstena | `/vadstena` | Avfallsappen (samdrift med Motala) — opt-in via `SOPOR_AVFALLSAPPEN_MOBILE=1` |
+| Vallentuna | `/vallentuna` | Avfallsappen (mobil-API) — opt-in via `SOPOR_AVFALLSAPPEN_MOBILE=1` |
 | Arjeplog | `/arjeplog` | Statiska rutt-slingor från arjeplog.se (ingen adress-uppslag) |
 | Arvidsjaur | `/arvidsjaur` | Statiska rutt-slingor från arvidsjaur.se (ingen adress-uppslag) |
 | Lysekil | `/lysekil` | Rambo AB (WP-JSON på rambo.se) |
@@ -221,69 +225,150 @@ Identifierade men inte byggda än. Bidrag välkomna.
 | **Sysav-relaterade** | Per-kommun "Min sophämtning"-sidor | Lomma, Kävlinge, Svedala — sannolikt EDP-bakgrund. |
 | **CGI BFUS** (Business For Utilities Suite) | `Portal-Version: CGI.Utility.Application.CPU.Client.Web.dll`, `pfu_lang`-cookie, `/Environments/<KLIENT>/`-paths | BankID/inloggning krävs — inga publika endpoints. Bekräftade kunder: Vakin (Umeå/Vindeln/Nordmaling), Stockholm Vatten och Avfall, Karlstads Energi, Alingsås Energi. CGI:s [produktsida](https://www.cgi.com/se/sv/business-for-utilities-suite) anger 70+ kunder utan publik lista. |
 
+## Datakällor: gränsdragning
+
+Coverage-tabellen ovan spänner över tre kvalitativt olika typer av
+datakällor, och vi drar en explicit gräns för när vi använder dem:
+
+1. **Officiell öppen data.** Sundsvall (CC0 via
+   `api.sundsvall.se/Garbage/…`) är hittills enda kända fallet i
+   Sverige. Om fler kommuner följer efter blir det här den rimliga
+   vägen. Aktivt utan förbehåll.
+
+2. **Publika kommun-widgets utan formell auth.** Merparten av
+   provider-mappen — SiteVision-portlets, EDP FutureWeb, Indecta,
+   VA SYD, Roslagsvatten, Optigon, m.fl. Ingen inloggning krävs,
+   sidorna är byggda för att låta vem som helst slå upp en
+   hämtningsdag, och scraping-ansträngningen är rimlig och
+   proportionerlig mot nyttan. Aktivt utan förbehåll.
+
+3. **App-leverantörens mobil-API utan Bearer/token.**
+   Bozzanova/Avfallsappens WP-plugin-endpoints
+   (`<tenant>.avfallsapp.se/wp-json/nova/v1/`) svarar helt utan
+   autentiseringstoken; enda kravet är en själv-genererad UUID via
+   `/register`. Rent tekniskt är alltså endpointen lika öppen som
+   (2). **Men vi aktiverar den inte som default.** Designen
+   signalerar att åtkomst är tänkt att gå via kommunens eller
+   leverantörens app (plant_numbers nonce:as per requesting UUID på
+   vissa tenanter, och Bozzanovas allmänna villkor täcker rimligen
+   tredjepart-API-anrop). Vi avvaktar tills en kommun eller
+   Bozzanova aktivt godkänner integrationen.
+
+Gränsen mellan (2) och (3) är erkänt lite ologisk — den tekniska
+nivån är samma, det är den *avsedda användningen* som skiljer. Vår
+tumregel: om en publik sida på kommunens egen domän låter vem som
+helst slå upp en adress bygger vi. Om åtkomsten är tänkt att gå via
+en app-leverantörs klient och de har signalerat detta i designen
+väntar vi på grönt ljus, även om endpointen råkar svara ändå.
+
+### Kommuner sannolikt möjliga via app-API (bakom feature toggle)
+
+Endpoint-signaturerna är verifierade att fungera live men rutterna
+registreras inte utan `SOPOR_AVFALLSAPPEN_MOBILE=1` (se
+[Miljövariabler](#miljövariabler)). Markerade `🚧` i 290-grid nedan.
+
+| Kommun | Bozzanova-tenant | Notering |
+| --- | --- | --- |
+| Söderköping | `soderkoping.avfallsapp.se` | Permanent numeriskt plant_id |
+| Motala | `motala.avfallsapp.se` | Samdrift med Vadstena |
+| Vadstena | `motala.avfallsapp.se` | Adressuppslag via Motala-tenanten |
+| Vallentuna | `vallentuna.avfallsapp.se` | Plant_number nonce:as per UUID |
+
+Utöver dessa har vi kartlagt fler Bozzanova-tenanter via certificate
+transparency-loggar (Sysav, Vafab Miljö, Rambo, Miva, June Avfall &
+Miljö m.fl.). Flera av dem täcker kommuner som redan har öppna vägar
+via andra providers och behöver därför inte den här fallbacken.
+
+Testat men uteslutet: Dala Vatten och Avfall (`dalavatten` — Gagnef,
+Leksand, Rättvik, Vansbro). Server-side-blockering av `/list` för
+nya device-UUIDs oavsett flöde. Endpointerna finns dokumenterade i
+`providers/avfallsappen.rs` — återöppna om beteendet förändras.
+
+Ⓑ-markeringen utelämnar också ett par tenanter medvetet: `teknikivast`
+(Arvika, Eda) och `vanersborg` (Vänersborg) svarar båda på `/api/nova/v1/`
+med en statisk Bearer + `X-App-Identifier` (samma widget-mode-mönster
+som AÅS Skaraborg), men — till skillnad från AÅS — hostas ingen widget
+på kommunernas publika webb. Bearer:n finns bara inuti mobilklienten
+(deras `Mitt DVA`-motsvarigheter, båda NativeScript-appar med
+plaintext-bundle). Att extrahera nycklar ur en mobil-APK ligger en nivå
+mer intrikat än att läsa en publik web-widget, så vi markerar dem inte
+som "potentiellt integrerbar" här. Samma resonemang för övriga
+`requires_token: True`-tenanter i [HACS-referensen](https://github.com/mampfes/hacs_waste_collection_schedule).
+
 ## Alla Sveriges 290 kommuner
 
-`✅` = stöds nu · `🔬` = plattform identifierad, ej implementerad · `⬜` = ej undersökt.
+`✅` = stöds nu · `🚧` = möjlig via app-leverantörens API men opt-in
+bakom feature toggle · `🔬` = plattform identifierad, ej implementerad
+· `⬜` = ej undersökt.
+
+Sekundär markering `Ⓑ` = Bozzanova/Avfallsappen-tenant existerar för
+kommunen (verifierat via CT-loggar eller känd bolagstillhörighet) och
+den är därmed *potentiellt* integrerbar via mobil-API-vägen (se
+[Datakällor: gränsdragning](#datakällor-gränsdragning) ovan). Överlapp
+med primär markering är väntat: vissa `✅` täcks redan via en annan
+och mer öppen väg (Bozzanova-fallbacken behövs inte), vissa `🚧` är
+just den här mobil-mode-gate:n, och vissa `⬜` har en tenant men är
+inte utvärderade.
 
 | | | | | |
 | --- | --- | --- | --- | --- |
 | ✅ Ale | ⬜ Alingsås | ✅ Alvesta | ⬜ Aneby | ✅ Arboga |
 | ✅ Arjeplog | ✅ Arvidsjaur | ⬜ Arvika | ⬜ Askersund | ⬜ Avesta |
 | ⬜ Bengtsfors | ✅ Berg | ✅ Bjurholm | 🔬 Bjuv | ✅ Boden |
-| ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås |
-| ✅ Botkyrka | ⬜ Boxholm | ✅ Bromölla | ✅ Bräcke | ✅ Burlöv |
+| ⬜ Bollebygd | ⬜ Bollnäs | ✅ Borgholm | ⬜ Borlänge | ✅ Borås Ⓑ |
+| ✅ Botkyrka | ⬜ Boxholm Ⓑ | ✅ Bromölla | ✅ Bräcke | ✅ Burlöv |
 | 🔬 Båstad | ⬜ Dals-Ed | ✅ Danderyd | ⬜ Degerfors | ✅ Dorotea |
 | ⬜ Eda | ✅ Ekerö | ⬜ Eksjö | ⬜ Emmaboda | ✅ Enköping |
-| ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga | ✅ Fagersta | ✅ Falkenberg |
-| ✅ Falköping | ✅ Falun | ✅ Filipstad | ⬜ Finspång | ✅ Flen |
-| ✅ Forshaga | ⬜ Färgelanda | ⬜ Gagnef | ✅ Gislaved | ⬜ Gnesta |
-| ✅ Gnosjö | ⬜ Gotland | ✅ Grums | ✅ Grästorp | ✅ Gullspång |
-| ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene | ✅ Habo |
-| ⬜ Hagfors | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ✅ Hammarö |
+| ⬜ Eskilstuna | ⬜ Eslöv | ✅ Essunga Ⓑ | ✅ Fagersta | ✅ Falkenberg |
+| ✅ Falköping Ⓑ | ✅ Falun | ✅ Filipstad | ⬜ Finspång Ⓑ | ✅ Flen |
+| ✅ Forshaga Ⓑ | ⬜ Färgelanda | ⬜ Gagnef Ⓑ | ✅ Gislaved | ⬜ Gnesta |
+| ✅ Gnosjö | ⬜ Gotland | ✅ Grums Ⓑ | ✅ Grästorp Ⓑ | ✅ Gullspång Ⓑ |
+| ⬜ Gällivare | ⬜ Gävle | ⬜ Göteborg | ✅ Götene Ⓑ | ✅ Habo Ⓑ |
+| ⬜ Hagfors Ⓑ | ⬜ Hallsberg | ✅ Hallstahammar | ⬜ Halmstad | ✅ Hammarö Ⓑ |
 | ✅ Haninge | ⬜ Haparanda | ✅ Heby | ⬜ Hedemora | 🔬 Helsingborg |
-| ✅ Herrljunga | ✅ Hjo | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall |
+| ✅ Herrljunga | ✅ Hjo Ⓑ | ⬜ Hofors | ✅ Huddinge | ⬜ Hudiksvall Ⓑ |
 | ✅ Hultsfred | ✅ Hylte | ⬜ Håbo | ✅ Hällefors | ✅ Härjedalen |
 | ✅ Härnösand | ⬜ Härryda | ✅ Hässleholm | 🔬 Höganäs | ✅ Högsby |
-| ⬜ Hörby | ⬜ Höör | ✅ Jokkmokk | ⬜ Järfälla | ✅ Jönköping |
-| ⬜ Kalix | ✅ Kalmar | ✅ Karlsborg | ⬜ Karlshamn | ⬜ Karlskoga |
-| ⬜ Karlskrona | ⬜ Karlstad | ✅ Katrineholm | ⬜ Kil | ⬜ Kinda |
-| ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta | ✅ Kramfors | ✅ Kristianstad |
-| ⬜ Kristinehamn | ⬜ Krokom | ⬜ Kumla | ⬜ Kungsbacka | ✅ Kungsör |
-| ✅ Kungälv | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ✅ Landskrona |
-| ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand | ⬜ Lerum | ✅ Lessebo |
+| ⬜ Hörby | ⬜ Höör | ✅ Jokkmokk | ⬜ Järfälla | ✅ Jönköping Ⓑ |
+| ⬜ Kalix Ⓑ | ✅ Kalmar | ✅ Karlsborg Ⓑ | ⬜ Karlshamn | ⬜ Karlskoga |
+| ⬜ Karlskrona | ⬜ Karlstad | ✅ Katrineholm | ⬜ Kil Ⓑ | ⬜ Kinda Ⓑ |
+| ✅ Kiruna | ⬜ Klippan | 🔬 Knivsta Ⓑ | ✅ Kramfors | ✅ Kristianstad |
+| ⬜ Kristinehamn | ⬜ Krokom Ⓑ | ⬜ Kumla Ⓑ | ⬜ Kungsbacka Ⓑ | ✅ Kungsör |
+| ✅ Kungälv Ⓑ | ✅ Kävlinge | ✅ Köping | ⬜ Laholm | ✅ Landskrona |
+| ⬜ Laxå | ⬜ Lekeberg | ⬜ Leksand Ⓑ | ⬜ Lerum Ⓑ | ✅ Lessebo |
 | ✅ Lidingö | ✅ Lidköping | ⬜ Lilla Edet | ✅ Lindesberg | ⬜ Linköping |
 | ✅ Ljungby | ⬜ Ljusdal | ✅ Ljusnarsberg | ✅ Lomma | ✅ Ludvika |
-| 🔬 Luleå | ✅ Lund | ✅ Lycksele | ✅ Lysekil | ✅ Malmö |
-| ⬜ Malung-Sälen | ✅ Malå | ✅ Mariestad | ✅ Mark | ✅ Markaryd |
-| ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora | 🔬 Motala | ✅ Mullsjö |
-| ✅ Munkedal | ⬜ Munkfors | ⬜ Mölndal | ✅ Mönsterås | ✅ Mörbylånga |
-| ✅ Nacka | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling |
-| ⬜ Norrköping | ⬜ Norrtälje | ✅ Norsjö | ✅ Nybro | ⬜ Nykvarn |
+| 🔬 Luleå | ✅ Lund | ✅ Lycksele | ✅ Lysekil Ⓑ | ✅ Malmö |
+| ⬜ Malung-Sälen | ✅ Malå | ✅ Mariestad Ⓑ | ✅ Mark | ✅ Markaryd |
+| ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora Ⓑ | 🚧 Motala Ⓑ | ✅ Mullsjö Ⓑ |
+| ✅ Munkedal Ⓑ | ⬜ Munkfors Ⓑ | ⬜ Mölndal Ⓑ | ✅ Mönsterås | ✅ Mörbylånga |
+| ✅ Nacka Ⓑ | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling Ⓑ |
+| ⬜ Norrköping | ⬜ Norrtälje | ✅ Norsjö | ✅ Nybro | ⬜ Nykvarn Ⓑ |
 | ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
-| ⬜ Orsa | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
+| ⬜ Orsa Ⓑ | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
 | ⬜ Oxelösund | ✅ Pajala | ⬜ Partille | ⬜ Perstorp | ⬜ Piteå |
-| ✅ Ragunda | ⬜ Robertsfors | ✅ Ronneby | ⬜ Rättvik | ✅ Sala |
-| ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna | ✅ Simrishamn | ✅ Sjöbo |
-| ✅ Skara | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde |
-| ✅ Smedjebacken | ⬜ Sollefteå | ⬜ Sollentuna | ⬜ Solna | ✅ Sorsele |
-| ✅ Sotenäs | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
-| ✅ Storuman | ⬜ Strängnäs | ✅ Strömstad | ✅ Strömsund | ⬜ Sundbyberg |
-| ✅ Sundsvall | ⬜ Sunne | ✅ Surahammar | ✅ Svalöv | ✅ Svedala |
-| ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn |
-| ⬜ Söderköping | ⬜ Södertälje | ⬜ Sölvesborg | ✅ Tanum | ✅ Tibro |
+| ✅ Ragunda Ⓑ | ⬜ Robertsfors | ✅ Ronneby | ⬜ Rättvik Ⓑ | ✅ Sala |
+| ✅ Salem | ⬜ Sandviken | ⬜ Sigtuna Ⓑ | ✅ Simrishamn | ✅ Sjöbo |
+| ✅ Skara Ⓑ | ✅ Skellefteå | ✅ Skinnskatteberg | ⬜ Skurup | ✅ Skövde Ⓑ |
+| ✅ Smedjebacken | ⬜ Sollefteå Ⓑ | ⬜ Sollentuna | ⬜ Solna | ✅ Sorsele |
+| ✅ Sotenäs Ⓑ | ⬜ Staffanstorp | ✅ Stenungsund | ✅ Stockholm | ⬜ Storfors |
+| ✅ Storuman | ⬜ Strängnäs | ✅ Strömstad | ✅ Strömsund Ⓑ | ⬜ Sundbyberg |
+| ✅ Sundsvall | ⬜ Sunne Ⓑ | ✅ Surahammar | ✅ Svalöv | ✅ Svedala |
+| ✅ Svenljunga | ⬜ Säffle | ⬜ Säter | ✅ Sävsjö | ⬜ Söderhamn Ⓑ |
+| 🚧 Söderköping Ⓑ | ⬜ Södertälje Ⓑ | ⬜ Sölvesborg | ✅ Tanum Ⓑ | ✅ Tibro Ⓑ |
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
-| ✅ Tomelilla | ⬜ Torsby | ✅ Torsås | ⬜ Tranemo | ⬜ Tranås |
-| ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö | ✅ Täby |
-| ✅ Töreboda | ⬜ Uddevalla | ⬜ Ulricehamn | 🔬 Umeå | ⬜ Upplands-Bro |
-| ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | ⬜ Vadstena | ✅ Vaggeryd |
-| ✅ Valdemarsvik | 🔬 Vallentuna | ⬜ Vansbro | ✅ Vara | ⬜ Varberg |
+| ✅ Tomelilla | ⬜ Torsby Ⓑ | ✅ Torsås | ⬜ Tranemo Ⓑ | ⬜ Tranås |
+| ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö Ⓑ | ✅ Täby |
+| ✅ Töreboda Ⓑ | ⬜ Uddevalla | ⬜ Ulricehamn Ⓑ | 🔬 Umeå | ⬜ Upplands-Bro Ⓑ |
+| ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | 🚧 Vadstena Ⓑ | ✅ Vaggeryd Ⓑ |
+| ✅ Valdemarsvik Ⓑ | 🚧 Vallentuna Ⓑ | ⬜ Vansbro Ⓑ | ✅ Vara Ⓑ | ⬜ Varberg |
 | ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ✅ Vilhelmina | ⬜ Vimmerby |
-| 🔬 Vindeln | ✅ Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
+| 🔬 Vindeln Ⓑ | ✅ Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
 | 🔬 Värmdö | ✅ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ✅ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ✅ Åre |
-| ✅ Årjäng | ✅ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg | ✅ Älmhult |
-| ⬜ Älvdalen | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
-| ⬜ Ödeshög | ✅ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik | ⬜ Östersund |
+| ✅ Årjäng | ✅ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg Ⓑ | ✅ Älmhult |
+| ⬜ Älvdalen Ⓑ | ⬜ Älvkarleby | ⬜ Älvsbyn | 🔬 Ängelholm | ⬜ Öckerö |
+| ⬜ Ödeshög Ⓑ | ✅ Örebro | ⬜ Örkelljunga | ✅ Örnsköldsvik Ⓑ | ⬜ Östersund Ⓑ |
 | ✅ Österåker | ⬜ Östhammar | ✅ Östra Göinge | ⬜ Överkalix | ✅ Övertorneå |
 
 Status motsvarar status i kodbasen idag. 🔬 betyder att jag identifierat
@@ -309,6 +394,16 @@ docker run --rm -p 8080:8080 sopor
 
 - `PORT` (default `8080`)
 - `RUST_LOG` (default `info`)
+- `SOPOR_AVFALLSAPPEN_MOBILE` (default `av`) — sätts till `1`, `true`,
+  `yes` eller `on` för att aktivera Avfallsappen-mobile-API-fallbacken
+  (Söderköping, Motala, Vadstena, Vallentuna). Läget använder ingen
+  Bearer-token utan bara en själv-genererad UUID via `/register`;
+  det är fortfarande en tredjepart-integration som lämpligen bör
+  koordineras med Bozzanova innan produktion (se moduldokumentation i
+  `src/providers/avfallsappen.rs`). Widget-mode för AÅS-Skaraborg
+  (Falköping, Skövde m.fl.) är inte gated och aktivt oavsett flaggan.
+  Mobile-app-parsers har egna unit-tester som är `#[ignore]:ade` som
+  default — kör dem via `cargo test -- --include-ignored`.
 
 ## Notiser
 

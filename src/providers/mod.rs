@@ -93,6 +93,16 @@ pub struct Registry {
     providers: Vec<Arc<dyn Provider>>,
 }
 
+/// Läs en miljövariabel som en enkel av/på-flagga. Sant för
+/// `1`, `true`, `yes`, `on` (case-insensitivt). Allt annat (även
+/// avsaknad) tolkas som av.
+fn is_env_toggle_on(var: &str) -> bool {
+    std::env::var(var)
+        .ok()
+        .map(|v| matches!(v.trim().to_lowercase().as_str(), "1" | "true" | "yes" | "on"))
+        .unwrap_or(false)
+}
+
 impl Registry {
     pub fn build() -> Self {
         let http = reqwest::Client::builder()
@@ -1095,106 +1105,181 @@ impl Registry {
         // en delad Avfallsappen-widget (Bozzanova) på tenant
         // gullspang.avfallsapp.se. Statisk bearer + X-App-Identifier
         // extraherade ur widgetens Vue-bundle på avfallskaraborg.se.
-        let aas = |cfg: avfallsappen::Config| -> Arc<dyn Provider> {
+        let av = |cfg: avfallsappen::Config| -> Arc<dyn Provider> {
             Arc::new(avfallsappen::Avfallsappen::new(http.clone(), cfg))
         };
-        let aas_tenant = "gullspang";
-        let aas_bearer = "J6lD4hVH8pRMQZeBSoCvtCZj1V0wvgg0QvBqSDTH9fce942d";
-        let aas_app_id = "70bae483-3268-4875-93f5-14f2274ec7cb";
+        let aas_widget = avfallsappen::Auth::Widget {
+            bearer: "J6lD4hVH8pRMQZeBSoCvtCZj1V0wvgg0QvBqSDTH9fce942d",
+            app_identifier: "70bae483-3268-4875-93f5-14f2274ec7cb",
+        };
         let aas_note = "Sophämtningsdata från Avfall & Återvinning Skaraborg (AÅS) \
                         via Avfallsappen. API:t returnerar bara nästa tömning \
                         per fraktion — kalendern uppdateras löpande när klienten \
                         hämtar in feeden på nytt.";
-        let avfallsappen_providers: Vec<Arc<dyn Provider>> = vec![
-            aas(avfallsappen::Config {
+        let mut avfallsappen_providers: Vec<Arc<dyn Provider>> = vec![
+            av(avfallsappen::Config {
                 id: "essunga", name: "Essunga",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Nossebro", "Essunga"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "falkoping", name: "Falköping",
                 placeholder: "t.ex. Storgatan 10", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &[
                     "Falköping", "Floby", "Stenstorp", "Kättilstorp",
                     "Kinnarp", "Slutarp", "Åsarp", "Gudhem",
                     "Vartofta", "Broddetorp",
                 ],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "grastorp", name: "Grästorp",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Grästorp", "Tråvad"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "gullspang", name: "Gullspång",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &[
                     "Gullspång", "Hova", "Gårdsjö", "Otterbäcken",
                     "Skagersvik", "Aspa Bruk", "Aspabruk",
                 ],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "gotene", name: "Götene",
                 placeholder: "t.ex. Skolgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Götene", "Källby", "Lundsbrunn", "Hällekis"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "hjo", name: "Hjo",
                 placeholder: "t.ex. Skolgatan 11", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Hjo", "Fagersanna"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "karlsborg", name: "Karlsborg",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Karlsborg", "Mölltorp", "Undenäs", "Forsvik"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "mariestad", name: "Mariestad",
                 placeholder: "t.ex. Kyrkogatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Mariestad", "Lyrestad", "Moholm", "Sjötorp", "Torsö"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "skara", name: "Skara",
                 placeholder: "t.ex. Skolgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Skara", "Axvall", "Varnhem"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "skovde", name: "Skövde",
                 placeholder: "t.ex. Skolgatan 17", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &[
                     "Skövde", "Timmersdala", "Tidan", "Väring",
                     "Lerdala", "Värsås",
                 ],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "tibro", name: "Tibro",
                 placeholder: "t.ex. Skolgatan 10", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Tibro"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "toreboda", name: "Töreboda",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget.clone(),
                 cities: &["Töreboda", "Älgarås", "Finnerödja"],
             }),
-            aas(avfallsappen::Config {
+            av(avfallsappen::Config {
                 id: "vara", name: "Vara",
                 placeholder: "t.ex. Storgatan 1", note: aas_note,
-                tenant: aas_tenant, bearer: aas_bearer, app_identifier: aas_app_id,
+                tenant: "gullspang", auth: aas_widget,
                 cities: &["Vara", "Kvänum", "Vedum", "Stora Levene", "Larv"],
             }),
         ];
+
+        // Avfallsappen mobile-app-mode (Bozzanova WP-plugin, ingen Bearer).
+        // Fallback för kommuner där ingen annan öppen backend hittats.
+        // Använd endast för tenanter vars `wp-json/nova/v1/`-endpoints
+        // svarar utan auth-token (endast själv-genererad UUID via
+        // /register). Se `providers/avfallsappen.rs` för mönstret.
+        //
+        // Gated bakom miljövariabeln `SOPOR_AVFALLSAPPEN_MOBILE` —
+        // default av. Sätt till `1`, `true`, `yes` eller `on` för att
+        // aktivera. Rekomenderat att först ha rättslig OK från
+        // Bozzanova (se not i README).
+        //
+        // Testat men uteslutet: `dalavatten` (DVA — Gagnef, Leksand,
+        // Rättvik, Vansbro). Register + set-status returnerar
+        // `response:1` men `/list` returnerar tom array för nya devices
+        // (deras server har någon form av device-whitelist eller
+        // fördröjd sync som blockerar iCal-flödet). Endpointerna finns —
+        // återöppna om deras beteende förändras eller om vi hittar rätt
+        // init-sekvens.
+        if is_env_toggle_on("SOPOR_AVFALLSAPPEN_MOBILE") {
+            tracing::info!(
+                target: "avfallsappen",
+                "SOPOR_AVFALLSAPPEN_MOBILE=on — mobile-app-mode enabled \
+                 (Söderköping, Motala, Vadstena, Vallentuna)"
+            );
+            avfallsappen_providers.extend(vec![
+            av(avfallsappen::Config {
+                id: "soderkoping", name: "Söderköping",
+                placeholder: "t.ex. Storgatan 1",
+                note: "Sophämtningsdata från Söderköpings kommun via \
+                       Avfallsappen. API:t returnerar bara nästa tömning \
+                       per fraktion — kalendern uppdateras löpande när \
+                       klienten hämtar in feeden på nytt.",
+                tenant: "soderkoping", auth: avfallsappen::Auth::MobileApp,
+                cities: &[
+                    "Söderköping", "Sankt Anna", "S:t Anna",
+                    "Skällvik", "Östra Ryd", "Gårdeby",
+                ],
+            }),
+            av(avfallsappen::Config {
+                id: "motala", name: "Motala",
+                placeholder: "t.ex. Storgatan 1",
+                note: "Sophämtningsdata från Motala kommun via Avfallsappen. \
+                       API:t returnerar bara nästa tömning per fraktion — \
+                       kalendern uppdateras löpande när klienten hämtar in \
+                       feeden på nytt.",
+                tenant: "motala", auth: avfallsappen::Auth::MobileApp,
+                cities: &[
+                    "Motala", "Borensberg", "Fornåsa", "Tjällmo",
+                    "Karlsby", "Klockrike", "Nykyrka", "Godegård",
+                ],
+            }),
+            av(avfallsappen::Config {
+                id: "vadstena", name: "Vadstena",
+                placeholder: "t.ex. Storgatan 1",
+                note: "Sophämtningsdata från Vadstena kommun via Avfallsappen \
+                       (samdrift med Motala). API:t returnerar bara nästa \
+                       tömning per fraktion.",
+                tenant: "motala", auth: avfallsappen::Auth::MobileApp,
+                cities: &["Vadstena"],
+            }),
+            av(avfallsappen::Config {
+                id: "vallentuna", name: "Vallentuna",
+                placeholder: "t.ex. Centralvägen 1",
+                note: "Sophämtningsdata från Vallentuna kommun via Avfallsappen. \
+                       API:t returnerar bara nästa tömning per fraktion.",
+                tenant: "vallentuna", auth: avfallsappen::Auth::MobileApp,
+                cities: &[
+                    "Vallentuna", "Brottby", "Kårsta", "Ekskogen",
+                    "Lindholmen",
+                ],
+            }),
+            ]);
+        }
 
         Self {
             providers: providers
