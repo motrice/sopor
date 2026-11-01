@@ -115,6 +115,9 @@ timmar före (notis ~18:00 dagen innan på Apple Calendar).
 | Vingåker | `/vingaker` | Sörmland Vatten & Avfall (samdrift) |
 | Flen | `/flen` | Sörmland Vatten & Avfall (samdrift) |
 | Sundsvall | `/sundsvall` | **Officiell öppen data (CC0)** via dataportal.se |
+| Umeå | `/umea` | Vakin (CGI BFUS via öppen SiteVision-proxy) |
+| Vindeln | `/vindeln` | Vakin (samdrift med Umeå) |
+| Nordmaling | `/nordmaling` | UMEVA/Vakin (samdrift med Umeå) |
 | Botkyrka | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Haninge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
 | Huddinge | `/sodertorn` | SRV Återvinning (Södertörn — samdrift) |
@@ -219,11 +222,11 @@ Identifierade men inte byggda än. Bidrag välkomna.
 
 | Plattform | Markör | Sannolika kommuner |
 | --- | --- | --- |
-| **EDP Future / FutureWeb** (VertiGIS) | `futureweb.<kommun>.se`, `/EDPLogin/LogIn`, iframe-embed | Den i särklass största — uppskattningsvis 100+ kommuner. Bekräftade exempel: Luleå, Värmdö, Motala, Skellefteå, Hylte, Danderyd, Uppsala. Regionala bolag: NSR (NV Skåne: Helsingborg, Bjuv, Båstad, Höganäs, Åstorp, Ängelholm), Roslagsvatten (Österåker, Vaxholm, Knivsta, Ekerö, Vallentuna), Sörmland Vatten (Katrineholm, Flen, Vingåker), Vakin (Umeå, Nordmaling, Vindeln). |
+| **EDP Future / FutureWeb** (VertiGIS) | `futureweb.<kommun>.se`, `/EDPLogin/LogIn`, iframe-embed | Den i särklass största — uppskattningsvis 100+ kommuner. Bekräftade exempel: Luleå, Värmdö, Motala, Skellefteå, Hylte, Danderyd, Uppsala. Regionala bolag: NSR (NV Skåne: Helsingborg, Bjuv, Båstad, Höganäs, Åstorp, Ängelholm), Roslagsvatten (Österåker, Vaxholm, Knivsta, Ekerö, Vallentuna) och Sörmland Vatten (Katrineholm, Flen, Vingåker). |
 | **Avfallsappen** (Bozzanova) | Kommunens sida länkar till app, mobil-API | ~50 kommuner. Lista på `avfallsappen.se`. |
 | **Renova / Göteborg Stad Kretslopp och vatten** | Mina sidor med BankID | Göteborg (publika widget saknas — bara inloggad vy). |
 | **Sysav-relaterade** | Per-kommun "Min sophämtning"-sidor | Lomma, Kävlinge, Svedala — sannolikt EDP-bakgrund. |
-| **CGI BFUS** (Business For Utilities Suite) | `Portal-Version: CGI.Utility.Application.CPU.Client.Web.dll`, `pfu_lang`-cookie, `/Environments/<KLIENT>/`-paths | BankID/inloggning krävs — inga publika endpoints. Bekräftade kunder: Vakin (Umeå/Vindeln/Nordmaling), Stockholm Vatten och Avfall, Karlstads Energi, Alingsås Energi. CGI:s [produktsida](https://www.cgi.com/se/sv/business-for-utilities-suite) anger 70+ kunder utan publik lista. |
+| **CGI BFUS** (Business For Utilities Suite) | `Portal-Version: CGI.Utility.Application.CPU.Client.Web.dll`, `pfu_lang`-cookie, `/Environments/<KLIENT>/`-paths | Mina sidor-lagret kräver BankID. **Men:** Vakin (Umeå/Vindeln/Nordmaling) publicerar sedan 2026 en öppen widget som proxar BFUS-API:t serverside — se `providers/vakin.rs`. Leta efter motsvarande widget hos övriga kunder innan ni ger upp: Stockholm Vatten och Avfall, Karlstads Energi, Alingsås Energi. CGI:s [produktsida](https://www.cgi.com/se/sv/business-for-utilities-suite) anger 70+ kunder utan publik lista. |
 
 ## Datakällor: gränsdragning
 
@@ -342,7 +345,7 @@ inte utvärderade.
 | ⬜ Malung-Sälen | ✅ Malå | ✅ Mariestad Ⓑ | ✅ Mark | ✅ Markaryd |
 | ⬜ Mellerud | ⬜ Mjölby | ⬜ Mora Ⓑ | 🚧 Motala Ⓑ | ✅ Mullsjö Ⓑ |
 | ✅ Munkedal Ⓑ | ⬜ Munkfors Ⓑ | ⬜ Mölndal Ⓑ | ✅ Mönsterås | ✅ Mörbylånga |
-| ✅ Nacka Ⓑ | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | 🔬 Nordmaling Ⓑ |
+| ✅ Nacka Ⓑ | ✅ Nora | ✅ Norberg | ⬜ Nordanstig | ✅ Nordmaling Ⓑ |
 | ⬜ Norrköping | ⬜ Norrtälje | ✅ Norsjö | ✅ Nybro | ⬜ Nykvarn Ⓑ |
 | ⬜ Nyköping | ✅ Nynäshamn | ⬜ Nässjö | ⬜ Ockelbo | ⬜ Olofström |
 | ⬜ Orsa Ⓑ | ✅ Orust | ✅ Osby | ✅ Oskarshamn | ⬜ Ovanåker |
@@ -359,11 +362,11 @@ inte utvärderade.
 | ⬜ Tidaholm | ⬜ Tierp | ⬜ Timrå | ✅ Tingsryd | ⬜ Tjörn |
 | ✅ Tomelilla | ⬜ Torsby Ⓑ | ✅ Torsås | ⬜ Tranemo Ⓑ | ⬜ Tranås |
 | ⬜ Trelleborg | ⬜ Trollhättan | ⬜ Trosa | ⬜ Tyresö Ⓑ | ✅ Täby |
-| ✅ Töreboda Ⓑ | ⬜ Uddevalla | ⬜ Ulricehamn Ⓑ | 🔬 Umeå | ⬜ Upplands-Bro Ⓑ |
+| ✅ Töreboda Ⓑ | ⬜ Uddevalla | ⬜ Ulricehamn Ⓑ | ✅ Umeå | ⬜ Upplands-Bro Ⓑ |
 | ⬜ Upplands Väsby | ✅ Uppsala | ✅ Uppvidinge | 🚧 Vadstena Ⓑ | ✅ Vaggeryd Ⓑ |
 | ✅ Valdemarsvik Ⓑ | 🚧 Vallentuna Ⓑ | ⬜ Vansbro Ⓑ | ✅ Vara Ⓑ | ⬜ Varberg |
 | ✅ Vaxholm | ⬜ Vellinge | ✅ Vetlanda | ✅ Vilhelmina | ⬜ Vimmerby |
-| 🔬 Vindeln Ⓑ | ✅ Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
+| ✅ Vindeln Ⓑ | ✅ Vingåker | ✅ Vårgårda | ⬜ Vänersborg | ✅ Vännäs |
 | 🔬 Värmdö | ✅ Värnamo | ⬜ Västervik | ✅ Västerås | ✅ Växjö |
 | ✅ Ydre | ⬜ Ystad | ⬜ Åmål | ⬜ Ånge | ✅ Åre |
 | ✅ Årjäng | ✅ Åsele | 🔬 Åstorp | ⬜ Åtvidaberg Ⓑ | ✅ Älmhult |

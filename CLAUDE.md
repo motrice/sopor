@@ -34,7 +34,13 @@ src/
     hassleholm.rs      Hässleholm Miljö. Appbolaget API (search) + SiteVision webapp JSON (months).
     sodertorn.rs       SRV Återvinning (Botkyrka, Haninge, Huddinge, Nynäshamn, Salem).
                        Open GET JSON at /rest-api/core/sewagePickup/{getSuggestions,search}.
+    vakin.rs           Umeå, Vindeln, Nordmaling. CGI BFUS reached through an open
+                       SiteVision webapp proxy on vakin.se.
 ```
+
+Note: the tree above lists the platform providers that carry the most
+non-obvious knowledge, not every module — `providers/mod.rs` is the
+authoritative list.
 
 Current coverage: one `/sodertorn` route covers 5 kommuner via `index_aliases()`
 (5 landing-list entries all linking to the shared page — unusual pattern, only SRV).
@@ -77,6 +83,9 @@ Existing platforms with multi-tenant configs:
   allow-list to filter the shared upstream.
 - `Roslagsvatten` (Ekerö, Vaxholm, Österåker) — `/schedule/search` +
   `/schedule/fetch` POST JSON, returns Drupal AJAX-array.
+- `Vakin` (Umeå, Vindeln, Nordmaling) — the `se.soleil.garbageTruckFetcher`
+  SiteVision webapp on vakin.se. One shared address register for all
+  three kommuner, split by a postort `cities` allow-list.
 - `Sodertorn` (Botkyrka, Haninge, Huddinge, Nynäshamn, Salem) — single
   provider on `/sodertorn` with 5 index aliases. SRV Återvinning's
   BM FetchPlanner backend (`fpservice.bmsystem.se/1839SRVProd/`) is
@@ -147,6 +156,31 @@ literal in `Registry::build`. New platform = new file under
   pre-baked ~52 dates for weekly containers; emit as explicit anchors
   (no RRULE projection). `hasFrequency=false` on slam containers where
   `frequency` is literally the string `"False"` — filter to empty.
+- **Vakin (Umeå/Vindeln/Nordmaling)** — SiteVision webapp
+  `se.soleil.garbageTruckFetcher`, portlet `12.6252338c1a0c6bd088ed033`.
+  Two routes, both plain GET on the page URL with the query string as
+  separate params (NOT embedded in the `route=` value):
+  `…?sv.target=<portlet>&sv.<portlet>.route=/getAddresses&pickupAddress=<prefix>`
+  and `…route=/getcontainerdata&addressParams=<json>&startDate=&endDate=`.
+  `X-Requested-With: XMLHttpRequest` is REQUIRED or SiteVision returns the
+  full HTML page (same trap as Hässleholm). Address search is
+  **prefix-only** on the street string and silently returns 0 hits if the
+  query carries both a letter suffix and a city (`"Granvägen 1 A, Umeå"`
+  → nothing), so never round-trip the full label; `addressParams` is the
+  suggestion's `value` object verbatim and we carry the postnummer in the
+  suggestion string instead (`"Granvägen 1, Vindeln (92232)"`), EDP-style.
+  Postnummer must have no space. The webapp proxies CGI BFUS at
+  `api-bfus.vakin.se/EP/EnvironmentalService/GetScheduledExecutionsSummary/
+  cgi/<street>/<city>/<zip>/<from>/<to>` — that host is 401 without the
+  proxy's key, and it leaks upstream failures back as HTTP 200 with
+  `{"error": …}` (addresses containing a colon, e.g. the fastighets-
+  beteckning `Sjöbotten 1:19`, give 400 because the colon breaks the path
+  segment). Each row is one pickup day with the fractions collected that
+  day; `contentTypes` order varies between rows, so sort before using it
+  as a series key or the UIDs split. Data runs ~2 years ahead; we take 12
+  months as explicit dates. The address register also holds a handful of
+  border addresses in Vännäs and Lycksele — excluded from every
+  allow-list, same reasoning as the Sundsvall border addresses.
 - **Roslagsvatten** — Drupal AJAX. The endpoints return a JSON array
   of `{command, method, selector, data}` where `data` is an HTML
   fragment string. Extract addresses via regex on `data-bid="ID"`+text;
@@ -176,7 +210,7 @@ free function (`parse_schedule`, `build_schedule`, `parse_calendar`)
 that takes a string/struct and returns `PickupSchedule`. Fixtures are
 inline string literals — small enough to keep readable.
 
-`cargo test --quiet` should always pass. Currently 46 tests; add
+`cargo test --quiet` should always pass. Currently 193 tests; add
 specific cases for new edge cases discovered while implementing a
 provider rather than scaling test count for its own sake.
 
@@ -222,8 +256,24 @@ provider rather than scaling test count for its own sake.
   `/Garbage/api-docs`). Now implemented as `providers/sundsvall.rs`.
   Lesson for future kommun-investigations: **search dataportal.se by
   the kommun name** before declaring scrape the only option.
-- **CGI BFUS (Business For Utilities Suite)** — the Mina sidor /
-  customer portal layer of CGI's BFUS product. Product page:
+- **CGI BFUS (Business For Utilities Suite)** — ~~skip entirely~~.
+  **Partly overturned 2026-11-01: Vakin is now implemented** (see
+  `providers/vakin.rs`). The *Mina sidor* layer is still BankID-gated
+  exactly as described below, but that was never the only door: Vakin's
+  public "När kommer sopbilen"-widget is a SiteVision webapp that proxies
+  the BFUS REST API (`api-bfus.vakin.se/EP/EnvironmentalService/…`)
+  server-side with its own key, so no auth is needed on our end. The
+  BFUS API itself answers 401 if called directly.
+
+  **Lesson:** a BankID-gated *portal* says nothing about the kommun's
+  *public* widget. Before writing off any BFUS customer, check the
+  avfallsbolag's own "när kommer sopbilen"-page for a widget and look for
+  an `api-bfus.<tenant>.se`-style proxy host in its webapp bundle. Worth
+  re-probing for Stockholm Vatten och Avfall (already covered via SVOA's
+  own JSON), Karlstads Energi and Alingsås Energi.
+
+  The original dead-end notes on the portal layer, still accurate:
+  the Mina sidor / customer portal layer of CGI's BFUS product. Product page:
   `https://www.cgi.com/se/sv/business-for-utilities-suite` (says 70+
   customer companies, none listed publicly). The portal is
   ASP.NET WebForms + Knockout.js + jQuery, with WSDL/Swagger/OpenAPI
@@ -231,7 +281,8 @@ provider rather than scaling test count for its own sake.
 
   Confirmed customers:
   - Vakin / UMEVA (Umeå, Vindeln, Nordmaling) — `minasidor.vakin.se`,
-    `/Environments/UMEVA/`
+    `/Environments/UMEVA/`. **Implemented** via the public widget, not
+    this portal.
   - Stockholm Vatten och Avfall — `pfu.stockholmvattenochavfall.se/
     flex/flexservices.aspx` (visible as the "Mina sidor"-link in SVOA's
     frontend, see session 1), `/Environments/STOVA/`
@@ -260,11 +311,11 @@ provider rather than scaling test count for its own sake.
     API:er" but only for internal case-creation — no public developer
     docs, no third-party widgets.
 
-  **Don't re-probe.** Skip CGI BFUS entirely. Re-attempt only if
-  (a) a kommun publishes a separate non-BFUS widget, (b) we build
-  BankID/Freja auth support (separate project, brushes against
-  personuppgifter), or (c) a HACS source reverses the post-login
-  endpoints. Direct contact: Lasse Andersson, lar.andersson@cgi.com
+  **Don't re-probe the portal layer.** Probe the public widget instead
+  (see the lesson above). Attacking the portal itself is still only
+  worth it if (a) we build BankID/Freja auth support (separate project,
+  brushes against personuppgifter), or (b) a HACS source reverses the
+  post-login endpoints. Direct contact: Lasse Andersson, lar.andersson@cgi.com
   (BFUS product manager).
 - **MSVA — Mittsverige Vatten & Avfall (Sundsvall, Timrå, Nordanstig)** —
   ~~previously marked as not implemented~~. **Sundsvall is now

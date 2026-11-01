@@ -18,6 +18,7 @@ pub mod rambo;
 pub mod sormland_vatten;
 pub mod stromstad;
 pub mod sysav;
+pub mod vakin;
 pub mod vattenmiljoresurs;
 pub mod vmab;
 pub mod edp_future;
@@ -838,6 +839,62 @@ impl Registry {
                 },
             ))];
 
+        // Vakin / UMEVA — Umeå, Vindeln, Nordmaling. CGI BFUS, men
+        // SiteVision-webbappen `se.soleil.garbageTruckFetcher` proxar
+        // `api-bfus.vakin.se` utan inloggning. Ett delat adressregister
+        // för alla tre kommuner, filtrerat per postort.
+        let vakin = |cfg: vakin::Config| -> Arc<dyn Provider> {
+            Arc::new(vakin::Vakin::new(http.clone(), cfg))
+        };
+        let vakin_providers: Vec<Arc<dyn Provider>> = vec![
+            vakin(vakin::Config {
+                id: "umea",
+                name: "Umeå",
+                placeholder: "t.ex. Storgatan 1",
+                note: "Sophämtningsdata från Vakin. Skriv gatuadress och \
+                       husnummer — välj rätt ort ur listan om gatan finns \
+                       i flera orter.",
+                cities: &[
+                    "Umeå",
+                    "Holmsund",
+                    "Obbola",
+                    "Röbäck",
+                    "Täfteå",
+                    "Sävar",
+                    "Hörnefors",
+                    "Holmön",
+                    "Bullmark",
+                    "Tavelsjö",
+                    "Botsmark",
+                ],
+            }),
+            vakin(vakin::Config {
+                id: "vindeln",
+                name: "Vindeln",
+                placeholder: "t.ex. Granvägen 1",
+                note: "Sophämtningsdata från Vakin (samdrift med Umeå). \
+                       Skriv gatuadress och husnummer.",
+                cities: &["Vindeln", "Åmsele", "Granö", "Tvärålund", "Hällnäs"],
+            }),
+            vakin(vakin::Config {
+                id: "nordmaling",
+                name: "Nordmaling",
+                placeholder: "t.ex. Hamngatan 3",
+                note: "Sophämtningsdata från UMEVA/Vakin (samdrift med Umeå). \
+                       Skriv gatuadress och husnummer.",
+                cities: &[
+                    "Nordmaling",
+                    "Rundvik",
+                    "Lögdeå",
+                    "Norrfors",
+                    "Nyåker",
+                    "Håknäs",
+                    "Gräsmyr",
+                    "Hörnsjö",
+                ],
+            }),
+        ];
+
         // Sundsvall — official CC0 open-data dataset published on
         // dataportal.se (61_6752). Single-kommun provider with an
         // in-memory cache refreshed every 12 h.
@@ -1291,6 +1348,7 @@ impl Registry {
                 .chain(hemab_providers.into_iter())
                 .chain(kristianstad_providers.into_iter())
                 .chain(sv_providers.into_iter())
+                .chain(vakin_providers.into_iter())
                 .chain(sundsvall_providers.into_iter())
                 .chain(sodertorn_providers.into_iter())
                 .chain(avfallsappen_providers.into_iter())
