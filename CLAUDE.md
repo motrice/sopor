@@ -268,9 +268,32 @@ provider rather than scaling test count for its own sake.
   **Lesson:** a BankID-gated *portal* says nothing about the kommun's
   *public* widget. Before writing off any BFUS customer, check the
   avfallsbolag's own "när kommer sopbilen"-page for a widget and look for
-  an `api-bfus.<tenant>.se`-style proxy host in its webapp bundle. Worth
-  re-probing for Stockholm Vatten och Avfall (already covered via SVOA's
-  own JSON), Karlstads Energi and Alingsås Energi.
+  an `api-bfus.<tenant>.se`-style proxy host in its webapp bundle.
+
+  **Checked the other two known tenants (session 4) — both negative:**
+  - *Karlstads Energi* — SiteVision, but no schedule widget exists on the
+    site at all. The 758-URL sitemap has no hämtningsdag/tömningskalender
+    page; their own FAQ answers "var ser jag min nya sophämtningsdag?"
+    with "i appen och på Mina sidor", and the app page says pushnotiser
+    require login (BankID or kundnummer + lösenord). No
+    `api-bfus.karlstadsenergi.se` (NXDOMAIN), no `api.karlstadsenergi.se`.
+  - *Alingsås Energi* — WordPress, and they only *bill* renhållning on
+    behalf of Samhällsbyggnadskontoret; the kommun's own
+    `alingsas.se/.../avfallshamtning/hamtningsdagar/` says outright
+    "Logga in för att se när vi tömmer dina sopkärl" and points at the
+    Miljötjänster tab inside `minasidor.alingsasenergi.se`. No widget, no
+    iframe, no address lookup anywhere. `api-bfus.alingsasenergi.se`
+    NXDOMAIN.
+
+  Stockholm Vatten och Avfall is already covered via SVOA's own JSON, so
+  its BFUS tenant is moot. In other words Vakin is so far the only BFUS
+  tenant with a public facade — the same "one site's own design choice,
+  not a product feature" situation as SRV's REST facade on BM
+  FetchPlanner. A more promising lead than hunting BFUS tenants is the
+  *widget vendor*: Vakin's webapps are `se.soleil.garbageTruckFetcher`
+  and `se.soleilit.treeMenu` (Soleil IT). Other SiteVision sites running
+  `se.soleil*` webapps may ship the same fetcher regardless of which
+  billing backend sits behind it.
 
   The original dead-end notes on the portal layer, still accurate:
   the Mina sidor / customer portal layer of CGI's BFUS product. Product page:
